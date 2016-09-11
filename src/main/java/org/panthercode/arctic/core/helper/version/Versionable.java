@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.identity;
+package org.panthercode.arctic.core.helper.version;
 
 /**
- * Interface to force classes to implement an identity object.
+ * Interface to force classes to implement a version object.
  */
-public interface Identifiable {
-
+public interface Versionable {
     /**
-     * Returns the identity of an object.
+     * Returns the version of the object.
      *
-     * @return Returns the identity of an object.
+     * @return Returns the version of the object.
      */
-    Identity identity();
+    Version version();
 }

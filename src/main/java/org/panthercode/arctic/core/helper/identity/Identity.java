@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.identity;
+package org.panthercode.arctic.core.helper.identity;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.helper.Freezable;
