@@ -172,8 +172,9 @@ public class ArgumentUtils {
      */
     public static void assertGreaterOrEqualsThan(long value, long limit, String name)
             throws IllegalArgumentException {
-        if (value < limit)
+        if (value < limit) {
             throw new IllegalArgumentException(PREFIX + name + " is less than limit.");
+        }
     }
 
     /**
@@ -344,7 +345,6 @@ public class ArgumentUtils {
      */
     public static void assertEquals(Object actual, Object expected, String name)
             throws IllegalArgumentException {
-
         if (actual == null) {
             if (expected != null) {
                 throw new IllegalArgumentException(PREFIX + name + " is not equals the expected one.");
@@ -366,7 +366,6 @@ public class ArgumentUtils {
      */
     public static void assertNotEquals(Object actual, Object expected, String name)
             throws IllegalArgumentException {
-
         if (actual == null) {
             if (expected == null) {
                 throw new IllegalArgumentException(PREFIX + name + " is equals the expected one.");
