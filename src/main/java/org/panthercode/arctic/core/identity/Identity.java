@@ -29,6 +29,9 @@ import java.util.Random;
  * generating a new identifier a hash code consisting of name and group name is calculated and multiplied with a random
  * number. Therefore the result of <code>new Identity("name","group").equals(new Identity("name","group"))</code>
  * returns always false.
+ * <p>
+ * To create an new instance of the identity class use the generate() function:
+ * <code>Identity identity = Identity.generate(...);</code>
  */
 public final class Identity implements Freezable {
 
@@ -189,11 +192,8 @@ public final class Identity implements Freezable {
      * @return Returns <code>true</code> if the object offers an IdentityInfo annotation; Otherwise <code>false</code>.
      */
     public static boolean isAnnotated(Object object) {
-        if (object != null) {
-            return object.getClass().getAnnotation(IdentityInfo.class) != null;
-        }
+        return object != null && object.getClass().getAnnotation(IdentityInfo.class) != null;
 
-        return false;
     }
 
     /**
