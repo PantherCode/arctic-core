@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Utilclass that contains a set of functions to handle files.
+ * Utils class that contains a set of functions to handle files.
  */
 public class IOUtils {
 
@@ -40,7 +40,7 @@ public class IOUtils {
      * @param path path to file
      * @return Returns an opened FileInputStream.
      * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws FileNotFoundException    Is thrown if the filepath doesn't exist.
+     * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
      */
     public static FileInputStream toFileIntputStream(String path)
             throws IllegalArgumentException, FileNotFoundException {
@@ -57,7 +57,7 @@ public class IOUtils {
      * @param path path to file
      * @return Returns an opened BufferedReader.
      * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws FileNotFoundException    Is thrown if the filepath doesn't exist.
+     * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
      */
     public static BufferedReader toBufferedReader(String path)
             throws IllegalArgumentException, FileNotFoundException {
@@ -74,7 +74,7 @@ public class IOUtils {
      * @param path path to file
      * @return Returns an opened FileOutputStream.
      * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws FileNotFoundException    Is thrown if the filepath doesn't exist.
+     * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
      */
     public static FileOutputStream toFileOutputStream(String path)
             throws IllegalArgumentException, FileNotFoundException {
