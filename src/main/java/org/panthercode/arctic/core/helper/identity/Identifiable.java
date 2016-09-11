@@ -16,7 +16,7 @@
 package org.panthercode.arctic.core.helper.identity;
 
 /**
- * Interface to force classes to implement an identity object.
+ * Interface to make classes better identifiable.
  */
 public interface Identifiable {
 

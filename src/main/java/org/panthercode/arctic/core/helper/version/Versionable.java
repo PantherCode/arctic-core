@@ -16,7 +16,7 @@
 package org.panthercode.arctic.core.helper.version;
 
 /**
- * Interface to force classes to implement a version object.
+ * Interface to make classes version controlled.
  */
 public interface Versionable {
     /**
