@@ -79,7 +79,7 @@ public enum ProcessState {
      *
      * @param value value of state
      */
-    ProcessState(String value) {
+    ProcessState(final String value) {
         this.value = value;
     }
 
