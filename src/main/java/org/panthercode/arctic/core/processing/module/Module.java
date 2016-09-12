@@ -24,9 +24,14 @@ import org.panthercode.arctic.core.settings.context.Context;
  * A module is the basic unit for execution. It provides a little set of functionality for controlling and handling the
  * object at runtime. The concrete implementation should always contains a coherent inner state model, that
  * change the state corresponding to the actual phase of the object.
- * There is no way to let wait the object explicitly, because the "wait" state is handle a sub state of running. Means,
- * if the module is executing, in state "running", and can't go on because the needed resource is not available for
- * example the state jumps form "running" to "waiting" and back if executions will go on.
+ * <p>
+ * For better safety there is no setter function to change the inner process state directly. Instead changes should
+ * be hidden and done by corresponded methods automatically. E.g. the <tt>start()</tt> method change the state to
+ * <tt>Running</tt>.
+ * <p>
+ * There is also no way to let wait the object explicitly, because the "wait" state is handle a sub state of running.
+ * Means, if the module is executing, in state "running", and can't go on because the needed resource is not available
+ * for example the state jumps form "running" to "waiting" and back if executions will go on.
  * <p>
  * Although the <tt>ProcessState</tt> enumeration provides some more possible states, the module provides only a
  * meaningful subset to maintain processing by default.

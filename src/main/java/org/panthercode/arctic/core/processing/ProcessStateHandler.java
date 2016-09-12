@@ -9,7 +9,8 @@ import org.panthercode.arctic.core.processing.module.Module;
 public interface ProcessStateHandler {
 
     /**
-     * Function used to react to <tt>ProcessState</tt> changes.
+     * Function used to react to <tt>ProcessState</tt> changes. You should call this function after the new value is
+     * set to object. Therefore it's possible to see old and new value.
      *
      * @param module   module, that raised the event
      * @param oldState state of object before change
