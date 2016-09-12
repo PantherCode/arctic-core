@@ -40,7 +40,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is not null.
      */
-    public static void assertNull(Object value, String name)
+    public static void assertNull(final Object value, final String name)
             throws IllegalArgumentException {
         if (value != null) {
             throw new IllegalArgumentException(PREFIX + name + " is not null.");
@@ -54,7 +54,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws NullPointerException Is thrown if the value is null.
      */
-    public static void assertNotNull(Object value, String name)
+    public static void assertNotNull(final Object value, final String name)
             throws NullPointerException {
         if (value == null) {
             throw new NullPointerException(PREFIX + name + " is null.");
@@ -68,7 +68,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is zero or greater.
      */
-    public static void assertLessZero(long value, String name)
+    public static void assertLessZero(final long value, final String name)
             throws IllegalArgumentException {
         if (value >= 0) {
             throw new IllegalArgumentException(PREFIX + name + " is equals or greater than zero.");
@@ -82,7 +82,7 @@ public class ArgumentUtils {
      * @param name  getName of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is zero or less.
      */
-    public static void assertGreaterZero(long value, String name)
+    public static void assertGreaterZero(final long value, final String name)
             throws IllegalArgumentException {
         if (value <= 0) {
             throw new IllegalArgumentException(PREFIX + name + " is equals or less than zero.");
@@ -96,7 +96,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is (real) greater than zero.
      */
-    public static void assertLessOrEqualsZero(long value, String name)
+    public static void assertLessOrEqualsZero(final long value, final String name)
             throws IllegalArgumentException {
         if (value > 0) {
             throw new IllegalArgumentException(PREFIX + name + " is greater than zero.");
@@ -110,7 +110,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is (real) less than zero.
      */
-    public static void assertGreaterOrEqualsZero(long value, String name)
+    public static void assertGreaterOrEqualsZero(final long value, final String name)
             throws IllegalArgumentException {
         if (value < 0) {
             throw new IllegalArgumentException(PREFIX + name + " is less than zero.");
@@ -125,7 +125,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is equals or greater than the limit.
      */
-    public static void assertLessThan(long value, long limit, String name)
+    public static void assertLessThan(final long value, final long limit, final String name)
             throws IllegalArgumentException {
         if (value >= limit) {
             throw new IllegalArgumentException(PREFIX + name + " is equals or greater than the limit.");
@@ -140,7 +140,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is (real) greater than the limit.
      */
-    public static void assertLessOrEqualsThan(long value, long limit, String name)
+    public static void assertLessOrEqualsThan(final long value, final long limit, final String name)
             throws IllegalArgumentException {
         if (value > limit) {
             throw new IllegalArgumentException(PREFIX + name + " is greater than the limit");
@@ -155,7 +155,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is equals or less than the limit.
      */
-    public static void assertGreaterThan(long value, long limit, String name)
+    public static void assertGreaterThan(final long value, final long limit, final String name)
             throws IllegalArgumentException {
         if (value <= limit) {
             throw new IllegalArgumentException(PREFIX + name + " is less or equals than limit.");
@@ -170,7 +170,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value (real) less than the limit.
      */
-    public static void assertGreaterOrEqualsThan(long value, long limit, String name)
+    public static void assertGreaterOrEqualsThan(final long value, final long limit, final String name)
             throws IllegalArgumentException {
         if (value < limit) {
             throw new IllegalArgumentException(PREFIX + name + " is less than limit.");
@@ -187,7 +187,7 @@ public class ArgumentUtils {
      * @param name  getName of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is out of the given boundary.
      */
-    public static void assertInLimits(long value, long lower, long upper, String name)
+    public static void assertInLimits(final long value, final long lower, final long upper, final String name)
             throws IllegalArgumentException {
         if (value <= lower) {
             throw new IllegalArgumentException(PREFIX + name + " is less than lower limit.");
@@ -205,7 +205,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is zero or greater.
      */
-    public static void assertLessZero(double value, String name)
+    public static void assertLessZero(final double value, final String name)
             throws IllegalArgumentException {
         if (value >= 0) {
             throw new IllegalArgumentException(PREFIX + name + " is equals or greater than zero.");
@@ -219,7 +219,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is zero or less.
      */
-    public static void assertGreaterZero(double value, String name)
+    public static void assertGreaterZero(final double value, final String name)
             throws IllegalArgumentException {
         if (value <= 0) {
             throw new IllegalArgumentException(PREFIX + name + " is equals or less than zero.");
@@ -233,7 +233,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is (real) greater than zero.
      */
-    public static void assertLessOrEqualsZero(double value, String name)
+    public static void assertLessOrEqualsZero(final double value, final String name)
             throws IllegalArgumentException {
         if (value > 0) {
             throw new IllegalArgumentException(PREFIX + name + " is greater than zero.");
@@ -247,7 +247,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is (real) less than zero.
      */
-    public static void assertGreaterOrEqualsZero(double value, String name)
+    public static void assertGreaterOrEqualsZero(final double value, final String name)
             throws IllegalArgumentException {
         if (value < 0) {
             throw new IllegalArgumentException(PREFIX + name + " is less than zero.");
@@ -262,7 +262,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is equals or greater than the limit.
      */
-    public static void assertLessThan(double value, double limit, String name)
+    public static void assertLessThan(final double value, final double limit, final String name)
             throws IllegalArgumentException {
         if (value >= limit) {
             throw new IllegalArgumentException(PREFIX + name + " is greater than or equals limit.");
@@ -277,7 +277,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is (real) greater than the limit.
      */
-    public static void assertLessOrEqualsThan(double value, double limit, String name)
+    public static void assertLessOrEqualsThan(final double value, final double limit, final String name)
             throws IllegalArgumentException {
         if (value > limit) {
             throw new IllegalArgumentException(PREFIX + name + " is greater than limit.");
@@ -292,7 +292,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is equals or less than the limit.
      */
-    public static void assertGreaterThan(double value, double limit, String name)
+    public static void assertGreaterThan(final double value, final double limit, final String name)
             throws IllegalArgumentException {
         if (value <= limit) {
             throw new IllegalArgumentException(PREFIX + name + " is less or equals than limit.");
@@ -307,7 +307,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value (real) less than the limit.
      */
-    public static void assertGreaterOrEqualsThan(double value, double limit, String name)
+    public static void assertGreaterOrEqualsThan(final double value, final double limit, final String name)
             throws IllegalArgumentException {
         if (value < limit) {
             throw new IllegalArgumentException(PREFIX + name + " is less than limit.");
@@ -324,7 +324,7 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is out of the given boundary.
      */
-    public static void assertInLimits(double value, double lower, double upper, String name)
+    public static void assertInLimits(final double value, final double lower, final double upper, final String name)
             throws IllegalArgumentException {
         if (value <= lower) {
             throw new IllegalArgumentException(PREFIX + name + " is less than lower limit.");
@@ -343,7 +343,7 @@ public class ArgumentUtils {
      * @param name     name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the actual value is not equals to the expected one.
      */
-    public static void assertEquals(Object actual, Object expected, String name)
+    public static void assertEquals(final Object actual, final Object expected, final String name)
             throws IllegalArgumentException {
         if (actual == null) {
             if (expected != null) {
@@ -364,7 +364,7 @@ public class ArgumentUtils {
      * @param name     name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the actual value is equals to the expected one.
      */
-    public static void assertNotEquals(Object actual, Object expected, String name)
+    public static void assertNotEquals(final Object actual, final Object expected, final String name)
             throws IllegalArgumentException {
         if (actual == null) {
             if (expected == null) {
