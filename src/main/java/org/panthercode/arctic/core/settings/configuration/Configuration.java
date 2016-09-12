@@ -83,7 +83,7 @@ public class Configuration extends Properties {
      *
      * @param comment new comment
      */
-    public void setComment(String comment) {
+    public void setComment(final String comment) {
         this.comment = comment == null ? "" : comment;
     }
 
@@ -93,7 +93,7 @@ public class Configuration extends Properties {
      * @param path path to file
      * @throws IOException Is thrown if an error occurs while reading file.
      */
-    public void load(String path) throws IOException {
+    public void load(final String path) throws IOException {
         try (FileInputStream stream = IOUtils.toFileIntputStream(path)) {
             load(stream);
         }
@@ -105,7 +105,7 @@ public class Configuration extends Properties {
      * @param path path to file
      * @throws IOException Is thrown if an error occurs while writing in file.
      */
-    public void store(String path) throws IOException {
+    public void store(final String path) throws IOException {
         try (FileOutputStream stream = IOUtils.toFileOutputStream(path)) {
             store(stream, this.comment);
         }

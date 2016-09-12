@@ -84,7 +84,7 @@ public final class Identity implements Freezable {
      *
      * @param id new identifier
      */
-    private synchronized void setId(long id) {
+    private synchronized void setId(final long id) {
         this.id = Math.abs(id);
     }
 
@@ -104,7 +104,7 @@ public final class Identity implements Freezable {
      * @param name new object name
      * @throws RuntimeException Is thrown if the name is tried to modify, but it's not allowed.
      */
-    public synchronized void setName(String name)
+    public synchronized void setName(final String name)
             throws RuntimeException {
         if (this.canModify) {
             this.name = (name == null) ? "unknown" : name;
@@ -129,7 +129,7 @@ public final class Identity implements Freezable {
      * @param group new group name
      * @throws RuntimeException Is thrown if the group name is tried to modify, but it's not allowed.
      */
-    public synchronized void setGroup(String group)
+    public synchronized void setGroup(final String group)
             throws RuntimeException {
         if (this.canModify) {
             this.group = (group == null) ? "default" : group;
@@ -192,7 +192,7 @@ public final class Identity implements Freezable {
      * @param object object to check
      * @return Returns <code>true</code> if the object offers an IdentityInfo annotation; Otherwise <code>false</code>.
      */
-    public static boolean isAnnotated(Object object) {
+    public static boolean isAnnotated(final Object object) {
         return object != null && object.getClass().getAnnotation(IdentityInfo.class) != null;
 
     }
@@ -203,7 +203,7 @@ public final class Identity implements Freezable {
      *
      * @return Returns an identity made of annotation information.
      */
-    public static Identity fromAnnotation(Object object) {
+    public static Identity fromAnnotation(final Object object) {
         if (object != null) {
             IdentityInfo info = object.getClass().getAnnotation(IdentityInfo.class);
 
@@ -237,7 +237,7 @@ public final class Identity implements Freezable {
      * @return Returns <code>true</code> if two identity objects have the same name and group name.
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == this) {
             return true;
         }
@@ -266,7 +266,7 @@ public final class Identity implements Freezable {
      * @param name new object name
      * @return Returns a new identity object.
      */
-    public static Identity generate(String name) {
+    public static Identity generate(final String name) {
         return Identity.generate(name, null);
     }
 
@@ -278,7 +278,7 @@ public final class Identity implements Freezable {
      * @param group new group name
      * @return Returns a new identity object.
      */
-    public static Identity generate(String name, String group) {
+    public static Identity generate(final String name, final String group) {
         Random seed = new Random(System.currentTimeMillis());
 
         HashCodeBuilder builder = new HashCodeBuilder();

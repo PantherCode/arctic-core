@@ -191,7 +191,7 @@ public final class Version implements Freezable {
      * @param value new value
      * @throws IllegalArgumentException Is throw if the value is less than zero.
      */
-    public synchronized void set(VersionField field, int value)
+    public synchronized void set(final VersionField field, final int value)
             throws IllegalArgumentException {
         if (this.canModify) {
             ArgumentUtils.assertGreaterOrEqualsZero(value, field.toString());
@@ -222,7 +222,7 @@ public final class Version implements Freezable {
      * @param revision new revision number
      * @throws IllegalArgumentException Is thrown if a value is less than zero.
      */
-    public synchronized void set(int major, int minor, int build, int revision)
+    public synchronized void set(final int major, final int minor, final int build, final int revision)
             throws IllegalArgumentException {
         if (this.canModify) {
             ArgumentUtils.assertGreaterOrEqualsZero(major, "major");

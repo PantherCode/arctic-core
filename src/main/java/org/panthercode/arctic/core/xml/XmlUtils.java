@@ -41,7 +41,7 @@ public class XmlUtils {
      * @param obj  object to store in xml file
      * @throws IOException Is thrown if an error occurs while writing in file.
      */
-    public static void writeToFile(String path, Object obj)
+    public static void writeToFile(final String path, final Object obj)
             throws IOException {
         ArgumentUtils.assertNotNull(obj, "object");
 
@@ -59,7 +59,7 @@ public class XmlUtils {
      * @return Returns an object with given type.
      * @throws IOException Is thrown if an error occurs while reading the file.
      */
-    public static <T> T readFromFile(String path, Class<T> clazz)
+    public static <T> T readFromFile(final String path, final Class<T> clazz)
             throws IOException {
         ArgumentUtils.assertNotNull(path, "path");
         ArgumentUtils.assertNotNull(clazz, "clazz");
@@ -72,4 +72,6 @@ public class XmlUtils {
 
         return result;
     }
+
+    //Todo: Implement methods to load file in Document class
 }

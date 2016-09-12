@@ -42,7 +42,7 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
      */
-    public static FileInputStream toFileIntputStream(String path)
+    public static FileInputStream toFileIntputStream(final String path)
             throws IllegalArgumentException, FileNotFoundException {
         ArgumentUtils.assertNotNull(path, "path");
 
@@ -59,7 +59,7 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
      */
-    public static BufferedReader toBufferedReader(String path)
+    public static BufferedReader toBufferedReader(final String path)
             throws IllegalArgumentException, FileNotFoundException {
         ArgumentUtils.assertNotNull(path, "path");
 
@@ -76,7 +76,7 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
      */
-    public static FileOutputStream toFileOutputStream(String path)
+    public static FileOutputStream toFileOutputStream(final String path)
             throws IllegalArgumentException, FileNotFoundException {
         ArgumentUtils.assertNotNull(path, "path");
 
@@ -93,7 +93,7 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws IOException              Is thrown if an error occurs while opening the file.
      */
-    public static BufferedWriter toBufferedWriter(String path)
+    public static BufferedWriter toBufferedWriter(final String path)
             throws IllegalArgumentException, IOException {
         ArgumentUtils.assertNotNull(path, "path");
 
@@ -110,7 +110,7 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws IOException              Is thrown if an error occurs while reading the file.
      */
-    public static String readTextFile(String path)
+    public static String readTextFile(final String path)
             throws IllegalArgumentException, IOException {
         ArgumentUtils.assertNotNull(path, " path");
 
@@ -136,7 +136,7 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws IOException              Is thrown if an error occurs while reading the file.
      */
-    public static List<String> readTextFileAsList(String path)
+    public static List<String> readTextFileAsList(final String path)
             throws IllegalArgumentException, IOException {
         ArgumentUtils.assertNotNull(path, "path");
 
@@ -159,10 +159,11 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws IOException              Is thrown if an error occurs while writing in file.
      */
-    public static void writeToTextFile(String path, String content)
+    public static void writeToTextFile(final String path, String content)
             throws IllegalArgumentException, IOException {
         ArgumentUtils.assertNotNull(path, "path");
 
+        //Todo: eventually throw NullpointerException instead
         content = (content == null) ? "" : content;
 
         try (BufferedWriter writer = IOUtils.toBufferedWriter(path)) {
@@ -178,10 +179,11 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws IOException              Is thrown if an error occurs while writing in file.
      */
-    public static void writeTextFile(String path, Collection<? extends String> content)
+    public static void writeTextFile(final String path, Collection<? extends String> content)
             throws IllegalArgumentException, IOException {
         ArgumentUtils.assertNotNull(path, "path");
 
+        //Todo: eventually throw NullpointerException instead
         content = (content == null) ? Collections.EMPTY_LIST : content;
 
         try (BufferedWriter writer = IOUtils.toBufferedWriter(path)) {

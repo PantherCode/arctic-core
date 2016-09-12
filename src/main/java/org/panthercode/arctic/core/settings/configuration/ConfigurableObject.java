@@ -45,7 +45,7 @@ public abstract class ConfigurableObject implements Configurable {
      *
      * @param configuration new configuration
      */
-    public void configure(Configuration configuration){
+    public void configure(final Configuration configuration){
         if(configuration != null) {
             this.configuration = configuration;
         }
