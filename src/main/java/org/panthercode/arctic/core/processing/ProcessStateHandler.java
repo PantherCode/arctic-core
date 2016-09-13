@@ -20,6 +20,8 @@ import org.panthercode.arctic.core.processing.module.Module;
 /**
  * The ProcessStateHandler is a simple kind of event handling. Whenever an object changes his process state an "event"
  * is raised, the handle() method will be called.
+ * <p>
+ * Todo: if implementation lasts too long, use own thread.
  */
 public interface ProcessStateHandler {
 

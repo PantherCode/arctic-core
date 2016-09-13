@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Utils class that contains a set of functions to handle files.
+ * Utils class that contains a set of functions to deal with files.
  */
 public class IOUtils {
 
