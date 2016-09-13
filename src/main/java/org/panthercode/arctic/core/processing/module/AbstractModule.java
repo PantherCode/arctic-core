@@ -93,9 +93,16 @@ public abstract class AbstractModule implements Module {
     private final Version version;
 
     /**
+     * Actual PrcessStateHandler to handle state transitions
+     */
+    private ProcessStateHandler processStateHandler = null;
+
+    /**
      * Contains all allowed process state changes.
      */
     protected HashMap<ProcessState, EnumSet<ProcessState>> stateMap;
+
+
 
     /**
      * Standard Constructor
@@ -205,6 +212,26 @@ public abstract class AbstractModule implements Module {
             this.context = (context == null) ? new Context() : context;
         }
     }
+
+    /**
+     * Returns the actual <tt>ProcessStateHandler</tt> the object is associated with.
+     *
+     * @return Returns the actual <tt>ProcessStateHandler</tt> the object is associated with.
+     */
+    public ProcessStateHandler getProcessStateHandler(){
+        return this.processStateHandler;
+    }
+
+    //TODO: expand model for multi-handler processing
+    /**
+     * Set a new <tt>ProcessStatusHandler</tt> the object is associated with.
+     *
+     * @param handler new handler
+     */
+    public synchronized void setProcessStateHandler(ProcessStateHandler handler){
+        this.processStateHandler = handler;
+    }
+
 
     /**
      * Returns the inner state the object is associated with.
@@ -374,31 +401,16 @@ public abstract class AbstractModule implements Module {
      */
     protected synchronized void changeState(final ProcessState newState)
             throws Exception {
-        this.changeState(newState, null);
-    }
-
-    /**
-     * Set the inner state of object to given value.
-     *
-     * @param newState new state of object
-     * @param handler ProcessStateHandler to react to state changes
-     * @throws Exception Is eventually thrown by ProcessStateHandler implementation.
-     */
-    protected synchronized void changeState(final ProcessState newState, ProcessStateHandler handler)
-            throws Exception {
         if (this.canChangeState(newState)) {
             ProcessState oldState = this.actualState;
 
             this.actualState = newState;
 
-            if (handler == null) {
-                // handler = ModuleRepository.defaultProcessStateHandler();
-            }
-
-            if (handler != null) {
-                // handler.handle(this, this.actualState, oldState);
+            if(this.processStateHandler != null){
+                this.processStateHandler.handle(this, oldState);
             }
         } else {
+            //Todo: implement ProcessStateException
             //throw new ProcessStateException("Try to change from " + this.actualState + " to " + newState);
         }
     }
