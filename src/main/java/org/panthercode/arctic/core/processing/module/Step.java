@@ -52,7 +52,7 @@ public abstract class Step extends AbstractModule {
      * Constructor
      *
      * @param identity identity the object is associated with
-     * @param context context the object is associated with
+     * @param context  context the object is associated with
      */
     public Step(Identity identity, Context context) {
         super(identity, context);
@@ -76,17 +76,18 @@ public abstract class Step extends AbstractModule {
             throws Exception {
         super.start();
 
-        if (this.isRunning()) {
-            try {
-                ProcessState result = this.step() ? ProcessState.SUCCEEDED : ProcessState.FAILED;
+        try {
+            ProcessState result = this.step() ? ProcessState.SUCCEEDED : ProcessState.FAILED;
 
-                this.changeState(result);
-            } catch (Exception e) {
+            this.changeState(result);
+        } catch (Exception e) {
+            if (this.canChangeState(ProcessState.STOPPED)) {
                 super.stop();
-
-                throw new RuntimeException("While running method step() an error is occurred.", e);
             }
+
+            throw new RuntimeException("While running method step() an error is occurred.", e);
         }
+
     }
 
     /**

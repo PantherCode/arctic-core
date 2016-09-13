@@ -314,6 +314,9 @@ public abstract class AbstractModule implements Module {
             throws Exception {
         if(this.isReady()){
             this.changeState(ProcessState.RUNNING);
+        } else {
+            throw new IllegalStateException("The object's process state is not " + ProcessState.READY + ". You can't" +
+                    " call start() method.");
         }
     }
 
@@ -326,6 +329,9 @@ public abstract class AbstractModule implements Module {
             throws Exception{
         if(this.canChangeState(ProcessState.STOPPED)){
             this.changeState(ProcessState.STOPPED);
+        } else {
+            throw new IllegalArgumentException("Can't stop, because the object's process state is " +
+                      this.actualState + ".");
         }
     }
 
