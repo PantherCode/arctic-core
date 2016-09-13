@@ -394,7 +394,7 @@ public abstract class AbstractModule implements Module {
     public abstract AbstractModule clone() throws CloneNotSupportedException;
 
     /**
-     * Set the inner state of object to given value.
+     * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
      *
      * @param newState new state of object
      * @throws Exception Is eventually thrown by ProcessStateHandler implementation.
