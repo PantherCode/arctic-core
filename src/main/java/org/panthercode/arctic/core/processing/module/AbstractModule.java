@@ -102,8 +102,6 @@ public abstract class AbstractModule implements Module {
      */
     protected HashMap<ProcessState, EnumSet<ProcessState>> stateMap;
 
-
-
     /**
      * Standard Constructor
      */
@@ -218,20 +216,20 @@ public abstract class AbstractModule implements Module {
      *
      * @return Returns the actual <tt>ProcessStateHandler</tt> the object is associated with.
      */
-    public ProcessStateHandler getProcessStateHandler(){
+    public ProcessStateHandler getProcessStateHandler() {
         return this.processStateHandler;
     }
 
     //TODO: expand model for multi-handler processing
+
     /**
      * Set a new <tt>ProcessStatusHandler</tt> the object is associated with.
      *
      * @param handler new handler
      */
-    public synchronized void setProcessStateHandler(ProcessStateHandler handler){
+    public synchronized void setProcessStateHandler(ProcessStateHandler handler) {
         this.processStateHandler = handler;
     }
-
 
     /**
      * Returns the inner state the object is associated with.
@@ -312,14 +310,24 @@ public abstract class AbstractModule implements Module {
      *
      * @throws Exception Is eventually thrown by the concrete implementation.
      */
-    public abstract void start() throws Exception;
+    public synchronized void start()
+            throws Exception {
+        if(this.isReady()){
+            this.changeState(ProcessState.RUNNING);
+        }
+    }
 
     /**
      * Stops the actual run.
      *
      * @throws Exception Is eventually thrown by the concrete implementation.
      */
-    public abstract void stop() throws Exception;
+    public synchronized void stop()
+            throws Exception{
+        if(this.canChangeState(ProcessState.STOPPED)){
+            this.changeState(ProcessState.STOPPED);
+        }
+    }
 
     /**
      * Set the inner stae to "ready". This method can only called if object has inner state "SUCCEEDED", "FAILED" or
@@ -406,7 +414,7 @@ public abstract class AbstractModule implements Module {
 
             this.actualState = newState;
 
-            if(this.processStateHandler != null){
+            if (this.processStateHandler != null) {
                 this.processStateHandler.handle(this, oldState);
             }
         } else {
@@ -418,7 +426,7 @@ public abstract class AbstractModule implements Module {
     /**
      * Helper function to fill a map with all allowed state changes. The map contains all state-pairs from table above,
      * which transition reutrns <tt>true</tt>.
-     *
+     * <p>
      * If you override this method, also override canChangeState() method to avoid wrong behavior of object at runtime!
      */
     protected synchronized void initialiseStateMap() {
