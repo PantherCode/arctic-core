@@ -312,7 +312,7 @@ public abstract class AbstractModule implements Module {
      */
     public synchronized void start()
             throws Exception {
-        if(this.isReady()){
+        if (this.isReady()) {
             this.changeState(ProcessState.RUNNING);
         } else {
             throw new IllegalStateException("The object's process state is not " + ProcessState.READY + ". You can't" +
@@ -326,12 +326,12 @@ public abstract class AbstractModule implements Module {
      * @throws Exception Is eventually thrown by the concrete implementation.
      */
     public synchronized void stop()
-            throws Exception{
-        if(this.canChangeState(ProcessState.STOPPED)){
+            throws Exception {
+        if (this.canChangeState(ProcessState.STOPPED)) {
             this.changeState(ProcessState.STOPPED);
         } else {
             throw new IllegalArgumentException("Can't stop, because the object's process state is " +
-                      this.actualState + ".");
+                    this.actualState + ".");
         }
     }
 
@@ -358,14 +358,12 @@ public abstract class AbstractModule implements Module {
         return Math.abs(new HashCodeBuilder()
                 .append(this.identity)
                 .append(this.version)
-                .append(this.actualState)
-                .append(this.context)
                 .toHashCode());
     }
 
     /**
      * Checks if this object is equals to another one. Both objects are equal if they identity equals method, version
-     * equals() method, context equals() methods return <tt>true</tt> and actual state is equal.
+     * equals() method, context equals() methods return <tt>true</tt> is equal.
      *
      * @param obj other object to check
      * @return Returns <code>true</code> if both objects have same member values; Otherwise <tt>false</tt>.
@@ -384,7 +382,6 @@ public abstract class AbstractModule implements Module {
 
         return this.identity.equals(module.identity()) &&
                 this.version.equals(module.version) &&
-                this.actualState == module.actualState &&
                 this.context.equals(module.context);
     }
 
