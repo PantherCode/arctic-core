@@ -224,15 +224,13 @@ public abstract class Loop extends AbstractModule {
     /**
      * This method will be called before loop process starts.
      */
-    public void before()
-            throws Exception {
+    public void before() {
     }
 
     /**
      * This method will be called after loop process finished.
      */
-    public void after()
-            throws Exception {
+    public void after() {
     }
 
     /**
@@ -253,8 +251,8 @@ public abstract class Loop extends AbstractModule {
     /**
      * Checks if this object is equals to another one.
      *
-     * @param obj other object for check comparison
-     * @return Returns <code>true</code> if both objects are equl; Otherwise <tt>false</tt>.
+     * @param obj other object for comparison
+     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean equals(final Object obj) {

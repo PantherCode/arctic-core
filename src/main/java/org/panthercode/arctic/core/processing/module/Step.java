@@ -69,7 +69,7 @@ public abstract class Step extends AbstractModule {
 
     /**
      * Call step() method and checks returned value. If value is <tt>true</tt> the process state is changed to
-     * "Succeeded"; Otherwise to "Failed". If an exception is thrown, the object try to set the state to "Stopped".
+     * "Succeeded"; Otherwise to "Failed". If an exception is thrown, the object try to set the state to "Failed".
      */
     @Override
     public synchronized void start()
@@ -81,8 +81,8 @@ public abstract class Step extends AbstractModule {
 
             this.changeState(result);
         } catch (Exception e) {
-            if (this.canChangeState(ProcessState.STOPPED)) {
-                super.stop();
+            if (this.canChangeState(ProcessState.FAILED)) {
+                this.changeState(ProcessState.FAILED);
             }
 
             throw new RuntimeException("While running method step() an error is occurred.", e);
