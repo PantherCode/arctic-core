@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * The Repeater repeats the module's functionality until the time limit is reached or until the module finished
  * successfully.
  */
-@IdentityInfo(name = "Standart Repeater", group = "Repeater Module")
+@IdentityInfo(name = "Standard Repeater", group = "Repeater Module")
 @VersionInfo(major = 1)
 public class Repeater extends Loop {
 
