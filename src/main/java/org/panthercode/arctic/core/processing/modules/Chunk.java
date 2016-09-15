@@ -1,0 +1,135 @@
+/*
+ * Copyright 2016 PantherCode
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.panthercode.arctic.core.processing.modules;
+
+import org.panthercode.arctic.core.helper.identity.Identity;
+import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.settings.context.Context;
+
+/**
+ * The Chunk class runs all elements parallelised.
+ */
+@IdentityInfo(name = "Standard Chunk", group = "Chunk Module")
+@VersionInfo(major = 1)
+public class Chunk extends Bundle {
+
+    /**
+     * Standard Constructor
+     */
+    public Chunk() {
+        super();
+    }
+
+    /**
+     * Constructor
+     *
+     * @param context context the module is associated with.
+     */
+    public Chunk(Context context) {
+        super(context);
+    }
+
+    /**
+     * Constructor
+     *
+     * @param identity identity the module is associated with.
+     * @param context  context the module is associated with.
+     */
+    public Chunk(Identity identity, Context context) {
+        super(identity, context);
+    }
+
+    /**
+     * Copy Constructor
+     *
+     * @param chunk object to copy
+     */
+    public Chunk(Chunk chunk)
+            throws CloneNotSupportedException, NullPointerException {
+        super(chunk);
+    }
+
+    /**
+     * Starts the process.
+     *
+     * @trows Exception Is eventually thrown by actual module or if an error occurred while running process.
+     */
+    public synchronized void start() throws Exception {
+        // Todo: implement
+    }
+
+    /**
+     * Stops the actual process. It's not guaranteed that process stops immediately.
+     * Calls the <tt>stop()</tt> method of each module.
+     *
+     * @trows Exception Is eventually thrown by actual module or if an error occurred while stopping process.
+     */
+    public synchronized void stop()
+            throws Exception {
+        for (Module module : this.modules()) {
+            //Todo ignore exceptions, rethrow it after stopping all other modules
+            module.stop();
+        }
+
+        if (this.canChangeState(ProcessState.STOPPED)) {
+            this.changeState(ProcessState.STOPPED);
+        }
+    }
+
+    /**
+     * Returns a hash code value of this object.
+     *
+     * @return Returns a hash code value of this object.
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    /**
+     * Checks if this object is equals to another one.
+     *
+     * @param obj other object for comparison
+     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Chunk)) {
+            return false;
+        }
+
+        Chunk chunk = (Chunk) obj;
+
+        return super.equals(chunk);
+    }
+
+    /**
+     * Creates a copy of this object.
+     *
+     * @return Return a copy of this object.
+     * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
+     */
+    @Override
+    public Chunk clone() throws CloneNotSupportedException, NullPointerException {
+        return new Chunk(this);
+    }
+}
