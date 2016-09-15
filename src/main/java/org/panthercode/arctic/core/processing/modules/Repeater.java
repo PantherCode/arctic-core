@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.module;
+package org.panthercode.arctic.core.processing.modules;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  */
 @IdentityInfo(name = "Standard Repeater", group = "Repeater Module")
 @VersionInfo(major = 1)
-public class Repeater extends Loop {
+public class Repeater extends org.panthercode.arctic.core.processing.modules.Loop {
 
     /**
      * time limit

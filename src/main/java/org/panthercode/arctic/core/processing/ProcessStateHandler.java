@@ -15,7 +15,7 @@
  */
 package org.panthercode.arctic.core.processing;
 
-import org.panthercode.arctic.core.processing.module.Module;
+import org.panthercode.arctic.core.processing.modules.Module;
 
 /**
  * The ProcessStateHandler is a simple kind of event handling. Whenever an object changes his process state an "event"
