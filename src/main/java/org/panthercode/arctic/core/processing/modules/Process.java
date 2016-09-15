@@ -83,7 +83,7 @@ public class Process extends Bundle {
     /**
      * Starts the process.
      *
-     * @trows Exception Is eventually thrown by actual module or if an error occurred while running process.
+     * @throws Exception Is eventually thrown by actual module or if an error occurred while running process.
      */
     @Override
     public void start()
@@ -118,7 +118,7 @@ public class Process extends Bundle {
      * Stops the actual process. It's not guaranteed that process stops immediately, but after finishing actual module.
      * Calls actual module's <tt>stop()</tt> method.
      *
-     * @trows Exception Is eventually thrown by actual module or if an error occurred while stopping process.
+     * @throws Exception Is eventually thrown by actual module or if an error occurred while stopping process.
      */
     public void stop()
             throws Exception {

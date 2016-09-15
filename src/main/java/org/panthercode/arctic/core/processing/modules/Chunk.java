@@ -67,7 +67,7 @@ public class Chunk extends Bundle {
     /**
      * Starts the process.
      *
-     * @trows Exception Is eventually thrown by actual module or if an error occurred while running process.
+     * @throws Exception Is eventually thrown by actual module or if an error occurred while running process.
      */
     public synchronized void start() throws Exception {
         // Todo: implement
@@ -77,7 +77,7 @@ public class Chunk extends Bundle {
      * Stops the actual process. It's not guaranteed that process stops immediately.
      * Calls the <tt>stop()</tt> method of each module.
      *
-     * @trows Exception Is eventually thrown by actual module or if an error occurred while stopping process.
+     * @throws Exception Is eventually thrown by actual module or if an error occurred while stopping process.
      */
     public synchronized void stop()
             throws Exception {
