@@ -214,6 +214,11 @@ public abstract class Bundle extends AbstractModule {
         return this.modules().iterator();
     }
 
+    /**
+     * Returns a hash code value of this object.
+     *
+     * @return Returns a hash code value of this object.
+     */
     @Override
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
