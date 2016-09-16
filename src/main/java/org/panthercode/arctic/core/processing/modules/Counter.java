@@ -175,12 +175,18 @@ public class Counter extends Loop {
                 if (module.isSucceeded() && this.canAbort) {
                     break;
                 }
+
+                //Todo: implement stop mechanism
+
+
             } catch (Exception e) {
                 if (!this.ignoreExceptions) {
                     this.changeState(ProcessState.FAILED);
                     throw new RuntimeException("While running the module an error occurred.", e);
                 }
             }
+
+            //Todo: implement delay time
         }
 
         after();
