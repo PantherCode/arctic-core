@@ -157,7 +157,7 @@ public final class Identity implements Freezable {
      */
     @Override
     public Identity clone() {
-        return Identity.generate(this.name, this.group);
+        return new Identity(this.id, this.name, this.group);
     }
 
     /**
@@ -230,6 +230,27 @@ public final class Identity implements Freezable {
     }
 
     /**
+     * Compares to identity objects and check if both have same name and same group.
+     *
+     * @param obj object to check
+     * @return Returns <tt>true</tt> if both objects have same name and same group.
+     */
+    public boolean match(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Identity)) {
+            return false;
+        }
+
+        Identity identity = (Identity) obj;
+
+        return this.getName().equals(identity.getName()) &&
+                this.getGroup().equals(identity.getGroup());
+    }
+
+    /**
      * Checks if this object is equals to another one. Two identity objects are equal if they have the same name and
      * the same group name. The identifier is ignored.
      *
@@ -247,8 +268,9 @@ public final class Identity implements Freezable {
         }
 
         Identity identity = (Identity) obj;
-        return this.getName().equals(identity.getName())
-                && this.getGroup().equals(identity.getGroup());
+        return this.id() == identity.id() &&
+                this.getName().equals(identity.getName()) &&
+                this.getGroup().equals(identity.getGroup());
     }
 
     /**

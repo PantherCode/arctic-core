@@ -21,10 +21,13 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessStateHandler;
+import org.panthercode.arctic.core.processing.exception.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.EnumSet;
 import java.util.HashMap;
+
+//TODO: implement a multi ProcessStateHandler mechanism
 
 /**
  * The Abstract Module class is the root element in inheritance hierarchy. This module contains basic functionality all
@@ -54,8 +57,8 @@ import java.util.HashMap;
  * Another important point are identities. Every class, who inherits from this class, need an identity. There are two
  * possibilities to handle. First you can set an identity as parameter via constructor. Second way you annotate child
  * class with @IdentityInfo and constructor will read the information automatically. You always should prefer second
- * way, because is safer and prevent the situation to forget it. Some principle obtains to versions. It's not a must
- * have to set a version, but nevertheless do it.
+ * way, because it's safer and prevent to forget it. Some principle obtains to versions. It's not a must have to set a
+ * version, but nevertheless do it.
  * <p>
  * If you inherit directly or indirectly from this class, you always should call in constructor super(...) with correct
  * parametrization to initialize the inner state machine and other important fields. Don't ask, do it! If you are not
@@ -104,6 +107,8 @@ public abstract class AbstractModule implements Module {
 
     /**
      * Standard Constructor
+     *
+     * @throws NullPointerException Is thrown if identity is null.
      */
     public AbstractModule()
             throws NullPointerException {
@@ -114,6 +119,7 @@ public abstract class AbstractModule implements Module {
      * Constructor
      *
      * @param context new context of object
+     * @throws NullPointerException Is thrown if identity is null.
      */
     public AbstractModule(Context context)
             throws NullPointerException {
@@ -125,7 +131,7 @@ public abstract class AbstractModule implements Module {
      *
      * @param identity identity the module is associated with.
      * @param context  context the module is associated with.
-     * @throws NullPointerException
+     * @throws NullPointerException Is thrown if identity is null.
      */
     public AbstractModule(Identity identity, Context context)
             throws NullPointerException {
@@ -135,7 +141,7 @@ public abstract class AbstractModule implements Module {
             if (Identity.isAnnotated(this)) {
                 this.identity = Identity.fromAnnotation(this);
             } else {
-                throw new NullPointerException("The identity is null.");
+                throw new NullPointerException("The value of identity is null.");
             }
         }
 
@@ -156,6 +162,7 @@ public abstract class AbstractModule implements Module {
      * Copy Constructor
      *
      * @param module object to copy
+     * @throws NullPointerException Is thrown if parameter is null.
      */
     public AbstractModule(AbstractModule module)
             throws NullPointerException {
@@ -179,7 +186,7 @@ public abstract class AbstractModule implements Module {
      * @return Returns the identity the object is associated with.
      */
     public Identity identity() {
-        return Identity.generate(this.identity.getName(), this.identity.getGroup());
+        return this.identity.clone();
     }
 
     /**
@@ -220,8 +227,6 @@ public abstract class AbstractModule implements Module {
         return this.processStateHandler;
     }
 
-    //TODO: expand model for multi-handler processing
-
     /**
      * Set a new <tt>ProcessStatusHandler</tt> the object is associated with.
      *
@@ -238,17 +243,6 @@ public abstract class AbstractModule implements Module {
      */
     public ProcessState state() {
         return this.actualState;
-    }
-
-    /**
-     * Function to check whether the new state is allowed or not.
-     *
-     * @param newState new state the object would like to set
-     * @return Returns <tt>true</tt> if the new state is allowed; Otherwise <tt>false</tt>.
-     */
-    public boolean canChangeState(final ProcessState newState) {
-        return this.stateMap.containsKey(this.actualState) &&
-                this.stateMap.get(this.actualState).contains(newState);
     }
 
     /**
@@ -306,12 +300,13 @@ public abstract class AbstractModule implements Module {
     }
 
     /**
-     * Starts to run the object.
+     * Starts to run the object and set process state to 'Running'.
      *
-     * @throws Exception Is eventually thrown by the concrete implementation.
+     * @throws ProcessException      Is eventually thrown by the concrete implementation.
+     * @throws IllegalStateException Is thrown if object's process state is not 'Ready'.
      */
     public synchronized void start()
-            throws Exception {
+            throws ProcessException, IllegalStateException {
         if (this.isReady()) {
             this.changeState(ProcessState.RUNNING);
         } else {
@@ -321,12 +316,13 @@ public abstract class AbstractModule implements Module {
     }
 
     /**
-     * Stops the actual run.
+     * Stops the actual run and set process state to 'Stopped'.
      *
-     * @throws Exception Is eventually thrown by the concrete implementation.
+     * @throws ProcessException      Is eventually thrown by the concrete implementation.
+     * @throws IllegalStateException Is thrown if object's process state doesn't allow it to set state to 'Stopped'.
      */
     public synchronized void stop()
-            throws Exception {
+            throws ProcessException, IllegalStateException {
         if (this.canChangeState(ProcessState.STOPPED)) {
             this.changeState(ProcessState.STOPPED);
         } else {
@@ -336,16 +332,56 @@ public abstract class AbstractModule implements Module {
     }
 
     /**
-     * Set the inner stae to "ready". This method can only called if object has inner state "SUCCEEDED", "FAILED" or
-     * "STOPPED".
+     * Set the inner state to 'Ready'. This method can only called if object has inner state 'Succeeded', 'Failed' or
+     * 'Stopped'. You can't reset a running process.
+     *
+     * @throws IllegalStateException Is thrown if object's process state doesn't allow it to set state to 'Ready'.
+     * @throws ProcessException      Is thrown if an error occurred while resetting the object.
      */
     public synchronized void reset()
-            throws Exception {
-        if (this.canChangeState(ProcessState.READY)) {
+            throws ProcessException {
+        if (this.actualState == ProcessState.READY) {
+            return;
+        } else if (this.canChangeState(ProcessState.READY)) {
             this.changeState(ProcessState.READY);
+        } else {
+            throw new IllegalArgumentException("Can't reset the object, because it's process state is "
+                    + this.actualState);
         }
+    }
 
-        //TODO: eventually throw RuntimeException, because wrong state
+    /**
+     * Function to check whether the new state is allowed or not.
+     *
+     * @param newState new state the object would like to set
+     * @return Returns <tt>true</tt> if the new state is allowed; Otherwise <tt>false</tt>.
+     */
+    public boolean canChangeState(final ProcessState newState) {
+        return this.stateMap.containsKey(this.actualState) &&
+                this.stateMap.get(this.actualState).contains(newState);
+    }
+
+    /**
+     * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
+     *
+     * @param newState new state of object
+     * @throws IllegalStateException Is thrown if object's process can't set to new value.
+     * @throws ProcessException      Is eventually thrown by ProcessStateHandler implementation.
+     */
+    protected synchronized void changeState(final ProcessState newState)
+            throws ProcessException {
+        if (this.canChangeState(newState)) {
+            ProcessState oldState = this.actualState;
+
+            this.actualState = newState;
+
+            if (this.processStateHandler != null) {
+                this.processStateHandler.handle(this, oldState);
+            }
+        } else {
+            throw new IllegalArgumentException("Can't change process state to " + newState + ", because actual" +
+                    "state is " + this.actualState);
+        }
     }
 
     /**
@@ -356,8 +392,8 @@ public abstract class AbstractModule implements Module {
     @Override
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
-                .append(this.identity)
-                .append(this.version)
+                .append(this.identity.hashCode())
+                .append(this.version.hashCode())
                 .toHashCode());
     }
 
@@ -380,19 +416,9 @@ public abstract class AbstractModule implements Module {
 
         AbstractModule module = (AbstractModule) obj;
 
-        return this.identity.equals(module.identity()) &&
+        return this.identity.match(module.identity()) &&
                 this.version.equals(module.version) &&
                 this.context.equals(module.context);
-    }
-
-    /**
-     * Returns a string representation of the object. The representation contains the id, name and group name.
-     *
-     * @return Returns a string representation of the object.
-     */
-    @Override
-    public String toString() {
-        return this.identity.toString() + ", version = " + this.version.toString();
     }
 
     /**
@@ -405,25 +431,13 @@ public abstract class AbstractModule implements Module {
     public abstract AbstractModule clone() throws CloneNotSupportedException;
 
     /**
-     * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
+     * Returns a string representation of the object. The representation contains the id, name and group name.
      *
-     * @param newState new state of object
-     * @throws Exception Is eventually thrown by ProcessStateHandler implementation.
+     * @return Returns a string representation of the object.
      */
-    protected synchronized void changeState(final ProcessState newState)
-            throws Exception {
-        if (this.canChangeState(newState)) {
-            ProcessState oldState = this.actualState;
-
-            this.actualState = newState;
-
-            if (this.processStateHandler != null) {
-                this.processStateHandler.handle(this, oldState);
-            }
-        } else {
-            //Todo: implement ProcessStateException
-            //throw new ProcessStateException("Try to change from " + this.actualState + " to " + newState);
-        }
+    @Override
+    public String toString() {
+        return this.identity.toString() + ", version = " + this.version.toString();
     }
 
     /**
