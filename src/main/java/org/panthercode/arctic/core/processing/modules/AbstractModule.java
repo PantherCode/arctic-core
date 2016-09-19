@@ -213,10 +213,14 @@ public abstract class AbstractModule implements Module {
      *
      * @param context new context
      */
-    public synchronized void setContext(final Context context) {
+    public synchronized boolean setContext(final Context context) {
         if (!this.isRunning() && !this.isWaiting()) {
             this.context = (context == null) ? new Context() : context;
+
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -303,33 +307,23 @@ public abstract class AbstractModule implements Module {
     /**
      * Starts to run the object and set process state to 'Running'.
      *
-     * @throws ProcessException      Is thrown if an error occurred while running the process.
-     * @throws IllegalStateException Is thrown if object's process state is not 'Ready'.
+     * @return
+     * @throws ProcessException Is thrown if an error occurred while running the process.
      */
-    public synchronized void start()
+    public synchronized boolean start()
             throws ProcessException, IllegalStateException {
-        if (this.isReady()) {
-            this.changeState(ProcessState.RUNNING);
-        } else {
-            throw new IllegalStateException("The object's process state is not " + ProcessState.READY + ". You can't" +
-                    " call start() method.");
-        }
+        return this.isReady() && this.changeState(ProcessState.RUNNING);
+
     }
 
     /**
      * Stops the actual run and set process state to 'Stopped'.
      *
-     * @throws ProcessException      Is thrown if an error occurred while stopping the process.
-     * @throws IllegalStateException Is thrown if object's process state doesn't allow it to set state to 'Stopped'.
+     * @throws ProcessException Is thrown if an error occurred while stopping the process.
      */
-    public synchronized void stop()
+    public synchronized boolean stop()
             throws ProcessException, IllegalStateException {
-        if (this.canChangeState(ProcessState.STOPPED)) {
-            this.changeState(ProcessState.STOPPED);
-        } else {
-            throw new IllegalArgumentException("Can't stop, because the object's process state is " +
-                    this.actualState + ".");
-        }
+        return this.changeState(ProcessState.STOPPED);
     }
 
     /**
@@ -339,14 +333,9 @@ public abstract class AbstractModule implements Module {
      * @throws IllegalStateException Is thrown if object's process state doesn't allow it to set state to 'Ready'.
      * @throws ProcessException      Is thrown if an error occurred while resetting the object.
      */
-    public synchronized void reset()
+    public synchronized boolean reset()
             throws ProcessException {
-        if (this.canChangeState(ProcessState.READY)) {
-            this.changeState(ProcessState.READY);
-        } else {
-            throw new IllegalArgumentException("Can't reset the object, because it's process state is "
-                    + this.actualState);
-        }
+        return this.changeState(ProcessState.READY);
     }
 
     /**
@@ -364,10 +353,8 @@ public abstract class AbstractModule implements Module {
      * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
      *
      * @param newState new state of object
-     * @throws IllegalStateException Is thrown if object's process can't set to new value.
      */
-    protected synchronized void changeState(final ProcessState newState)
-            throws IllegalStateException {
+    protected synchronized boolean changeState(final ProcessState newState) {
         if (this.canChangeState(newState)) {
             ProcessState oldState = this.actualState;
 
@@ -376,10 +363,11 @@ public abstract class AbstractModule implements Module {
             if (this.processStateHandler != null) {
                 this.processStateHandler.handle(this, oldState);
             }
-        } else {
-            throw new IllegalArgumentException("Can't change process state to " + newState + ", because actual" +
-                    "state is " + this.actualState);
+
+            return true;
         }
+
+        return false;
     }
 
     /**
