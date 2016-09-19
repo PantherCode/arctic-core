@@ -16,7 +16,7 @@
 package org.panthercode.arctic.core.processing.exception;
 
 /**
- *
+ * Exception class to communicate a disruption in processing.
  */
 public class ProcessException extends Exception {
 
