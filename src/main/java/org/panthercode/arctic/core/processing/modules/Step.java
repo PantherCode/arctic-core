@@ -17,7 +17,10 @@ package org.panthercode.arctic.core.processing.modules;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.processing.exception.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
+
+//TODO: update documentation
 
 /**
  * The step class is used to execute client code. By overriding the method step() the user is able to execute its own
@@ -34,18 +37,23 @@ public abstract class Step extends AbstractModule {
 
     /**
      * Standard Constructor
+     *
+     * @throws NullPointerException Is thrown if value of identity is null.
      */
-    public Step() {
-        super();
+    public Step()
+            throws NullPointerException {
+        this((Context) null);
     }
 
     /**
      * Constructor
      *
      * @param context context the object is associated with
+     * @throws NullPointerException Is thrown if value of identity is null.
      */
-    public Step(Context context) {
-        super(context);
+    public Step(Context context)
+            throws NullPointerException {
+        this(null, context);
     }
 
     /**
@@ -53,8 +61,10 @@ public abstract class Step extends AbstractModule {
      *
      * @param identity identity the object is associated with
      * @param context  context the object is associated with
+     * @throws NullPointerException Is thrown if value of identity is null.
      */
-    public Step(Identity identity, Context context) {
+    public Step(Identity identity, Context context)
+            throws NullPointerException {
         super(identity, context);
     }
 
@@ -62,18 +72,24 @@ public abstract class Step extends AbstractModule {
      * Copy Constructor
      *
      * @param step object to copy
+     * @throws CloneNotSupportedException Is thrown if a module in bundle doesn't support cloning.
+     * @throws NullPointerException       Is thrown if value of parameter is null.
      */
-    public Step(Step step) {
+    public Step(Step step)
+            throws NullPointerException, CloneNotSupportedException {
         super(step);
     }
 
     /**
      * Call step() method and checks returned value. If value is <tt>true</tt> the process state is changed to
      * "Succeeded"; Otherwise to "Failed". If an exception is thrown, the object try to set the state to "Failed".
+     *
+     * @throws IllegalStateException Is thrown if object's process can't set to 'Succeeded' or 'Failed'.
+     * @throws ProcessException      Is thrown if an error occurred while running the step.
      */
     @Override
     public synchronized void start()
-            throws Exception {
+            throws ProcessException, IllegalStateException {
         super.start();
 
         try {
@@ -85,16 +101,16 @@ public abstract class Step extends AbstractModule {
                 this.changeState(ProcessState.FAILED);
             }
 
-            throw new RuntimeException("While running method step() an error is occurred.", e);
+            throw new ProcessException("While running process step an error is occurred.", e);
         }
-
     }
 
     /**
      * This method is called by start() method. It contains concrete implemented code of some functionality.
      *
      * @return Returns <tt>true</tt> if the actual run was successful; Otherwise <tt>false</tt>.
+     * @throws ProcessException Is thrown if an error occurred while running the step.
      */
     public abstract boolean step()
-            throws Exception;
+            throws ProcessException;
 }

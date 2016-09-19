@@ -41,17 +41,17 @@ import java.util.HashMap;
  * ---------------------------------------------------------
  * from \ to  Ready Running Waiting Succeeded Failed Stopped
  * ---------------------------------------------------------
- * Ready       -     true    false    false   false   true
+ * Ready     true    true    false    false   false   true
  *
- * Running   false     -     true     true     true   true
+ * Running   false   true    true     true     true   true
  *
- * Waiting   false   true      -      false    false  true
+ * Waiting   false   true    true     false    false  true
  *
- * Succeeded true    false   false      -      true   false
+ * Succeeded true    false   false    true     true   false
  *
- * Failed    true    false   false    true      -     false
+ * Failed    true    false   false    true     true   false
  *
- * Stopped   true    false   false    false    false    -
+ * Stopped   true    false   false    false    false  true
  * ---------------------------------------------------------
  * </pre>
  * <p>
@@ -303,7 +303,7 @@ public abstract class AbstractModule implements Module {
     /**
      * Starts to run the object and set process state to 'Running'.
      *
-     * @throws ProcessException      Is eventually thrown by the concrete implementation.
+     * @throws ProcessException      Is thrown if an error occurred while running the process.
      * @throws IllegalStateException Is thrown if object's process state is not 'Ready'.
      */
     public synchronized void start()
@@ -319,7 +319,7 @@ public abstract class AbstractModule implements Module {
     /**
      * Stops the actual run and set process state to 'Stopped'.
      *
-     * @throws ProcessException      Is eventually thrown by the concrete implementation.
+     * @throws ProcessException      Is thrown if an error occurred while stopping the process.
      * @throws IllegalStateException Is thrown if object's process state doesn't allow it to set state to 'Stopped'.
      */
     public synchronized void stop()
@@ -341,9 +341,7 @@ public abstract class AbstractModule implements Module {
      */
     public synchronized void reset()
             throws ProcessException {
-        if (this.actualState == ProcessState.READY) {
-            return;
-        } else if (this.canChangeState(ProcessState.READY)) {
+        if (this.canChangeState(ProcessState.READY)) {
             this.changeState(ProcessState.READY);
         } else {
             throw new IllegalArgumentException("Can't reset the object, because it's process state is "
@@ -367,10 +365,9 @@ public abstract class AbstractModule implements Module {
      *
      * @param newState new state of object
      * @throws IllegalStateException Is thrown if object's process can't set to new value.
-     * @throws ProcessException      Is eventually thrown by ProcessStateHandler implementation.
      */
     protected synchronized void changeState(final ProcessState newState)
-            throws ProcessException {
+            throws IllegalStateException {
         if (this.canChangeState(newState)) {
             ProcessState oldState = this.actualState;
 
@@ -454,12 +451,12 @@ public abstract class AbstractModule implements Module {
             this.stateMap.clear();
         }
 
-        this.stateMap.put(ProcessState.READY, EnumSet.of(ProcessState.RUNNING, ProcessState.STOPPED));
-        this.stateMap.put(ProcessState.RUNNING, EnumSet.of(ProcessState.WAITING, ProcessState.SUCCEEDED,
+        this.stateMap.put(ProcessState.READY, EnumSet.of(ProcessState.READY, ProcessState.RUNNING, ProcessState.STOPPED));
+        this.stateMap.put(ProcessState.RUNNING, EnumSet.of(ProcessState.RUNNING, ProcessState.WAITING, ProcessState.SUCCEEDED,
                 ProcessState.FAILED, ProcessState.STOPPED));
-        this.stateMap.put(ProcessState.WAITING, EnumSet.of(ProcessState.RUNNING, ProcessState.STOPPED));
-        this.stateMap.put(ProcessState.SUCCEEDED, EnumSet.of(ProcessState.READY, ProcessState.FAILED));
-        this.stateMap.put(ProcessState.FAILED, EnumSet.of(ProcessState.READY, ProcessState.SUCCEEDED));
-        this.stateMap.put(ProcessState.STOPPED, EnumSet.of(ProcessState.READY));
+        this.stateMap.put(ProcessState.WAITING, EnumSet.of(ProcessState.WAITING, ProcessState.RUNNING, ProcessState.STOPPED));
+        this.stateMap.put(ProcessState.SUCCEEDED, EnumSet.of(ProcessState.SUCCEEDED, ProcessState.READY, ProcessState.FAILED));
+        this.stateMap.put(ProcessState.FAILED, EnumSet.of(ProcessState.FAILED, ProcessState.READY, ProcessState.SUCCEEDED));
+        this.stateMap.put(ProcessState.STOPPED, EnumSet.of(ProcessState.STOPPED, ProcessState.READY));
     }
 }
