@@ -21,9 +21,12 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.processing.exception.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.concurrent.TimeUnit;
+
+//TODO: udpate documentation
 
 /**
  * The Repeater repeats the module's functionality until the time limit is reached or until the module finished
@@ -47,9 +50,10 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
      * Constructor
      *
      * @param module module for processing
+     * @throws NullPointerException
      */
     public Repeater(Module module) {
-        this(module, 60000, 1000, true);
+        this(module, 60000, 1000, true, true);
     }
 
     /**
@@ -59,37 +63,64 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
      * @param delayTimeInMillis       timeout
      * @param maximalDurationInMillis time limit
      * @param ignoreExceptions        ignore exceptions are thrown by module
+     * @param canQuit                 close process if module finished successfully
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
      */
-    public Repeater(Module module, long delayTimeInMillis, long maximalDurationInMillis, boolean ignoreExceptions) {
-        this(null, module, delayTimeInMillis, maximalDurationInMillis, ignoreExceptions);
+    public Repeater(Module module,
+                    long delayTimeInMillis,
+                    long maximalDurationInMillis,
+                    boolean ignoreExceptions,
+                    boolean canQuit) {
+        this(module, delayTimeInMillis, maximalDurationInMillis, ignoreExceptions, canQuit, null);
     }
 
     /**
      * Constructor
      *
-     * @param identity                identity the object is associated with
      * @param module                  module for processing
      * @param delayTimeInMillis       timeout
      * @param maximalDurationInMillis time limit
      * @param ignoreExceptions        ignore exceptions are thrown by module
-     */
-    public Repeater(Identity identity, Module module, long delayTimeInMillis, long maximalDurationInMillis, boolean ignoreExceptions) {
-        this(identity, module, delayTimeInMillis, maximalDurationInMillis, ignoreExceptions, null);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param identity                identity the object is associated with
-     * @param module                  module for processing
-     * @param delayTimeInMillis       timeout
-     * @param maximalDurationInMillis time limit
-     * @param ignoreExceptions        ignore exceptions are thrown by module
+     * @param canQuit                 close process if module finished successfully
      * @param context                 context the object is associated with
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
      */
-    public Repeater(Identity identity, Module module, long delayTimeInMillis, long maximalDurationInMillis, boolean ignoreExceptions, Context context) {
-        super(identity, module, delayTimeInMillis, ignoreExceptions, context);
+    public Repeater(Module module,
+                    long delayTimeInMillis,
+                    long maximalDurationInMillis,
+                    boolean ignoreExceptions,
+                    boolean canQuit,
+                    Context context)
+            throws NullPointerException {
+        this(null, module, delayTimeInMillis, maximalDurationInMillis, ignoreExceptions, canQuit, context);
+    }
 
+    /**
+     * Constructor
+     *
+     * @param identity                identity the object is associated with
+     * @param module                  module for processing
+     * @param delayTimeInMillis       timeout
+     * @param maximalDurationInMillis time limit
+     * @param ignoreExceptions        ignore exceptions are thrown by module
+     * @param canQuit                 close process if module finished successfully
+     * @param context                 context the object is associated with
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
+     */
+    public Repeater(Identity identity,
+                    Module module,
+                    long delayTimeInMillis,
+                    long maximalDurationInMillis,
+                    boolean ignoreExceptions,
+                    boolean canQuit,
+                    Context context)
+            throws NullPointerException, IllegalArgumentException {
+        super(identity, module, delayTimeInMillis, ignoreExceptions, canQuit, context);
+
+        this.setMaximalDurationInMillis(maximalDurationInMillis);
     }
 
     /**
@@ -97,6 +128,8 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
      *
      * @param repeater object to copy
      * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
+     * @throws NullPointerException
+     * @throws IllegalArgumentException
      */
     public Repeater(Repeater repeater)
             throws CloneNotSupportedException {
@@ -132,8 +165,10 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
      *
      * @param unit     time unit
      * @param duration new time limit
+     * @throws IllegalArgumentException
      */
-    public void setMaximalDuration(TimeUnit unit, long duration) {
+    public void setMaximalDuration(TimeUnit unit, long duration)
+    throws IllegalArgumentException{
         this.setMaximalDurationInMillis(unit.toMillis(duration));
     }
 
@@ -141,6 +176,7 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
      * Set a new time limit.
      *
      * @param durationInMillis new time limit
+     * @throws IllegalArgumentException
      */
     public void setMaximalDurationInMillis(long durationInMillis) {
         ArgumentUtils.assertGreaterOrEqualsZero(durationInMillis, "duration");
@@ -162,51 +198,57 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
      * successfully. Before repeating the before() is called. After finishing the after() method is called.
      * <p>
      * The time limit doesn't guarantee to abort the process if time is up, but after actual run.
+     *
+     * @throws ProcessException
      */
     @Override
-    public void start()
-            throws Exception {
-        super.start();
+    public boolean start()
+            throws ProcessException {
+        if(super.start()) {
 
-        this.before();
+            this.before();
 
-        this.actualDurationInMillis = 0L;
+            this.actualDurationInMillis = 0L;
+            long durationInMillis = 0L;
 
-        for (long start = System.currentTimeMillis();
-             this.actualDurationInMillis < this.maximalDurationInMillis && this.isRunning();
-             this.actualDurationInMillis = System.currentTimeMillis() - start) {
+            for (long start = System.currentTimeMillis();
+                 durationInMillis < this.maximalDurationInMillis && this.isRunning();
+                 durationInMillis = System.currentTimeMillis() - start, this.actualDurationInMillis = durationInMillis) {
+                this.module.reset();
 
-            try {
-                this.module.start();
-            } catch (Exception e) {
-                if (!this.ignoreExceptions) {
-                    throw new RuntimeException("While running the module an error occurred.", e);
+                try {
+                    this.module.start();
+
+                    if ((module.isSucceeded() && this.canQuit) || this.module.isStopped()) {
+                        break;
+                    }
+                } catch (ProcessException e) {
+                    if (!this.ignoreExceptions) {
+                        this.changeState(ProcessState.FAILED);
+                        throw new ProcessException("While running the module an error occurred.", e);
+                    }
+                }
+
+                try {
+                    Thread.sleep(this.getDelayTimeInMillis());
+                } catch (InterruptedException e) {
+                    throw new ProcessException(e);
                 }
             }
 
-            if (module.isSucceeded()) {
-                break;
+            ProcessState result = (!this.canQuit || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                    : ProcessState.FAILED;
+
+            if(!this.changeState(result)){
+                throw new ProcessException("Failed to set status to " + result + ".");
             }
 
-            this.module.reset();
+            after();
 
-            //Todo: implement TimerUtils.sleep(...)
-            Thread.sleep(this.delayTimeInMillis);
+            return this.isSucceeded();
         }
 
-        this.after();
-
-        if (this.actualDurationInMillis > this.maximalDurationInMillis) {
-            if (this.canChangeState(ProcessState.FAILED)) {
-                this.changeState(ProcessState.FAILED);
-            }
-
-            throw new RuntimeException("The time limit is reached. The task lasts to long.");
-        }
-
-        if (this.canChangeState(ProcessState.SUCCEEDED)) {
-            this.changeState(ProcessState.SUCCEEDED);
-        }
+        return false;
     }
 
     /**

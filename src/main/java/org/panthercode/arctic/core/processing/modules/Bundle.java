@@ -99,14 +99,19 @@ public abstract class Bundle extends AbstractModule {
      * @param context new context
      */
     @Override
-    public synchronized void setContext(final Context context) {
-        super.setContext(context);
-
-        if (!this.isRunning() && !this.isWaiting()) {
+    public synchronized boolean setContext(final Context context) {
+        if (super.setContext(context)) {
+            boolean flag = true;
             for (Module module : this.modules) {
-                module.setContext(context);
+                if(!module.setContext(context)){
+                    flag = false;
+                }
             }
+
+            return flag;
         }
+
+        return false;
     }
 
     /**

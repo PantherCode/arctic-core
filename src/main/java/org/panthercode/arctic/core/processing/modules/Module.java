@@ -18,8 +18,11 @@ package org.panthercode.arctic.core.processing.modules;
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.processing.exception.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
 
+
+//TODO: udpate documentation
 /**
  * A module is the basic unit for execution. It provides a little set of functionality for controlling and handling the
  * object at runtime. The concrete implementation should always contains a coherent inner state model, that
@@ -95,8 +98,9 @@ public interface Module extends Identifiable, Versionable, Cloneable {
      * Set a new context the object is associated with.
      *
      * @param context new object's context.
+     * @return
      */
-    void setContext(Context context);
+    boolean setContext(Context context);
 
     /**
      * Returns whether the object is ready or not.
@@ -152,23 +156,23 @@ public interface Module extends Identifiable, Versionable, Cloneable {
      * function should change the state to "running" after start the execution. After finishing execution set process state
      * to "successful" if the run ends with the expected result; Otherwise set to "failed".
      *
-     * @throws Exception Is eventually thrown by the concrete implementation of this interface.
+     * @throws ProcessException Is eventually thrown by the concrete implementation of this interface.
      */
-    void start() throws Exception;
+    boolean start() throws ProcessException;
 
     /**
      * To abort the actual run call the stop() method. The process state is change to "stopped".
      *
-     * @throws Exception Is eventually thrown by the concrete implementation of this interface.
+     * @throws ProcessException Is eventually thrown by the concrete implementation of this interface.
      */
-    void stop() throws Exception;
+    boolean stop() throws ProcessException;
 
     /**
      * This method set the process state to "ready". It's an good place to take trash out and prepare the next run.
      *
-     * @throws Exception Is eventually thrown by the concrete implementation of this interface.
+     * @throws ProcessException Is eventually thrown by the concrete implementation of this interface.
      */
-    void reset() throws Exception;
+    boolean reset() throws ProcessException;
 
     /**
      * Creates a new identical instance of the object.

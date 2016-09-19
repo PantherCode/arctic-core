@@ -21,7 +21,11 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.processing.exception.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
+
+//TODO: create Builder class
+//TODO: update documentation
 
 /**
  * The Counter class repeats the module's functionality until a numeric limit is reached or (if canAbort flag is set)
@@ -30,11 +34,6 @@ import org.panthercode.arctic.core.settings.context.Context;
 @IdentityInfo(name = "Standard Counter", group = "Counter Module")
 @VersionInfo(major = 1)
 public class Counter extends Loop {
-
-    /**
-     * Flag to abort the process before count is reached, but module result is "Succeeded".
-     */
-    private boolean canAbort = true; //better name
 
     /**
      * maximal count of repeats
@@ -50,8 +49,10 @@ public class Counter extends Loop {
      * Constructor
      *
      * @param module module for processing
+     * @throws NullPointerException
      */
-    public Counter(Module module) {
+    public Counter(Module module)
+            throws NullPointerException {
         this(module, 1, 1000, true, true);
     }
 
@@ -61,14 +62,40 @@ public class Counter extends Loop {
      * @param module            module to processing
      * @param count             maximal counts of repeats
      * @param delayTimeInMillis timeout after each round
-     * @param canAbort          flag to abort the process before count is reached
+     * @param canQuit           flag to abort the process before count is reached
      * @param ignoreExceptions  ignore exceptions are thrown by module
+     * @throws NullPointerException
      */
-    public Counter(Module module, int count, long delayTimeInMillis, boolean canAbort, boolean ignoreExceptions) {
-        this(null, module, count, delayTimeInMillis, canAbort, ignoreExceptions, null);
+    public Counter(Module module,
+                   int count,
+                   long delayTimeInMillis,
+                   boolean canQuit,
+                   boolean ignoreExceptions)
+            throws NullPointerException {
+        this(module, count, delayTimeInMillis, canQuit, ignoreExceptions, null);
     }
 
-    //Todo: create Builder class
+    /**
+     * Constructor
+     *
+     * @param module
+     * @param count
+     * @param delayTimeInMillis
+     * @param canQuit
+     * @param ignoreExceptions
+     * @param context
+     * @throws NullPointerException
+     */
+    public Counter(Module module,
+                   int count,
+                   long delayTimeInMillis,
+                   boolean canQuit,
+                   boolean ignoreExceptions,
+                   Context context)
+            throws NullPointerException {
+        this(null, module, count, delayTimeInMillis, canQuit, ignoreExceptions, context);
+    }
+
 
     /**
      * Constructor
@@ -77,17 +104,21 @@ public class Counter extends Loop {
      * @param module            module to processing
      * @param count             maximal counts of repeats
      * @param delayTimeInMillis timeout after each round
-     * @param canAbort          flag to abort the process before count is reached
+     * @param canQuit           flag to abort the process before count is reached
      * @param ignoreExceptions  ignore exceptions are thrown by module
      * @param context           context the object is associated with
      */
-    public Counter(Identity identity, Module module, int count, long delayTimeInMillis, boolean canAbort,
-                   boolean ignoreExceptions, Context context) {
-        super(identity, module, delayTimeInMillis, ignoreExceptions, context);
+    public Counter(Identity identity,
+                   Module module,
+                   int count,
+                   long delayTimeInMillis,
+                   boolean canQuit,
+                   boolean ignoreExceptions,
+                   Context context)
+            throws NullPointerException {
+        super(identity, module, delayTimeInMillis, ignoreExceptions, canQuit, context);
 
         this.setCount(count);
-
-        this.canAbort(canAbort);
     }
 
     /**
@@ -101,8 +132,6 @@ public class Counter extends Loop {
         super(counter);
 
         this.setCount(counter.getCount());
-
-        this.canAbort(counter.canAbort);
     }
 
     /**
@@ -127,24 +156,6 @@ public class Counter extends Loop {
     }
 
     /**
-     * Returns a flag whether the process is finished if module finished successful or not.
-     *
-     * @return Returns a flag whether the process is finished if module finished successful or not.
-     */
-    public boolean canAbort() {
-        return this.canAbort;
-    }
-
-    /**
-     * Set a flag whether the process can finished if module finished successful or not.
-     *
-     * @param value new flag
-     */
-    public synchronized void canAbort(final boolean value) {
-        this.canAbort = value;
-    }
-
-    /**
      * Returns the number repeats have done until starting the process.
      *
      * @return Returns the actual number of repeats have done or zero if process state is not "Running".
@@ -157,39 +168,54 @@ public class Counter extends Loop {
      * Begin to repeat the modules start() method until the count limit is reached or (if set) the module finished
      * successfully. Before repeating the before() is called. After finishing the after() method is called.
      *
-     * @throws Exception Is thrown if an exception is thrown by module and flag <tt>ignoreExceptions</tt> is
+     * @throws ProcessException Is thrown if an exception is thrown by module and flag <tt>ignoreExceptions</tt> is
      *                   <tt>false</tt>.
      */
     @Override
-    public synchronized void start() throws Exception {
-        super.start();
+    public synchronized boolean start()
+            throws ProcessException {
+        if(super.start()) {
+            before();
 
-        before();
+            this.actualCount = 0;
+            int loop;
 
-        for (this.actualCount = 1; this.actualCount <= this.count && this.isRunning(); this.actualCount++) {
-            this.module.reset();
+            for (loop = 0; loop <= this.count && this.isRunning(); loop++, this.actualCount = loop) {
+                this.module.reset();
 
-            try {
-                this.module.start();
+                try {
+                    this.module.start();
 
-                if (module.isSucceeded() && this.canAbort) {
-                    break;
+                    if ((module.isSucceeded() && this.canQuit) || this.module.isStopped()) {
+                        break;
+                    }
+                } catch (ProcessException e) {
+                    if (!this.ignoreExceptions) {
+                        this.changeState(ProcessState.FAILED);
+                        throw new ProcessException("While running the module an error occurred.", e);
+                    }
                 }
 
-                //Todo: implement stop mechanism
-
-
-            } catch (Exception e) {
-                if (!this.ignoreExceptions) {
-                    this.changeState(ProcessState.FAILED);
-                    throw new RuntimeException("While running the module an error occurred.", e);
+                try {
+                    Thread.sleep(this.getDelayTimeInMillis());
+                } catch (InterruptedException e) {
+                    throw new ProcessException(e);
                 }
             }
 
-            //Todo: implement delay time
+            ProcessState result = (!this.canQuit || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                                                                                : ProcessState.FAILED;
+
+            if(!this.changeState(result)){
+                throw new ProcessException("Failed to set status to " + result + ".");
+            }
+
+            after();
+
+            return this.isSucceeded();
         }
 
-        after();
+        return false;
     }
 
     /**
@@ -213,7 +239,6 @@ public class Counter extends Loop {
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
                 .append(super.hashCode())
-                .append(this.canAbort)
                 .append(this.count)
                 .toHashCode());
     }
@@ -236,7 +261,7 @@ public class Counter extends Loop {
 
         Counter counter = (Counter) obj;
         return super.equals(counter) &&
-                this.canAbort == counter.canAbort() &&
+                this.canQuit == counter.canQuit() &&
                 this.count == counter.getCount();
     }
 }
