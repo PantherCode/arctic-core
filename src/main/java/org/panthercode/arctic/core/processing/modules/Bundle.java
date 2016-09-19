@@ -23,10 +23,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+//TODO: update documentation
+
 /**
  * The bundle class is used to hold and proceed a list of modules. Every module is stored in an internal list.
  */
-public abstract class Bundle extends org.panthercode.arctic.core.processing.modules.AbstractModule {
+public abstract class Bundle extends AbstractModule {
 
     /**
      * list of modules in bundle
@@ -35,18 +37,23 @@ public abstract class Bundle extends org.panthercode.arctic.core.processing.modu
 
     /**
      * Standard Constructor
+     *
+     * @throws NullPointerException Is thrown if identity is null.
      */
-    public Bundle() {
-        super();
+    public Bundle()
+            throws NullPointerException {
+        this((Context) null);
     }
 
     /**
      * Constructor
      *
      * @param context context the module is associated with.
+     * @throws NullPointerException Is thrown if identity is null.
      */
-    public Bundle(Context context) {
-        super(context);
+    public Bundle(Context context)
+            throws NullPointerException {
+        this(null, context);
     }
 
     /**
@@ -54,8 +61,10 @@ public abstract class Bundle extends org.panthercode.arctic.core.processing.modu
      *
      * @param identity identity the module is associated with.
      * @param context  context the module is associated with.
+     * @throws NullPointerException Is thrown if identity is null.
      */
-    public Bundle(Identity identity, Context context) {
+    public Bundle(Identity identity, Context context)
+            throws NullPointerException {
         super(identity, context);
 
         modules = new ArrayList<>();
@@ -66,7 +75,7 @@ public abstract class Bundle extends org.panthercode.arctic.core.processing.modu
      *
      * @param bundle object to copy
      * @throws CloneNotSupportedException Is thrown if a module in bundle doesn't support cloning.
-     * @throws NullPointerException       Is thrown if the bundle contains a null element.
+     * @throws NullPointerException       Is thrown if the bundle contains a null element or parameter is null.
      */
     public Bundle(final Bundle bundle)
             throws CloneNotSupportedException, NullPointerException {
@@ -91,9 +100,9 @@ public abstract class Bundle extends org.panthercode.arctic.core.processing.modu
      */
     @Override
     public synchronized void setContext(final Context context) {
-        if (!this.isRunning() && !this.isWaiting()) {
-            super.setContext(context);
+        super.setContext(context);
 
+        if (!this.isRunning() && !this.isWaiting()) {
             for (Module module : this.modules) {
                 module.setContext(context);
             }
@@ -105,10 +114,12 @@ public abstract class Bundle extends org.panthercode.arctic.core.processing.modu
      *
      * @param module new module to add
      */
-    public synchronized void deploy(final Module module) {
+    public synchronized boolean deploy(final Module module) {
         if (module != null) {
-            this.modules.add(module);
+            return this.modules.add(module);
         }
+
+        return false;
     }
 
     /**
@@ -128,10 +139,12 @@ public abstract class Bundle extends org.panthercode.arctic.core.processing.modu
      *
      * @param module module to delete
      */
-    public synchronized void undeploy(final Module module) {
+    public synchronized boolean undeploy(final Module module) {
         if (module != null) {
-            this.modules.remove(module);
+            return this.modules.remove(module);
         }
+
+        return false;
     }
 
     /**
@@ -139,8 +152,8 @@ public abstract class Bundle extends org.panthercode.arctic.core.processing.modu
      *
      * @param moduleId identity id of module to delete
      */
-    public synchronized void undeploy(final long moduleId) {
-        this.undeploy(this.module(moduleId));
+    public synchronized boolean undeploy(final long moduleId) {
+        return this.undeploy(this.module(moduleId));
     }
 
     /**
@@ -223,7 +236,7 @@ public abstract class Bundle extends org.panthercode.arctic.core.processing.modu
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
                 .append(super.hashCode())
-                .append(this.modules)
+                .append(this.modules.hashCode())
                 .toHashCode());
     }
 
