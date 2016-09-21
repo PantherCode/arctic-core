@@ -345,7 +345,7 @@ public abstract class AbstractModule implements Module {
      * @param newState new state the object would like to set
      * @return Returns <tt>true</tt> if the new state is allowed; Otherwise <tt>false</tt>.
      */
-    public boolean canChangeState(final ProcessState newState) {
+    protected boolean canChangeState(final ProcessState newState) {
         return this.stateMap.containsKey(this.actualState) &&
                 this.stateMap.get(this.actualState).contains(newState);
     }
