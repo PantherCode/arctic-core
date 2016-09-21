@@ -23,6 +23,7 @@ import org.panthercode.arctic.core.settings.context.Context;
 
 
 //TODO: udpate documentation
+//TODO: explain  difference between return boolean and process state!
 /**
  * A module is the basic unit for execution. It provides a little set of functionality for controlling and handling the
  * object at runtime. The concrete implementation should always contains a coherent inner state model, that

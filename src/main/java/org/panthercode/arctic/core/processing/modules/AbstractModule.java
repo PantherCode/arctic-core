@@ -29,6 +29,7 @@ import java.util.HashMap;
 
 //TODO: implement a multi ProcessStateHandler mechanism
 //TODO: update documentation
+//TODO; implement specialist reset() functions in child classes
 
 /**
  * The Abstract Module class is the root element in inheritance hierarchy. This module contains basic functionality all
