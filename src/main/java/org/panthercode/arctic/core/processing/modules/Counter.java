@@ -203,16 +203,18 @@ public class Counter extends Loop {
                 }
             }
 
-            ProcessState result = (!this.canQuit || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
-                                                                                : ProcessState.FAILED;
+            if(!this.isStopped()) {
+                ProcessState result = (!this.canQuit || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                        : ProcessState.FAILED;
 
-            if(!this.changeState(result)){
-                throw new ProcessException("Failed to set status to " + result + ".");
+                if (!this.changeState(result)) {
+                    throw new ProcessException("Failed to set status to " + result + ".");
+                }
             }
 
             after();
 
-            return this.isSucceeded();
+            return !isStopped();
         }
 
         return false;

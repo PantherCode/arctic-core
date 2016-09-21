@@ -168,7 +168,7 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
      * @throws IllegalArgumentException
      */
     public void setMaximalDuration(TimeUnit unit, long duration)
-    throws IllegalArgumentException{
+            throws IllegalArgumentException {
         this.setMaximalDurationInMillis(unit.toMillis(duration));
     }
 
@@ -204,7 +204,7 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
     @Override
     public boolean start()
             throws ProcessException {
-        if(super.start()) {
+        if (super.start()) {
 
             this.before();
 
@@ -219,7 +219,7 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
                 try {
                     this.module.start();
 
-                    if ((module.isSucceeded() && this.canQuit) || this.module.isStopped()) {
+                    if ((module.isSucceeded() && this.canQuit) || this.isStopped()) {
                         break;
                     }
                 } catch (ProcessException e) {
@@ -236,16 +236,18 @@ public class Repeater extends org.panthercode.arctic.core.processing.modules.Loo
                 }
             }
 
-            ProcessState result = (!this.canQuit || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
-                    : ProcessState.FAILED;
+            if (!this.isStopped()) {
+                ProcessState result = (!this.canQuit || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                        : ProcessState.FAILED;
 
-            if(!this.changeState(result)){
-                throw new ProcessException("Failed to set status to " + result + ".");
+                if (!this.changeState(result)) {
+                    throw new ProcessException("Failed to set status to " + result + ".");
+                }
             }
 
             after();
 
-            return this.isSucceeded();
+            return !this.isStopped();
         }
 
         return false;

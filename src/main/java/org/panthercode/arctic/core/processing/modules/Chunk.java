@@ -19,6 +19,7 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.processing.exception.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
 
 /**
@@ -69,8 +70,9 @@ public class Chunk extends Bundle {
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while running process.
      */
-    public synchronized void start() throws Exception {
+    public synchronized boolean start() throws ProcessException {
         // Todo: implement
+        return false;
     }
 
     /**
@@ -79,16 +81,14 @@ public class Chunk extends Bundle {
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while stopping process.
      */
-    public synchronized void stop()
-            throws Exception {
+    public synchronized boolean stop()
+            throws ProcessException {
         for (Module module : this.modules()) {
             //Todo ignore exceptions, rethrow it after stopping all other modules
             module.stop();
         }
 
-        if (this.canChangeState(ProcessState.STOPPED)) {
-            this.changeState(ProcessState.STOPPED);
-        }
+        return this.canChangeState(ProcessState.STOPPED);
     }
 
     /**

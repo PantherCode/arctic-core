@@ -88,21 +88,26 @@ public abstract class Step extends AbstractModule {
      * @throws ProcessException      Is thrown if an error occurred while running the step.
      */
     @Override
-    public synchronized void start()
+    public synchronized boolean start()
             throws ProcessException, IllegalStateException {
-        super.start();
+        if(super.start()) {
 
-        try {
-            ProcessState result = this.step() ? ProcessState.SUCCEEDED : ProcessState.FAILED;
+            try {
+                ProcessState result = this.step() ? ProcessState.SUCCEEDED : ProcessState.FAILED;
 
-            this.changeState(result);
-        } catch (Exception e) {
-            if (this.canChangeState(ProcessState.FAILED)) {
-                this.changeState(ProcessState.FAILED);
+                this.changeState(result);
+
+                return true;
+            } catch (Exception e) {
+                if (this.canChangeState(ProcessState.FAILED)) {
+                    this.changeState(ProcessState.FAILED);
+                }
+
+                throw new ProcessException("While running process step an error is occurred.", e);
             }
-
-            throw new ProcessException("While running process step an error is occurred.", e);
         }
+
+        return false;
     }
 
     /**

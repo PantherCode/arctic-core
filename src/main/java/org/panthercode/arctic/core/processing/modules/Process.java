@@ -19,6 +19,7 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.processing.exception.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.Iterator;
@@ -86,32 +87,37 @@ public class Process extends Bundle {
      * @throws Exception Is eventually thrown by actual module or if an error occurred while running process.
      */
     @Override
-    public void start()
-            throws Exception {
-        super.start();
+    public boolean start()
+            throws ProcessException {
+        if(super.start()) {
 
-        try {
-            Iterator<Module> iterator = this.iterator();
-            while (iterator.hasNext() && this.isRunning()) {
-                this.currentModule = iterator.next();
+            try {
+                Iterator<Module> iterator = this.iterator();
+                while (iterator.hasNext() && this.isRunning()) {
+                    this.currentModule = iterator.next();
 
-                this.currentModule.start();
+                    this.currentModule.start();
 
-                if (!this.currentModule.isSucceeded()) {
-                    this.currentModule = null;
+                    if (!this.currentModule.isSucceeded()) {
+                        this.currentModule = null;
 
-                    //Todo: return false for whole process instead of throwing an exception
-                    throw new RuntimeException("Step does not return successful.");
+                        //Todo: return false for whole process instead of throwing an exception
+                        throw new RuntimeException("Step does not return successful.");
+                    }
                 }
+
+                this.currentModule = null;
+
+                this.changeState(ProcessState.SUCCEEDED);
+
+                return true;
+            } catch (Exception e) {
+                this.changeState(ProcessState.FAILED);
+                //Todo: throw exception if it's not ignored.
             }
-
-            this.currentModule = null;
-
-            this.changeState(ProcessState.SUCCEEDED);
-        } catch (Exception e) {
-            this.changeState(ProcessState.FAILED);
-            //Todo: throw exception if it's not ignored.
         }
+
+        return false;
     }
 
     /**
@@ -120,15 +126,13 @@ public class Process extends Bundle {
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while stopping process.
      */
-    public void stop()
-            throws Exception {
+    public boolean stop()
+            throws ProcessException {
         if (this.currentModule != null) {
             this.currentModule.stop();
         }
 
-        if (this.canChangeState(ProcessState.STOPPED)) {
-            super.stop();
-        }
+        return super.stop();
     }
 
     /**

@@ -21,6 +21,7 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.processing.exception.ProcessException;
 import org.panthercode.arctic.core.processing.modules.AbstractModule;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
@@ -91,15 +92,17 @@ public class Container extends AbstractModule {
      *                   process state or actual child module is <tt>null</tt>.
      */
     @Override
-    public synchronized void start()
-            throws Exception {
+    public synchronized boolean start()
+            throws ProcessException {
         if (worker == null) {
             throw new NullPointerException("There is no worker to execute.");
         }
 
-        super.start();
+        if(super.start()) {
+            return this.worker.start();
+        }
 
-        worker.start();
+        return false;
     }
 
     /**
@@ -107,13 +110,13 @@ public class Container extends AbstractModule {
      * to <tt>Stopped</tt>.
      */
     @Override
-    public synchronized void stop()
-            throws Exception {
-        if (this.canChangeState(ProcessState.STOPPED)) {
-            super.stop();
-
-            worker.stop();
+    public synchronized boolean stop()
+            throws ProcessException {
+        if(worker != null){
+            this.worker.stop();
         }
+
+        return  super.stop();
     }
 
     /**
@@ -147,16 +150,18 @@ public class Container extends AbstractModule {
      * @param context new context the object and child module is associated with.
      */
     @Override
-    public synchronized void setContext(Context context) {
+    public synchronized boolean setContext(Context context) {
         if (!this.isRunning() && !this.isWaiting()) {
             context = context == null ? new Context() : context;
 
-            super.setContext(context);
-
-            if (this.worker != null) {
-                this.worker.setContext(context);
+            if(super.setContext(context)) {
+                if (this.worker != null) {
+                    return this.worker.setContext(context);
+                }
             }
         }
+
+        return false;
     }
 
     /**
