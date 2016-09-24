@@ -25,16 +25,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * Concrete implementation of Interface 'Repository' to store objects.
  */
 public class DefaultRepository<T extends Identifiable> implements Repository<T> {
     /**
-     *
+     * The identity the object is associated with.
      */
     private final Identity identity;
 
     /**
-     *
+     * map to store objects
      */
     private Map<String, T> map = new HashMap<>();
 
@@ -56,7 +56,9 @@ public class DefaultRepository<T extends Identifiable> implements Repository<T> 
     }
 
     /**
-     * @param element
+     * Adds a new element to repository.
+     *
+     * @param element element to add
      */
     @Override
     public synchronized void store(T element) {
@@ -68,7 +70,9 @@ public class DefaultRepository<T extends Identifiable> implements Repository<T> 
     }
 
     /**
-     * @param key
+     * Removes an element from repository.
+     *
+     * @param key element to remove
      */
     @Override
     public synchronized void delete(String key) {
@@ -78,8 +82,10 @@ public class DefaultRepository<T extends Identifiable> implements Repository<T> 
     }
 
     /**
-     * @param key
-     * @return
+     * Checks whether the repository contains an element with given name or not.
+     *
+     * @param key name of module
+     * @return Returns <tt>true</tt> if repository contains the element; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean contains(String key) {
@@ -87,8 +93,10 @@ public class DefaultRepository<T extends Identifiable> implements Repository<T> 
     }
 
     /**
-     * @param key
-     * @return
+     * Returns an element from repository.
+     *
+     * @param key name of element
+     * @return Returns the element if repository contains the object; Otherwise <tt>null</tt>.
      */
     @Override
     public T get(String key) {
@@ -96,7 +104,7 @@ public class DefaultRepository<T extends Identifiable> implements Repository<T> 
     }
 
     /**
-     *
+     * Removes all elements from repository.
      */
     @Override
     public void clear() {
@@ -104,7 +112,9 @@ public class DefaultRepository<T extends Identifiable> implements Repository<T> 
     }
 
     /**
+     * Returns a collection with all elements stored in this object.
      *
+     * @return Returns a collection with all elements stored in this object.
      */
     @Override
     public List<T> elements() {
@@ -112,7 +122,9 @@ public class DefaultRepository<T extends Identifiable> implements Repository<T> 
     }
 
     /**
-     * @return
+     * Returns a map with all elements stored in this object.
+     *
+     * @return Returns a collection with all elements stored in this object.
      */
     @Override
     public Map<String, T> asMap() {
