@@ -115,7 +115,7 @@ public abstract class AbstractResource extends ConfigurableObject implements Res
      *
      */
     public void close() {
-        this.isCloned = true;
+        this.isClosed = true;
     }
 
     /**
