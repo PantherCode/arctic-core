@@ -21,44 +21,56 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * Created by architect on 21.09.16.
+ * Repositories are used to store classes identified by its identify name.
  */
 public interface Repository<T extends Identifiable> extends Identifiable {
 
     /**
-     * @param element
+     * Adds a new element to repository.
+     *
+     * @param element element to add
      */
     void store(T element);
 
     /**
-     * @param key
+     * Removes an element from repository.
+     *
+     * @param key element to remove
      */
     void delete(String key);
 
     /**
-     * @param key
-     * @return
+     * Checks whether the repository contains an element with given name or not.
+     *
+     * @param key name of module
+     * @return Returns <tt>true</tt> if repository contains the element; Otherwise <tt>false</tt>.
      */
     boolean contains(String key);
 
     /**
-     * @param key
-     * @return
+     * Returns an element from repository.
+     *
+     * @param key name of element
+     * @return Returns the element if repository contains the object; Otherwise <tt>null</tt>.
      */
     T get(String key);
 
     /**
-     *
+     * Removes all elements from repository.
      */
     void clear();
 
     /**
-     * @return
+     * Returns a collection with all elements stored in this object.
+     *
+     * @return Returns a collection with all elements stored in this object.
      */
     Collection<T> elements();
 
     /**
-     * @return
+     * Returns a map with all elements stored in this object.
+     *
+     * @return Returns a collection with all elements stored in this object.
      */
     Map<String, T> asMap();
 }
