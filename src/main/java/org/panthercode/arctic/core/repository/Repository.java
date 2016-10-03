@@ -23,8 +23,7 @@ import org.panthercode.arctic.core.helper.version.Versionable;
 import java.util.Collection;
 import java.util.Map;
 
-//TODO: add version
-//TODO: add mechanism to storage objects in various versions
+//TODO: update documentation
 
 /**
  * Repositories are used to store classes identified by its identify name.
@@ -54,23 +53,27 @@ public interface Repository<T extends Identifiable & Versionable> extends Identi
     /**
      * Checks whether the repository contains an element with given name or not.
      *
-     * @param key name of module
+     * @param identity
      * @return Returns <tt>true</tt> if repository contains the element; Otherwise <tt>false</tt>.
      */
     boolean contains(Identity identity);
 
+    /**
+     * @param identity
+     * @param version
+     * @return
+     */
     boolean contains(Identity identity, Version version);
 
     /**
      * Returns an element from repository.
      *
-     * @param key name of element
+     * @param identity
      * @return Returns the element if repository contains the object; Otherwise <tt>null</tt>.
      */
     Map<Version, T> get(Identity identity);
 
     /**
-     *
      * @param identity
      * @param version
      * @return
