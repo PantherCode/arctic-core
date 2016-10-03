@@ -53,17 +53,13 @@ public class RepositoryImpl<T extends Identifiable & Versionable> implements Rep
     private Map<String, Map<Version, T>> map = new HashMap<>();
 
     /**
-     * @param identity
+     *
      */
-    public RepositoryImpl(Identity identity) {
-        if (identity != null) {
-            this.identity = identity;
+    public RepositoryImpl() {
+        if (Identity.isAnnotated(this)) {
+            this.identity = Identity.fromAnnotation(this);
         } else {
-            if (Identity.isAnnotated(this)) {
-                this.identity = Identity.fromAnnotation(this);
-            } else {
-                throw new NullPointerException("The value of identity is null.");
-            }
+            throw new NullPointerException("The value of identity is null.");
         }
 
         if (Version.isAnnotated(this)) {
@@ -144,7 +140,7 @@ public class RepositoryImpl<T extends Identifiable & Versionable> implements Rep
      * @param identity
      * @return Returns <tt>true</tt> if repository contains the element; Otherwise <tt>false</tt>.
      */
-
+    @Override
     public boolean contains(Identity identity) {
         return identity != null &&
                 this.map.containsKey(identity.asShortString());
@@ -155,6 +151,7 @@ public class RepositoryImpl<T extends Identifiable & Versionable> implements Rep
      * @param version
      * @return
      */
+    @Override
     public boolean contains(Identity identity, Version version) {
         return identity != null &&
                 this.map.containsKey(identity.asShortString()) &&
@@ -176,6 +173,11 @@ public class RepositoryImpl<T extends Identifiable & Versionable> implements Rep
         return null;
     }
 
+    /**
+     * @param identity
+     * @param version
+     * @return
+     */
     public T get(Identity identity, Version version) {
         if (this.contains(identity, version)) {
             return this.map.get(identity.asShortString()).get(version);
