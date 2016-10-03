@@ -19,6 +19,7 @@ import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
+import org.panthercode.arctic.core.reflect.ClassBuilder;
 import org.panthercode.arctic.core.settings.context.Context;
 
 
@@ -86,7 +87,7 @@ import org.panthercode.arctic.core.settings.context.Context;
  * If you implement this interface or inherit from a module class, you should always override the following methods:
  * equals(), hashCode() and clone(). If you are not sure about that, you can look at existing implementations.
  */
-public interface Module extends Identifiable, Versionable, Cloneable {
+public interface Module extends Identifiable, Versionable {
 
     /**
      * Returns the context the object is associated with.
@@ -176,10 +177,10 @@ public interface Module extends Identifiable, Versionable, Cloneable {
     boolean reset() throws ProcessException;
 
     /**
-     * Creates a new identical instance of the object.
+     * Creates a new deep copy of an object.
      *
      * @return Returns a new identical instance of the object.
-     * @throws CloneNotSupportedException Is thrown if the object doesn't support cloning.
+     * @throws UnsupportedOperationException Is thrown if the object doesn't support copying.
      */
-    Module clone() throws CloneNotSupportedException;
+    Module copy() throws UnsupportedOperationException;
 }
