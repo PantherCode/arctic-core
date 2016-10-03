@@ -122,31 +122,15 @@ public abstract class ModuleImpl implements Module {
     /**
      * Constructor
      *
-     * @param context new context of object
+     * @param context  context the module is associated with.
      * @throws NullPointerException Is thrown if identity is null.
      */
     public ModuleImpl(Context context)
             throws NullPointerException {
-        this(null, context);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param identity identity the module is associated with.
-     * @param context  context the module is associated with.
-     * @throws NullPointerException Is thrown if identity is null.
-     */
-    public ModuleImpl(Identity identity, Context context)
-            throws NullPointerException {
-        if (identity != null) {
-            this.identity = identity;
+        if (Identity.isAnnotated(this)) {
+            this.identity = Identity.fromAnnotation(this);
         } else {
-            if (Identity.isAnnotated(this)) {
-                this.identity = Identity.fromAnnotation(this);
-            } else {
-                throw new NullPointerException("The value of identity is null.");
-            }
+            throw new NullPointerException("The value of identity is null.");
         }
 
         if (Version.isAnnotated(this)) {

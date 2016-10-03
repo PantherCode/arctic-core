@@ -47,16 +47,6 @@ public class Chunk extends Bundle {
     }
 
     /**
-     * Constructor
-     *
-     * @param identity identity the module is associated with.
-     * @param context  context the module is associated with.
-     */
-    public Chunk(Identity identity, Context context) {
-        super(identity, context);
-    }
-
-    /**
      * Copy Constructor
      *
      * @param chunk object to copy
@@ -90,6 +80,11 @@ public class Chunk extends Bundle {
         }
 
         return this.canChangeState(ProcessState.STOPPED);
+    }
+
+    @Override
+    public Module copy() throws UnsupportedOperationException {
+        return null;
     }
 
     /**

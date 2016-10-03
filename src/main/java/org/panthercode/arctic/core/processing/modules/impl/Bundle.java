@@ -16,7 +16,8 @@
 package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.panthercode.arctic.core.helper.identity.Identity;
+import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
@@ -29,6 +30,8 @@ import java.util.List;
 /**
  * The bundle class is used to hold and proceed a list of modules. Every module is stored in an internal list.
  */
+@IdentityInfo(name = "Standard Bundle", group = "Bundle Module")
+@VersionInfo(major = 1)
 public abstract class Bundle extends ModuleImpl {
 
     /**
@@ -52,21 +55,9 @@ public abstract class Bundle extends ModuleImpl {
      * @param context context the module is associated with.
      * @throws NullPointerException Is thrown if identity is null.
      */
-    public Bundle(Context context)
+    public Bundle(final Context context)
             throws NullPointerException {
-        this(null, context);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param identity identity the module is associated with.
-     * @param context  context the module is associated with.
-     * @throws NullPointerException Is thrown if identity is null.
-     */
-    public Bundle(Identity identity, Context context)
-            throws NullPointerException {
-        super(identity, context);
+        super(context);
 
         modules = new ArrayList<>();
     }
@@ -89,7 +80,7 @@ public abstract class Bundle extends ModuleImpl {
                 throw new NullPointerException("The bundle contains a null element");
             }
 
-            this.modules.add(module.clone());
+            this.modules.add(module.copy());
         }
     }
 
@@ -104,7 +95,7 @@ public abstract class Bundle extends ModuleImpl {
         if (super.setContext(context)) {
             boolean flag = true;
             for (Module module : this.modules) {
-                if(!module.setContext(context)){
+                if (!module.setContext(context)) {
                     flag = false;
                 }
             }

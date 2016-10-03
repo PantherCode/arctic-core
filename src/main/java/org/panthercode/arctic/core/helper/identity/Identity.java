@@ -32,7 +32,7 @@ import java.util.Random;
  * returns always false.
  * <p>
  * To create an new instance of the identity class use the generate() function:
- * <code>Identity identity = Identity.generate(...);</code>
+ * <tt>Identity identity = Identity.generate(...);</tt>
  */
 public final class Identity implements Freezable {
 

@@ -24,7 +24,7 @@ import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
  * This class is used to control and manage objects by version. The scheme follows the major.minor[.build[.revision]]
  * pattern.
  */
-public final class Version implements Freezable {
+public class Version implements Freezable {
 
     /**
      * major number of version
