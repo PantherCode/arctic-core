@@ -20,7 +20,7 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
-import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.impl.ModuleImpl;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
