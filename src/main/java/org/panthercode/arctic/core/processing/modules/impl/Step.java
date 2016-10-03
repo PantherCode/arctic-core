@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules;
+package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.ProcessState;
@@ -33,7 +33,7 @@ import org.panthercode.arctic.core.settings.context.Context;
  * "Waiting". When process goes on, change state to "Running". Otherwise maybe you will provoke bad behavior of the
  * system.
  */
-public abstract class Step extends AbstractModule {
+public abstract class Step extends ModuleImpl {
 
     /**
      * Standard Constructor

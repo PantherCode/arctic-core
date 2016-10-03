@@ -16,7 +16,7 @@
 package org.panthercode.arctic.core.resources.helper;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
-import org.panthercode.arctic.core.repository.DefaultRepository;
+import org.panthercode.arctic.core.repository.impl.RepositoryImpl;
 import org.panthercode.arctic.core.resources.Resource;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  *
  */
-public class ResourcePool extends DefaultRepository<ResourceHandler> {
+public class ResourcePool extends RepositoryImpl<ResourceHandler> {
 
     /**
      *

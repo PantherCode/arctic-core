@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules;
+package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
@@ -22,6 +22,7 @@ import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessStateHandler;
 import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.EnumSet;
@@ -76,7 +77,7 @@ import java.util.HashMap;
  * Please read the documentation of child modules. If you inherit from any class, inherit always from the most
  * specialist one to your needs. Always prefer to use available classes.
  */
-public abstract class AbstractModule implements Module {
+public abstract class ModuleImpl implements Module {
 
     /**
      * The local context the object is associated with.
@@ -113,7 +114,7 @@ public abstract class AbstractModule implements Module {
      *
      * @throws NullPointerException Is thrown if identity is null.
      */
-    public AbstractModule()
+    public ModuleImpl()
             throws NullPointerException {
         this(new Context());
     }
@@ -124,7 +125,7 @@ public abstract class AbstractModule implements Module {
      * @param context new context of object
      * @throws NullPointerException Is thrown if identity is null.
      */
-    public AbstractModule(Context context)
+    public ModuleImpl(Context context)
             throws NullPointerException {
         this(null, context);
     }
@@ -136,7 +137,7 @@ public abstract class AbstractModule implements Module {
      * @param context  context the module is associated with.
      * @throws NullPointerException Is thrown if identity is null.
      */
-    public AbstractModule(Identity identity, Context context)
+    public ModuleImpl(Identity identity, Context context)
             throws NullPointerException {
         if (identity != null) {
             this.identity = identity;
@@ -167,7 +168,7 @@ public abstract class AbstractModule implements Module {
      * @param module object to copy
      * @throws NullPointerException Is thrown if parameter is null.
      */
-    public AbstractModule(AbstractModule module)
+    public ModuleImpl(ModuleImpl module)
             throws NullPointerException {
         ArgumentUtils.assertNotNull(module, "module");
 
@@ -398,11 +399,11 @@ public abstract class AbstractModule implements Module {
             return true;
         }
 
-        if (!(obj instanceof AbstractModule)) {
+        if (!(obj instanceof ModuleImpl)) {
             return false;
         }
 
-        AbstractModule module = (AbstractModule) obj;
+        ModuleImpl module = (ModuleImpl) obj;
 
         return this.identity.match(module.identity()) &&
                 this.version.equals(module.version) &&
@@ -416,7 +417,7 @@ public abstract class AbstractModule implements Module {
      * @throws CloneNotSupportedException Is thrown if object doesn't provide an implementation of <tt>clone()</tt>
      *                                    method.
      */
-    public abstract AbstractModule clone() throws CloneNotSupportedException;
+    public abstract ModuleImpl clone() throws CloneNotSupportedException;
 
     /**
      * Returns a string representation of the object. The representation contains the id, name and group name.

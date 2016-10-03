@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules;
+package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.concurrent.TimeUnit;
@@ -28,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Class to repeat module's functionality. The Loop class provides some basic functions to control the loop process.
  */
-public abstract class Loop extends AbstractModule {
+public abstract class Loop extends ModuleImpl {
 
     /**
      * Module for processing
