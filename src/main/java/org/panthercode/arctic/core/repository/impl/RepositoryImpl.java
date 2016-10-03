@@ -96,13 +96,7 @@ public class RepositoryImpl<T extends Identifiable & Versionable> implements Rep
         if (element != null) {
             String key = element.identity().asShortString();
 
-            Map<Version, T> versionMap;
-
-            if (!this.map.containsKey(key)) {
-                versionMap = new HashMap<>();
-            } else {
-                versionMap = this.map.get(key);
-            }
+            Map<Version, T> versionMap = (this.contains(element.identity())) ? this.map.get(key) : new HashMap<>();
 
             versionMap.put(element.version(), element);
 
