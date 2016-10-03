@@ -16,47 +16,30 @@
 package org.panthercode.arctic.core.processing.modules.helper;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
+import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.repository.impl.RepositoryImpl;
 import org.panthercode.arctic.core.settings.context.Context;
 
 //TODO: implement auto-identification via annotation
+//TODO: change CloneNotSupportedException
 
 /**
  * This class is used to hold a set of modules.
  */
+@IdentityInfo(name = "Module Repository", group = "Repository")
+@VersionInfo(major = 1)
 public class ModuleRepository extends RepositoryImpl<Module> {
 
     /**
+     * TODO: Repository constructor without identity parameter -> annotation
      * Constructor
      *
      * @param identity identity associated with this object
      */
     public ModuleRepository(Identity identity) {
         super(identity);
-    }
-
-    /**
-     * Returns a new instance of a specific module given by its name.
-     *
-     * @param name name of module
-     * @return Returns a new casted instance of module, if repository contains module; Otherwise <tt>null</tt>.
-     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
-     */
-    public Module order(final String name) throws CloneNotSupportedException {
-        return this.order(name, null);
-    }
-
-    /**
-     * Returns a new instance of a specific module given by its name.
-     *
-     * @param name    name of module
-     * @param context context of new module instance
-     * @return Returns a new casted instance of module, if repository contains module; Otherwise <tt>null</tt>.
-     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
-     */
-    public Module order(final String name, final Context context) throws CloneNotSupportedException {
-        return this.order(Module.class, name, context);
     }
 
     /**
@@ -88,9 +71,32 @@ public class ModuleRepository extends RepositoryImpl<Module> {
     @SuppressWarnings("unchecked")
     public <T extends Module> T order(Class<T> moduleClass, final String name, final Context context)
             throws CloneNotSupportedException {
+        return (T) this.order(name, context);
+    }
+
+    /**
+     * Returns a new instance of a specific module given by its name.
+     *
+     * @param name name of module
+     * @return Returns a new casted instance of module, if repository contains module; Otherwise <tt>null</tt>.
+     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
+     */
+    public Module order(final String name) throws CloneNotSupportedException {
+        return this.order(name, null);
+    }
+
+    /**
+     * Returns a new instance of a specific module given by its name.
+     *
+     * @param name    name of module
+     * @param context context of new module instance
+     * @return Returns a new casted instance of module, if repository contains module; Otherwise <tt>null</tt>.
+     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
+     */
+    public Module order(final String name, final Context context) throws CloneNotSupportedException {
         if (this.contains(name)) {
             try {
-                T module = (T) this.get(name).clone();
+                Module module = this.get(name).copy();
 
                 if (context != null) {
                     module.setContext(context);
