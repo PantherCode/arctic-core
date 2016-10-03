@@ -30,6 +30,7 @@ import java.util.Map;
 
 //TODO: Warning if repository store already an element with same identiy name/ group and version
 //TODO: Update Documentation
+//TODO: update synchronisation
 
 /**
  * Concrete implementation of Interface 'Repository' to store objects.
