@@ -20,6 +20,8 @@ import org.panthercode.arctic.core.helper.identity.Identifiable;
 import java.util.Collection;
 import java.util.Map;
 
+//TODO: add version
+//TODO: add mechanism to storage objects in various versions
 /**
  * Repositories are used to store classes identified by its identify name.
  */
