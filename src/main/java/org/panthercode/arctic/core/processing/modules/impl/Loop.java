@@ -20,6 +20,7 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
+import org.panthercode.arctic.core.processing.modules.options.LoopOptions;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.concurrent.TimeUnit;
@@ -64,45 +65,37 @@ public abstract class Loop extends ModuleImpl {
      */
     public Loop(Module module)
             throws NullPointerException {
-        this(module, 1000L, true, true);
+        this(module, new LoopOptions());
     }
 
     /**
      * Constructor
      *
      * @param module            module for processing
-     * @param delayTimeInMillis timeout after each round
-     * @param ignoreExceptions  ignore exceptions are thrown by module
-     * @param canQuit           close process if module finished successfully
+
      * @throws NullPointerException     Is thrown if value of module or identity is null.
      * @throws IllegalArgumentException
      */
     public Loop(Module module,
-                long delayTimeInMillis,
-                boolean ignoreExceptions,
-                boolean canQuit)
+                LoopOptions options)
             throws NullPointerException, IllegalArgumentException {
-        this(module, delayTimeInMillis, ignoreExceptions, canQuit, null);
+        this(module, options, null);
     }
 
     /**
      * Constructor
      *
      * @param module            module for processing
-     * @param delayTimeInMillis timeout after each round
-     * @param ignoreExceptions  ignore exceptions are thrown by module
-     * @param canQuit           close process if module finished successfully
+
      * @param context           context the object is associated with
      * @throws NullPointerException Is thrown if value of module or identity is null.
      *                              throws IllegalArgumentException
      */
     public Loop(Module module,
-                long delayTimeInMillis,
-                boolean ignoreExceptions,
-                boolean canQuit,
+                LoopOptions options,
                 Context context)
             throws NullPointerException, IllegalArgumentException {
-        this(null, module, delayTimeInMillis, ignoreExceptions, canQuit, context);
+        this(null, module, options, context);
     }
 
     /**
@@ -110,18 +103,14 @@ public abstract class Loop extends ModuleImpl {
      *
      * @param identity          identity the object is associated with
      * @param module            module for processing
-     * @param delayTimeInMillis timeout after each round
-     * @param ignoreExceptions  ignore exceptions are thrown by module
-     * @param canQuit           close process if module finished successfully
+
      * @param context           context the object is associated with
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
     public Loop(Identity identity,
                 Module module,
-                long delayTimeInMillis,
-                boolean ignoreExceptions,
-                boolean canQuit,
+                LoopOptions options,
                 Context context) {
         super(identity, context);
 

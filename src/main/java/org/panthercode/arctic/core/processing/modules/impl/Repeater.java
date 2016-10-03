@@ -23,6 +23,7 @@ import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
+import org.panthercode.arctic.core.processing.modules.options.RepeaterOptions;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.concurrent.TimeUnit;
@@ -54,48 +55,36 @@ public class Repeater extends Loop {
      * @throws NullPointerException
      */
     public Repeater(Module module) {
-        this(module, 60000, 1000, true, true);
+        this(module, new RepeaterOptions());
     }
 
     /**
      * Constructor
      *
      * @param module                  module for processing
-     * @param delayTimeInMillis       timeout
-     * @param maximalDurationInMillis time limit
-     * @param ignoreExceptions        ignore exceptions are thrown by module
-     * @param canQuit                 close process if module finished successfully
+
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
     public Repeater(Module module,
-                    long delayTimeInMillis,
-                    long maximalDurationInMillis,
-                    boolean ignoreExceptions,
-                    boolean canQuit) {
-        this(module, delayTimeInMillis, maximalDurationInMillis, ignoreExceptions, canQuit, null);
+                    RepeaterOptions options) {
+        this(module, options, null);
     }
 
     /**
      * Constructor
      *
      * @param module                  module for processing
-     * @param delayTimeInMillis       timeout
-     * @param maximalDurationInMillis time limit
-     * @param ignoreExceptions        ignore exceptions are thrown by module
-     * @param canQuit                 close process if module finished successfully
+
      * @param context                 context the object is associated with
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
     public Repeater(Module module,
-                    long delayTimeInMillis,
-                    long maximalDurationInMillis,
-                    boolean ignoreExceptions,
-                    boolean canQuit,
+                    RepeaterOptions options,
                     Context context)
             throws NullPointerException {
-        this(null, module, delayTimeInMillis, maximalDurationInMillis, ignoreExceptions, canQuit, context);
+        this(null, module, options, context);
     }
 
     /**
@@ -103,23 +92,17 @@ public class Repeater extends Loop {
      *
      * @param identity                identity the object is associated with
      * @param module                  module for processing
-     * @param delayTimeInMillis       timeout
-     * @param maximalDurationInMillis time limit
-     * @param ignoreExceptions        ignore exceptions are thrown by module
-     * @param canQuit                 close process if module finished successfully
+
      * @param context                 context the object is associated with
      * @throws NullPointerException
      * @throws IllegalArgumentException
      */
     public Repeater(Identity identity,
                     Module module,
-                    long delayTimeInMillis,
-                    long maximalDurationInMillis,
-                    boolean ignoreExceptions,
-                    boolean canQuit,
+                    RepeaterOptions options,
                     Context context)
             throws NullPointerException, IllegalArgumentException {
-        super(identity, module, delayTimeInMillis, ignoreExceptions, canQuit, context);
+        super(identity, module, options, context);
 
         this.setMaximalDurationInMillis(maximalDurationInMillis);
     }

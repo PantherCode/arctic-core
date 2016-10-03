@@ -23,6 +23,7 @@ import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
+import org.panthercode.arctic.core.processing.modules.options.CounterOptions;
 import org.panthercode.arctic.core.settings.context.Context;
 
 //TODO: create Builder class
@@ -54,47 +55,35 @@ public class Counter extends Loop {
      */
     public Counter(Module module)
             throws NullPointerException {
-        this(module, 1, 1000, true, true);
+        this(module, new CounterOptions());
     }
 
     /**
      * Constructor
      *
      * @param module            module to processing
-     * @param count             maximal counts of repeats
-     * @param delayTimeInMillis timeout after each round
-     * @param canQuit           flag to abort the process before count is reached
-     * @param ignoreExceptions  ignore exceptions are thrown by module
+
      * @throws NullPointerException
      */
     public Counter(Module module,
-                   int count,
-                   long delayTimeInMillis,
-                   boolean canQuit,
-                   boolean ignoreExceptions)
+                   CounterOptions options)
             throws NullPointerException {
-        this(module, count, delayTimeInMillis, canQuit, ignoreExceptions, null);
+        this(module, options, null);
     }
 
     /**
      * Constructor
      *
      * @param module
-     * @param count
-     * @param delayTimeInMillis
-     * @param canQuit
-     * @param ignoreExceptions
+
      * @param context
      * @throws NullPointerException
      */
     public Counter(Module module,
-                   int count,
-                   long delayTimeInMillis,
-                   boolean canQuit,
-                   boolean ignoreExceptions,
+                   CounterOptions options,
                    Context context)
             throws NullPointerException {
-        this(null, module, count, delayTimeInMillis, canQuit, ignoreExceptions, context);
+        this(null, module, options, context);
     }
 
 
@@ -103,21 +92,15 @@ public class Counter extends Loop {
      *
      * @param identity          identity the object is associated with
      * @param module            module to processing
-     * @param count             maximal counts of repeats
-     * @param delayTimeInMillis timeout after each round
-     * @param canQuit           flag to abort the process before count is reached
-     * @param ignoreExceptions  ignore exceptions are thrown by module
+
      * @param context           context the object is associated with
      */
     public Counter(Identity identity,
                    Module module,
-                   int count,
-                   long delayTimeInMillis,
-                   boolean canQuit,
-                   boolean ignoreExceptions,
+                   CounterOptions options,
                    Context context)
             throws NullPointerException {
-        super(identity, module, delayTimeInMillis, ignoreExceptions, canQuit, context);
+        super(identity, module, options, context);
 
         this.setCount(count);
     }
