@@ -145,7 +145,15 @@ public final class Identity implements Freezable {
      */
     @Override
     public String toString() {
-        return "id = " + this.id + ", name = " + this.name + ", group = " + this.group;
+        return "id = " + this.id + ", " + this.asShortString();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String asShortString(){
+        return "name = " + this.name + ", group = " + this.group;
     }
 
     /**
@@ -232,20 +240,10 @@ public final class Identity implements Freezable {
     /**
      * Compares to identity objects and check if both have same name and same group.
      *
-     * @param obj object to check
+     * @param identity identity to check
      * @return Returns <tt>true</tt> if both objects have same name and same group.
      */
-    public boolean match(final Object obj) {
-        if (obj == this) {
-            return true;
-        }
-
-        if (!(obj instanceof Identity)) {
-            return false;
-        }
-
-        Identity identity = (Identity) obj;
-
+    public boolean match(Identity identity) {
         return this.getName().equals(identity.getName()) &&
                 this.getGroup().equals(identity.getGroup());
     }
