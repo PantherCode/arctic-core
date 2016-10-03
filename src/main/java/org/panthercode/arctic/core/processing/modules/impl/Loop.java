@@ -18,7 +18,7 @@ package org.panthercode.arctic.core.processing.modules.impl;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
-import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
@@ -42,7 +42,7 @@ public abstract class Loop extends ModuleImpl {
     protected long delayTimeInMillis = 1000L;
 
     /**
-     * Flag to ignore exception are thrown by module
+     * Flag to ignore exceptions are thrown by module
      */
     protected boolean ignoreExceptions = true;
 

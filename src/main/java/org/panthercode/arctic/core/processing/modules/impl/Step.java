@@ -17,7 +17,7 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
 
 //TODO: update documentation
@@ -82,7 +82,7 @@ public abstract class Step extends ModuleImpl {
 
     /**
      * Call step() method and checks returned value. If value is <tt>true</tt> the process state is changed to
-     * "Succeeded"; Otherwise to "Failed". If an exception is thrown, the object try to set the state to "Failed".
+     * "Succeeded"; Otherwise to "Failed". If an exceptions is thrown, the object try to set the state to "Failed".
      *
      * @throws IllegalStateException Is thrown if object's process can't set to 'Succeeded' or 'Failed'.
      * @throws ProcessException      Is thrown if an error occurred while running the step.

@@ -18,7 +18,7 @@ package org.panthercode.arctic.core.processing.modules;
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
 
 
@@ -51,7 +51,7 @@ import org.panthercode.arctic.core.settings.context.Context;
  *    try{
  *        // do something dangerous
  *    } catch(CorrectException e){
- *        // If more than one exception type is possible, you should
+ *        // If more than one exceptions type is possible, you should
  *        // bundle them to a meaningful upper class type like
  *        // RuntimeException
  *        throw new Exception("Some dangerous things happened.", e);
@@ -74,7 +74,7 @@ import org.panthercode.arctic.core.settings.context.Context;
  *     }
  *
  * } catch(ConcreteException e) {
- *     // exception handling
+ *     // exceptions handling
  * } catch(Exception e){
  *     // catch the rest.
  * }

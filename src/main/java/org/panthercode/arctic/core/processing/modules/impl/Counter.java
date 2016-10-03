@@ -21,7 +21,7 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
@@ -169,7 +169,7 @@ public class Counter extends Loop {
      * Begin to repeat the modules start() method until the count limit is reached or (if set) the module finished
      * successfully. Before repeating the before() is called. After finishing the after() method is called.
      *
-     * @throws ProcessException Is thrown if an exception is thrown by module and flag <tt>ignoreExceptions</tt> is
+     * @throws ProcessException Is thrown if an exceptions is thrown by module and flag <tt>ignoreExceptions</tt> is
      *                   <tt>false</tt>.
      */
     @Override

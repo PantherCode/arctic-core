@@ -19,7 +19,7 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
@@ -102,7 +102,7 @@ public class Process extends Bundle {
                     if (!this.currentModule.isSucceeded()) {
                         this.currentModule = null;
 
-                        //Todo: return false for whole process instead of throwing an exception
+                        //Todo: return false for whole process instead of throwing an exceptions
                         throw new RuntimeException("Step does not return successful.");
                     }
                 }
@@ -114,7 +114,7 @@ public class Process extends Bundle {
                 return true;
             } catch (Exception e) {
                 this.changeState(ProcessState.FAILED);
-                //Todo: throw exception if it's not ignored.
+                //Todo: throw exceptions if it's not ignored.
             }
         }
 
