@@ -15,38 +15,62 @@
  */
 package org.panthercode.arctic.core.repository.impl;
 
-import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.identity.Identity;
+import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.Version;
+import org.panthercode.arctic.core.helper.version.Versionable;
+import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.repository.Repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-//TODO: loading version and annotation from annotation
+//TODO: Warning if repository store already an element with same identiy name/ group and version
+//TODO: Update Documentation
+
 /**
  * Concrete implementation of Interface 'Repository' to store objects.
  */
-public class RepositoryImpl<T extends Identifiable> implements Repository<T> {
+@IdentityInfo(name = "Standard Repository", group = "Repository")
+@VersionInfo(major = 1)
+public class RepositoryImpl<T extends Identifiable & Versionable> implements Repository<T> {
     /**
      * The identity the object is associated with.
      */
     private final Identity identity;
 
     /**
+     *
+     */
+    private final Version version;
+
+    /**
      * map to store objects
      */
-    private Map<String, T> map = new HashMap<>();
+    private Map<String, Map<Version, T>> map = new HashMap<>();
 
     /**
      * @param identity
      */
     public RepositoryImpl(Identity identity) {
-        ArgumentUtils.assertNotNull(identity, "identity");
+        if (identity != null) {
+            this.identity = identity;
+        } else {
+            if (Identity.isAnnotated(this)) {
+                this.identity = Identity.fromAnnotation(this);
+            } else {
+                throw new NullPointerException("The value of identity is null.");
+            }
+        }
 
-        this.identity = identity;
+        if (Version.isAnnotated(this)) {
+            this.version = Version.fromAnnotation(this);
+        } else {
+            this.version = new Version();
+        }
     }
 
     /**
@@ -58,6 +82,14 @@ public class RepositoryImpl<T extends Identifiable> implements Repository<T> {
     }
 
     /**
+     * @return
+     */
+    @Override
+    public Version version() {
+        return this.version;
+    }
+
+    /**
      * Adds a new element to repository.
      *
      * @param element element to add
@@ -65,44 +97,91 @@ public class RepositoryImpl<T extends Identifiable> implements Repository<T> {
     @Override
     public synchronized void store(T element) {
         if (element != null) {
-            if (element.identity() != null) {
-                this.map.put(element.identity().getName(), element);
+            String key = element.identity().asShortString();
+
+            Map<Version, T> versionMap;
+
+            if (!this.map.containsKey(key)) {
+                versionMap = new HashMap<>();
+            } else {
+                versionMap = this.map.get(key);
             }
+
+            versionMap.put(element.version(), element);
+
+            this.map.put(key, versionMap);
+        }
+    }
+
+    @Override
+    public void delete(T element) {
+        if (element != null) {
+            this.delete(element.identity(), element.version());
         }
     }
 
     /**
      * Removes an element from repository.
      *
-     * @param key element to remove
+     * @param
      */
     @Override
-    public synchronized void delete(String key) {
-        if (key != null) {
-            this.map.remove(key);
+    public synchronized void delete(Identity identity, Version version) {
+        if (this.contains(identity, version)) {
+            Map<Version, T> versionMap = this.map.get(identity.asShortString());
+
+            versionMap.remove(version);
+
+            this.map.put(identity.asShortString(), versionMap);
+        } else if (this.contains(identity) && version == null) {
+            this.map.remove(identity.asShortString());
         }
     }
 
     /**
      * Checks whether the repository contains an element with given name or not.
      *
-     * @param key name of module
+     * @param identity
      * @return Returns <tt>true</tt> if repository contains the element; Otherwise <tt>false</tt>.
      */
-    @Override
-    public boolean contains(String key) {
-        return this.map.containsKey(key);
+
+    public boolean contains(Identity identity) {
+        return identity != null &&
+                this.map.containsKey(identity.asShortString());
+    }
+
+    /**
+     * @param identity
+     * @param version
+     * @return
+     */
+    public boolean contains(Identity identity, Version version) {
+        return identity != null &&
+                this.map.containsKey(identity.asShortString()) &&
+                this.map.get(identity.asShortString()).containsKey(version);
     }
 
     /**
      * Returns an element from repository.
      *
-     * @param key name of element
+     * @param identity
      * @return Returns the element if repository contains the object; Otherwise <tt>null</tt>.
      */
     @Override
-    public T get(String key) {
-        return this.map.get(key);
+    public Map<Version, T> get(Identity identity) {
+        if (this.contains(identity)) {
+            return this.map.get(identity.asShortString());
+        }
+
+        return null;
+    }
+
+    public T get(Identity identity, Version version) {
+        if (this.contains(identity, version)) {
+            return this.map.get(identity.asShortString()).get(version);
+        }
+
+        return null;
     }
 
     /**
@@ -119,7 +198,7 @@ public class RepositoryImpl<T extends Identifiable> implements Repository<T> {
      * @return Returns a collection with all elements stored in this object.
      */
     @Override
-    public List<T> elements() {
+    public Collection<Map<Version, T>> elements() {
         return new ArrayList<>(this.map.values());
     }
 
@@ -129,7 +208,7 @@ public class RepositoryImpl<T extends Identifiable> implements Repository<T> {
      * @return Returns a collection with all elements stored in this object.
      */
     @Override
-    public Map<String, T> asMap() {
+    public Map<String, Map<Version, T>> asMap() {
         return new HashMap<>(this.map);
     }
 }

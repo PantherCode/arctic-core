@@ -16,11 +16,12 @@
 package org.panthercode.arctic.core.resources.helper;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
+import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.repository.impl.RepositoryImpl;
 import org.panthercode.arctic.core.resources.Resource;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 //TODO: update implementation
@@ -53,7 +54,7 @@ public class ResourcePool extends RepositoryImpl<ResourceHandler> {
      * @return
      */
     @Override
-    public List elements() {
+    public Collection<Map<Version, ResourceHandler>> elements() {
         throw new UnsupportedOperationException();
     }
 
@@ -62,7 +63,7 @@ public class ResourcePool extends RepositoryImpl<ResourceHandler> {
      * @return
      */
     @Override
-    public Map asMap() {
+    public Map<String, Map<Version, ResourceHandler>> asMap() {
         throw new UnsupportedOperationException();
     }
 

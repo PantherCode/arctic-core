@@ -16,16 +16,20 @@
 package org.panthercode.arctic.core.repository;
 
 import org.panthercode.arctic.core.helper.identity.Identifiable;
+import org.panthercode.arctic.core.helper.identity.Identity;
+import org.panthercode.arctic.core.helper.version.Version;
+import org.panthercode.arctic.core.helper.version.Versionable;
 
 import java.util.Collection;
 import java.util.Map;
 
 //TODO: add version
 //TODO: add mechanism to storage objects in various versions
+
 /**
  * Repositories are used to store classes identified by its identify name.
  */
-public interface Repository<T extends Identifiable> extends Identifiable {
+public interface Repository<T extends Identifiable & Versionable> extends Identifiable, Versionable {
 
     /**
      * Adds a new element to repository.
@@ -37,9 +41,15 @@ public interface Repository<T extends Identifiable> extends Identifiable {
     /**
      * Removes an element from repository.
      *
-     * @param key element to remove
+     * @param
      */
-    void delete(String key);
+    void delete(T element);
+
+    /**
+     * @param identity
+     * @param version
+     */
+    void delete(Identity identity, Version version);
 
     /**
      * Checks whether the repository contains an element with given name or not.
@@ -47,7 +57,9 @@ public interface Repository<T extends Identifiable> extends Identifiable {
      * @param key name of module
      * @return Returns <tt>true</tt> if repository contains the element; Otherwise <tt>false</tt>.
      */
-    boolean contains(String key);
+    boolean contains(Identity identity);
+
+    boolean contains(Identity identity, Version version);
 
     /**
      * Returns an element from repository.
@@ -55,7 +67,15 @@ public interface Repository<T extends Identifiable> extends Identifiable {
      * @param key name of element
      * @return Returns the element if repository contains the object; Otherwise <tt>null</tt>.
      */
-    T get(String key);
+    Map<Version, T> get(Identity identity);
+
+    /**
+     *
+     * @param identity
+     * @param version
+     * @return
+     */
+    T get(Identity identity, Version version);
 
     /**
      * Removes all elements from repository.
@@ -67,12 +87,12 @@ public interface Repository<T extends Identifiable> extends Identifiable {
      *
      * @return Returns a collection with all elements stored in this object.
      */
-    Collection<T> elements();
+    Collection<Map<Version, T>> elements();
 
     /**
      * Returns a map with all elements stored in this object.
      *
      * @return Returns a collection with all elements stored in this object.
      */
-    Map<String, T> asMap();
+    Map<String, Map<Version, T>> asMap();
 }
