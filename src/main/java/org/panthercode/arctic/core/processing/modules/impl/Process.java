@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules;
+package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.exception.ProcessException;
+import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.Iterator;

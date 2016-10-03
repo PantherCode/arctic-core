@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.resources;
+package org.panthercode.arctic.core.resources.impl;
 
 /**
  *
@@ -21,6 +21,7 @@ package org.panthercode.arctic.core.resources;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.version.Version;
+import org.panthercode.arctic.core.resources.Resource;
 import org.panthercode.arctic.core.settings.configuration.ConfigurableObject;
 import org.panthercode.arctic.core.settings.configuration.Configuration;
 
@@ -29,7 +30,7 @@ import java.io.Closeable;
 /**
  *
  */
-public abstract class AbstractResource extends ConfigurableObject implements Resource, Cloneable, Closeable {
+public abstract class ResourceImpl extends ConfigurableObject implements Resource, Cloneable, Closeable {
 
     /**
      *
@@ -52,11 +53,11 @@ public abstract class AbstractResource extends ConfigurableObject implements Res
     private boolean isClosed;
 
 
-    public AbstractResource() {
+    public ResourceImpl() {
         this(null);
     }
 
-    public AbstractResource(Configuration configuration) {
+    public ResourceImpl(Configuration configuration) {
         this(null, configuration);
     }
 
@@ -64,7 +65,7 @@ public abstract class AbstractResource extends ConfigurableObject implements Res
      * @param identity
      * @param configuration
      */
-    public AbstractResource(Identity identity, Configuration configuration) {
+    public ResourceImpl(Identity identity, Configuration configuration) {
         if (identity != null) {
             this.identity = identity;
         } else {
@@ -121,7 +122,7 @@ public abstract class AbstractResource extends ConfigurableObject implements Res
     /**
      * @return
      */
-    public abstract AbstractResource clone();
+    public abstract ResourceImpl clone();
 
     /**
      * Should to be synchronized

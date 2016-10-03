@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.repository;
+package org.panthercode.arctic.core.repository.impl;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.identity.Identity;
+import org.panthercode.arctic.core.repository.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ import java.util.Map;
 /**
  * Concrete implementation of Interface 'Repository' to store objects.
  */
-public class DefaultRepository<T extends Identifiable> implements Repository<T> {
+public class RepositoryImpl<T extends Identifiable> implements Repository<T> {
     /**
      * The identity the object is associated with.
      */
@@ -41,7 +42,7 @@ public class DefaultRepository<T extends Identifiable> implements Repository<T> 
     /**
      * @param identity
      */
-    public DefaultRepository(Identity identity) {
+    public RepositoryImpl(Identity identity) {
         ArgumentUtils.assertNotNull(identity, "identity");
 
         this.identity = identity;

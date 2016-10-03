@@ -17,7 +17,7 @@ package org.panthercode.arctic.core.processing.modules.helper;
 
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.repository.DefaultRepository;
+import org.panthercode.arctic.core.repository.impl.RepositoryImpl;
 import org.panthercode.arctic.core.settings.context.Context;
 
 //TODO: implement auto-identification via annotation
@@ -25,7 +25,7 @@ import org.panthercode.arctic.core.settings.context.Context;
 /**
  * This class is used to hold a set of modules.
  */
-public class ModuleRepository extends DefaultRepository<Module> {
+public class ModuleRepository extends RepositoryImpl<Module> {
 
     /**
      * Constructor

@@ -18,7 +18,7 @@ package org.panthercode.arctic.core.resources.helper;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.identity.Identity;
-import org.panthercode.arctic.core.resources.AbstractResource;
+import org.panthercode.arctic.core.resources.impl.ResourceImpl;
 import org.panthercode.arctic.core.resources.Resource;
 import org.panthercode.arctic.core.settings.configuration.Configuration;
 
@@ -62,7 +62,7 @@ public class ResourceHandler implements Identifiable {
     /**
      *
      */
-    private final AbstractResource resource;
+    private final ResourceImpl resource;
 
     /**
      *
@@ -74,7 +74,7 @@ public class ResourceHandler implements Identifiable {
      * @param resource
      * @param maximalConnectinos
      */
-    public ResourceHandler(Identity identity, AbstractResource resource, int maximalConnectinos) {
+    public ResourceHandler(Identity identity, ResourceImpl resource, int maximalConnectinos) {
         this(identity, resource, maximalConnectinos, null);
     }
 
@@ -85,7 +85,7 @@ public class ResourceHandler implements Identifiable {
      * @param defaultConfig
      */
     //TODO: parameter setzen
-    public ResourceHandler(Identity identity, AbstractResource resource, int maximalConnectinos, Configuration defaultConfig) {
+    public ResourceHandler(Identity identity, ResourceImpl resource, int maximalConnectinos, Configuration defaultConfig) {
         ArgumentUtils.assertNotNull(identity, "identity");
         ArgumentUtils.assertNotNull(resource, "resource");
 
