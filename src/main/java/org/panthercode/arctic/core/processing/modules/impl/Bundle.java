@@ -46,7 +46,7 @@ public abstract class Bundle extends ModuleImpl {
      */
     public Bundle()
             throws NullPointerException {
-        this((Context) null);
+        this(new Context());
     }
 
     /**
@@ -66,11 +66,11 @@ public abstract class Bundle extends ModuleImpl {
      * Copy Constructor
      *
      * @param bundle object to copy
-     * @throws CloneNotSupportedException Is thrown if a module in bundle doesn't support cloning.
-     * @throws NullPointerException       Is thrown if the bundle contains a null element or parameter is null.
+     * @throws UnsupportedOperationException Is thrown if a module in bundle doesn't support cloning.
+     * @throws NullPointerException          Is thrown if the bundle contains a null element or parameter is null.
      */
     public Bundle(final Bundle bundle)
-            throws CloneNotSupportedException, NullPointerException {
+            throws UnsupportedOperationException, NullPointerException {
         super(bundle);
 
         this.modules = new ArrayList<>(bundle.size());
@@ -94,6 +94,7 @@ public abstract class Bundle extends ModuleImpl {
     public synchronized boolean setContext(final Context context) {
         if (super.setContext(context)) {
             boolean flag = true;
+
             for (Module module : this.modules) {
                 if (!module.setContext(context)) {
                     flag = false;
@@ -115,6 +116,28 @@ public abstract class Bundle extends ModuleImpl {
         if (module != null) {
             module.setContext(this.getContext());
             return this.modules.add(module);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param modules
+     * @return
+     */
+    public synchronized boolean deploy(final List<Module> modules) {
+        if (modules != null) {
+            boolean flag = true;
+
+            for (Module module : modules) {
+                if (module != null) {
+                    if (!this.deploy(module)) {
+                        flag = false;
+                    }
+                }
+            }
+
+            return flag;
         }
 
         return false;
