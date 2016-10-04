@@ -30,10 +30,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
-//TODO: implement a multi ProcessStateHandler mechanism
 //TODO: update documentation
-//TODO: implement specialist reset() functions in child classes
-//TODO: implement clone() method correctly
 
 /**
  * The Abstract Module class is the root element in inheritance hierarchy. This module contains basic functionality all
@@ -124,7 +121,7 @@ public abstract class ModuleImpl implements Module {
     /**
      * Constructor
      *
-     * @param context  context the module is associated with.
+     * @param context context the module is associated with.
      * @throws NullPointerException Is thrown if identity is null.
      */
     public ModuleImpl(Context context)
@@ -151,6 +148,7 @@ public abstract class ModuleImpl implements Module {
 
     /**
      * Copy Constructor
+     * TODO: document that new Context() is set not, module's context because of reference side effects and security
      *
      * @param module object to copy
      * @throws NullPointerException Is thrown if parameter is null.
@@ -159,14 +157,13 @@ public abstract class ModuleImpl implements Module {
             throws NullPointerException {
         ArgumentUtils.assertNotNull(module, "module");
 
-        this.identity = Identity.generate(module.identity().getName(),
-                module.identity().getGroup());
+        this.identity = Identity.generate(module.identity().getName(), module.identity().getGroup());
 
         this.actualState = ProcessState.READY;
 
         this.version = module.version();
 
-        this.setContext(module.getContext());
+        this.setContext(new Context());
 
         this.initialiseStateMap();
     }
@@ -231,7 +228,7 @@ public abstract class ModuleImpl implements Module {
         return this.processStateHandlers.remove(handler);
     }
 
-    public List<ProcessStateHandler> processStateHandler(){
+    public List<ProcessStateHandler> processStateHandler() {
         return new ArrayList<>(this.processStateHandlers);
     }
 
@@ -305,7 +302,7 @@ public abstract class ModuleImpl implements Module {
      * @throws ProcessException Is thrown if an error occurred while running the process.
      */
     public synchronized boolean start()
-            throws ProcessException, IllegalStateException {
+            throws ProcessException {
         return this.isReady() && this.changeState(ProcessState.RUNNING);
     }
 
@@ -315,7 +312,7 @@ public abstract class ModuleImpl implements Module {
      * @throws ProcessException Is thrown if an error occurred while stopping the process.
      */
     public synchronized boolean stop()
-            throws ProcessException, IllegalStateException {
+            throws ProcessException {
         return this.changeState(ProcessState.STOPPED);
     }
 
@@ -323,8 +320,7 @@ public abstract class ModuleImpl implements Module {
      * Set the inner state to 'Ready'. This method can only called if object has inner state 'Succeeded', 'Failed' or
      * 'Stopped'. You can't reset a running process.
      *
-     * @throws IllegalStateException Is thrown if object's process state doesn't allow it to set state to 'Ready'.
-     * @throws ProcessException      Is thrown if an error occurred while resetting the object.
+     * @throws ProcessException Is thrown if an error occurred while resetting the object.
      */
     public synchronized boolean reset()
             throws ProcessException {
@@ -353,7 +349,7 @@ public abstract class ModuleImpl implements Module {
 
             this.actualState = newState;
 
-            for(ProcessStateHandler handler : this.processStateHandlers){
+            for (ProcessStateHandler handler : this.processStateHandlers) {
                 handler.handle(this, oldState);
             }
 
@@ -405,9 +401,10 @@ public abstract class ModuleImpl implements Module {
      *
      * @return Return a copy of this object.
      * @throws UnsupportedOperationException Is thrown if object doesn't provide an implementation of <tt>clone()</tt>
-     *                                    method.
+     *                                       method.
      */
-    public abstract ModuleImpl copy() throws UnsupportedOperationException;
+    public abstract ModuleImpl copy()
+            throws UnsupportedOperationException;
 
     /**
      * Returns a string representation of the object. The representation contains the id, name and group name.

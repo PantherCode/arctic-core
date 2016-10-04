@@ -183,5 +183,5 @@ public interface Module extends Identifiable, Versionable {
      * @return Returns a new identical instance of the object.
      * @throws UnsupportedOperationException Is thrown if the object doesn't support copying.
      */
-    Module copy() throws UnsupportedOperationException, CloneNotSupportedException;
+    Module copy() throws UnsupportedOperationException;
 }

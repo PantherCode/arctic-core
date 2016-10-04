@@ -77,7 +77,7 @@ public abstract class Step extends ModuleImpl {
      */
     @Override
     public synchronized boolean start()
-            throws ProcessException, IllegalStateException {
+            throws ProcessException {
         if(super.start()) {
 
             try {
@@ -106,4 +106,7 @@ public abstract class Step extends ModuleImpl {
      */
     public abstract boolean step()
             throws ProcessException;
+
+    public abstract Step copy()
+        throws UnsupportedOperationException;
 }
