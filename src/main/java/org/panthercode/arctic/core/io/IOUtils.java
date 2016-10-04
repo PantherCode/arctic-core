@@ -18,13 +18,10 @@ package org.panthercode.arctic.core.io;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Utils class that contains a set of functions to deal with files.
+ * TODO: update Documentation
  */
 public class IOUtils {
 
@@ -35,23 +32,6 @@ public class IOUtils {
     }
 
     /**
-     * Opens a specific file path as FileInputStream.
-     *
-     * @param path path to file
-     * @return Returns an opened FileInputStream.
-     * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
-     */
-    public static FileInputStream toFileIntputStream(final String path)
-            throws IllegalArgumentException, FileNotFoundException {
-        ArgumentUtils.assertNotNull(path, "path");
-
-        File file = new File(path);
-
-        return new FileInputStream(file);
-    }
-
-    /**
      * Opens a specific file path as BufferedReader.
      *
      * @param path path to file
@@ -59,30 +39,13 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
      */
-    public static BufferedReader toBufferedReader(final String path)
+    public static BufferedReader openBufferedReader(final String path)
             throws IllegalArgumentException, FileNotFoundException {
         ArgumentUtils.assertNotNull(path, "path");
 
         FileReader fileReader = new FileReader(path);
 
         return new BufferedReader(fileReader);
-    }
-
-    /**
-     * Opens a specific file path as FileOutputStream.
-     *
-     * @param path path to file
-     * @return Returns an opened FileOutputStream.
-     * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws FileNotFoundException    Is thrown if the file path doesn't exist.
-     */
-    public static FileOutputStream toFileOutputStream(final String path)
-            throws IllegalArgumentException, FileNotFoundException {
-        ArgumentUtils.assertNotNull(path, "path");
-
-        File file = new File(path);
-
-        return new FileOutputStream(file);
     }
 
     /**
@@ -93,104 +56,25 @@ public class IOUtils {
      * @throws IllegalArgumentException Is thrown if path is null.
      * @throws IOException              Is thrown if an error occurs while opening the file.
      */
-    public static BufferedWriter toBufferedWriter(final String path)
+    public static BufferedWriter openBufferedWriter(final String path)
+            throws IllegalArgumentException, IOException {
+        return IOUtils.toBufferedWriter(path, false);
+    }
+
+    /**
+     * Opens a specific file path as BufferedReader.
+     *
+     * @param path path to file
+     * @return Returns an opened BufferedWriter.
+     * @throws IllegalArgumentException Is thrown if path is null.
+     * @throws IOException              Is thrown if an error occurs while opening the file.
+     */
+    public static BufferedWriter toBufferedWriter(final String path, final boolean append)
             throws IllegalArgumentException, IOException {
         ArgumentUtils.assertNotNull(path, "path");
 
-        FileWriter fileWriter = new FileWriter(path);
+        FileWriter fileWriter = new FileWriter(path, append);
 
         return new BufferedWriter(fileWriter);
-    }
-
-    /**
-     * Reads a text file completely and store the content as string.
-     *
-     * @param path path to file
-     * @return Returns a String with file content.
-     * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws IOException              Is thrown if an error occurs while reading the file.
-     */
-    public static String readTextFile(final String path)
-            throws IllegalArgumentException, IOException {
-        ArgumentUtils.assertNotNull(path, " path");
-
-        StringBuilder builder = new StringBuilder();
-
-        try (BufferedReader reader = IOUtils.toBufferedReader(path)) {
-            while (reader.ready()) {
-                builder.append(reader.readLine());
-                builder.append("\n");
-
-            }
-        }
-
-        return builder.toString();
-    }
-
-    /**
-     * Reads a text file completely and store the content in a list. For each line
-     * in the file one entry is added to list.
-     *
-     * @param path path to file
-     * @return Returns a List with file content.
-     * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws IOException              Is thrown if an error occurs while reading the file.
-     */
-    public static List<String> readTextFileAsList(final String path)
-            throws IllegalArgumentException, IOException {
-        ArgumentUtils.assertNotNull(path, "path");
-
-        List<String> fileContent = new ArrayList<>();
-
-        try (BufferedReader reader = IOUtils.toBufferedReader(path)) {
-            while (reader.ready()) {
-                fileContent.add(reader.readLine());
-            }
-        }
-
-        return fileContent;
-    }
-
-    /**
-     * Writes a string in a specific file.
-     *
-     * @param path    path to file
-     * @param content String to store in file
-     * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws IOException              Is thrown if an error occurs while writing in file.
-     */
-    public static void writeToTextFile(final String path, String content)
-            throws IllegalArgumentException, IOException {
-        ArgumentUtils.assertNotNull(path, "path");
-
-        //Todo: eventually throw NullpointerException instead
-        content = (content == null) ? "" : content;
-
-        try (BufferedWriter writer = IOUtils.toBufferedWriter(path)) {
-            writer.write(content);
-        }
-    }
-
-    /**
-     * Writes a list of strings in a specific file. Each list entry is one line in file.
-     *
-     * @param path    path to file
-     * @param content list with Strings to store in file
-     * @throws IllegalArgumentException Is thrown if path is null.
-     * @throws IOException              Is thrown if an error occurs while writing in file.
-     */
-    public static void writeTextFile(final String path, Collection<? extends String> content)
-            throws IllegalArgumentException, IOException {
-        ArgumentUtils.assertNotNull(path, "path");
-
-        //Todo: eventually throw NullpointerException instead
-        content = (content == null) ? Collections.EMPTY_LIST : content;
-
-        try (BufferedWriter writer = IOUtils.toBufferedWriter(path)) {
-            for (String line : content) {
-                writer.write(line);
-                writer.newLine();
-            }
-        }
     }
 }
