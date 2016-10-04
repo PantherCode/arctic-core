@@ -52,7 +52,7 @@ public class Chunk extends Bundle {
      * @param chunk object to copy
      */
     public Chunk(Chunk chunk)
-            throws CloneNotSupportedException, NullPointerException {
+            throws UnsupportedOperationException, NullPointerException {
         super(chunk);
     }
 
@@ -61,7 +61,8 @@ public class Chunk extends Bundle {
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while running process.
      */
-    public synchronized boolean start() throws ProcessException {
+    public synchronized boolean start()
+            throws ProcessException {
         // Todo: implement
         return false;
     }
@@ -82,9 +83,15 @@ public class Chunk extends Bundle {
         return this.canChangeState(ProcessState.STOPPED);
     }
 
+    /**
+     *
+     * @return
+     * @throws UnsupportedOperationException
+     */
     @Override
-    public Module copy() throws UnsupportedOperationException {
-        return null;
+    public Chunk copy()
+            throws UnsupportedOperationException {
+        return new Chunk(this);
     }
 
     /**
@@ -116,16 +123,5 @@ public class Chunk extends Bundle {
         Chunk chunk = (Chunk) obj;
 
         return super.equals(chunk);
-    }
-
-    /**
-     * Creates a copy of this object.
-     *
-     * @return Return a copy of this object.
-     * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
-     */
-    @Override
-    public Chunk clone() throws CloneNotSupportedException, NullPointerException {
-        return new Chunk(this);
     }
 }
