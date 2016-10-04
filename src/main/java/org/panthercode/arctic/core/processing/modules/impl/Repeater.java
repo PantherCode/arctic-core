@@ -84,25 +84,7 @@ public class Repeater extends Loop {
                     RepeaterOptions options,
                     Context context)
             throws NullPointerException {
-        this(null, module, options, context);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param identity                identity the object is associated with
-     * @param module                  module for processing
-
-     * @param context                 context the object is associated with
-     * @throws NullPointerException
-     * @throws IllegalArgumentException
-     */
-    public Repeater(Identity identity,
-                    Module module,
-                    RepeaterOptions options,
-                    Context context)
-            throws NullPointerException, IllegalArgumentException {
-        super(identity, module, options, context);
+        super(module, options, context);
 
         this.setMaximalDurationInMillis(maximalDurationInMillis);
     }

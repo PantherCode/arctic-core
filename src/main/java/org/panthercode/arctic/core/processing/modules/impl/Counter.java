@@ -17,7 +17,6 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
@@ -61,8 +60,7 @@ public class Counter extends Loop {
     /**
      * Constructor
      *
-     * @param module            module to processing
-
+     * @param module module to processing
      * @throws NullPointerException
      */
     public Counter(Module module,
@@ -75,7 +73,6 @@ public class Counter extends Loop {
      * Constructor
      *
      * @param module
-
      * @param context
      * @throws NullPointerException
      */
@@ -83,24 +80,7 @@ public class Counter extends Loop {
                    CounterOptions options,
                    Context context)
             throws NullPointerException {
-        this(null, module, options, context);
-    }
-
-
-    /**
-     * Constructor
-     *
-     * @param identity          identity the object is associated with
-     * @param module            module to processing
-
-     * @param context           context the object is associated with
-     */
-    public Counter(Identity identity,
-                   Module module,
-                   CounterOptions options,
-                   Context context)
-            throws NullPointerException {
-        super(identity, module, options, context);
+        super(module, options, context);
 
         this.setCount(count);
     }
@@ -153,12 +133,12 @@ public class Counter extends Loop {
      * successfully. Before repeating the before() is called. After finishing the after() method is called.
      *
      * @throws ProcessException Is thrown if an exceptions is thrown by module and flag <tt>ignoreExceptions</tt> is
-     *                   <tt>false</tt>.
+     *                          <tt>false</tt>.
      */
     @Override
     public synchronized boolean start()
             throws ProcessException {
-        if(super.start()) {
+        if (super.start()) {
             before();
 
             this.actualCount = 0;
@@ -187,7 +167,7 @@ public class Counter extends Loop {
                 }
             }
 
-            if(!this.isStopped()) {
+            if (!this.isStopped()) {
                 ProcessState result = (!this.canQuit || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
                         : ProcessState.FAILED;
 
@@ -204,15 +184,9 @@ public class Counter extends Loop {
         return false;
     }
 
-    /**
-     * Creates a copy of this object.
-     *
-     * @return Return a copy of this object.
-     * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
-     */
     @Override
-    public ModuleImpl clone()
-            throws CloneNotSupportedException {
+    public Counter copy()
+            throws UnsupportedOperationException, CloneNotSupportedException {
         return new Counter(this);
     }
 

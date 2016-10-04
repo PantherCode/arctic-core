@@ -113,6 +113,7 @@ public abstract class Bundle extends ModuleImpl {
      */
     public synchronized boolean deploy(final Module module) {
         if (module != null) {
+            module.setContext(this.getContext());
             return this.modules.add(module);
         }
 

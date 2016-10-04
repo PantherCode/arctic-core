@@ -54,16 +54,6 @@ public class Process extends Bundle {
     }
 
     /**
-     * Constructor
-     *
-     * @param identity identity the module is associated with.
-     * @param context  context the module is associated with.
-     */
-    public Process(Identity identity, Context context) {
-        super(identity, context);
-    }
-
-    /**
      * Copy constructor
      *
      * @param process object to copy

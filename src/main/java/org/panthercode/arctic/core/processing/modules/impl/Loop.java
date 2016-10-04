@@ -95,24 +95,7 @@ public abstract class Loop extends ModuleImpl {
                 LoopOptions options,
                 Context context)
             throws NullPointerException, IllegalArgumentException {
-        this(null, module, options, context);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param identity          identity the object is associated with
-     * @param module            module for processing
-
-     * @param context           context the object is associated with
-     * @throws NullPointerException
-     * @throws IllegalArgumentException
-     */
-    public Loop(Identity identity,
-                Module module,
-                LoopOptions options,
-                Context context) {
-        super(identity, context);
+        super();
 
         this.setContext(context);
 
@@ -136,7 +119,7 @@ public abstract class Loop extends ModuleImpl {
             throws NullPointerException, CloneNotSupportedException {
         super(loop);
 
-        this.setModule(loop.getModule().clone());
+        this.setModule(loop.getModule().copy());
 
         this.setDelayTimeInMillis(loop.getDelayTimeInMillis());
 

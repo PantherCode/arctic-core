@@ -53,19 +53,7 @@ public abstract class Step extends ModuleImpl {
      */
     public Step(Context context)
             throws NullPointerException {
-        this(null, context);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param identity identity the object is associated with
-     * @param context  context the object is associated with
-     * @throws NullPointerException Is thrown if value of identity is null.
-     */
-    public Step(Identity identity, Context context)
-            throws NullPointerException {
-        super(identity, context);
+        super(context);
     }
 
     /**

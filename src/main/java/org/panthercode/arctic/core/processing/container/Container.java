@@ -49,22 +49,11 @@ public class Container extends ModuleImpl {
     /**
      * Constructor
      *
-     * @param worker  module for processing
-     * @param context context the module is associated with.
-     */
-    public Container(Module worker, Context context) {
-        this(null, worker, context);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param identity identity the module is associated with.
      * @param worker   module for processing
      * @param context  context the module is associated with.
      */
-    public Container(Identity identity, Module worker, Context context) {
-        super(identity, context);
+    public Container(Module worker, Context context) {
+        super(context);
 
         this.setWorker(worker);
     }

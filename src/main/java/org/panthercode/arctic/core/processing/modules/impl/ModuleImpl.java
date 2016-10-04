@@ -25,8 +25,10 @@ import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 
 //TODO: implement a multi ProcessStateHandler mechanism
 //TODO: update documentation
@@ -102,7 +104,7 @@ public abstract class ModuleImpl implements Module {
     /**
      * Actual PrcessStateHandler to handle state transitions
      */
-    private ProcessStateHandler processStateHandler = null;
+    private List<ProcessStateHandler> processStateHandlers = new ArrayList<>();
 
     /**
      * Contains all allowed process state changes.
@@ -130,6 +132,7 @@ public abstract class ModuleImpl implements Module {
         if (Identity.isAnnotated(this)) {
             this.identity = Identity.fromAnnotation(this);
         } else {
+            //TODO: better exception message
             throw new NullPointerException("The value of identity is null.");
         }
 
@@ -215,8 +218,8 @@ public abstract class ModuleImpl implements Module {
      *
      * @return Returns the actual <tt>ProcessStateHandler</tt> the object is associated with.
      */
-    public ProcessStateHandler getProcessStateHandler() {
-        return this.processStateHandler;
+    public synchronized boolean addProcessStateHandler(ProcessStateHandler handler) {
+        return this.processStateHandlers.add(handler);
     }
 
     /**
@@ -224,8 +227,12 @@ public abstract class ModuleImpl implements Module {
      *
      * @param handler new handler
      */
-    public synchronized void setProcessStateHandler(ProcessStateHandler handler) {
-        this.processStateHandler = handler;
+    public synchronized boolean removeProcessStateHandler(ProcessStateHandler handler) {
+        return this.processStateHandlers.remove(handler);
+    }
+
+    public List<ProcessStateHandler> processStateHandler(){
+        return new ArrayList<>(this.processStateHandlers);
     }
 
     /**
@@ -300,7 +307,6 @@ public abstract class ModuleImpl implements Module {
     public synchronized boolean start()
             throws ProcessException, IllegalStateException {
         return this.isReady() && this.changeState(ProcessState.RUNNING);
-
     }
 
     /**
@@ -347,8 +353,8 @@ public abstract class ModuleImpl implements Module {
 
             this.actualState = newState;
 
-            if (this.processStateHandler != null) {
-                this.processStateHandler.handle(this, oldState);
+            for(ProcessStateHandler handler : this.processStateHandlers){
+                handler.handle(this, oldState);
             }
 
             return true;
@@ -398,10 +404,10 @@ public abstract class ModuleImpl implements Module {
      * Creates a copy of this object.
      *
      * @return Return a copy of this object.
-     * @throws CloneNotSupportedException Is thrown if object doesn't provide an implementation of <tt>clone()</tt>
+     * @throws UnsupportedOperationException Is thrown if object doesn't provide an implementation of <tt>clone()</tt>
      *                                    method.
      */
-    public abstract ModuleImpl clone() throws CloneNotSupportedException;
+    public abstract ModuleImpl copy() throws UnsupportedOperationException;
 
     /**
      * Returns a string representation of the object. The representation contains the id, name and group name.
