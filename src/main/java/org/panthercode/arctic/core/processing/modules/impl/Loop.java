@@ -17,7 +17,6 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.options.LoopOptions;
@@ -38,19 +37,9 @@ public abstract class Loop extends ModuleImpl {
     protected Module module = null;
 
     /**
-     * Timeout after each round
+     *
      */
-    protected long delayTimeInMillis = 1000L;
-
-    /**
-     * Flag to ignore exceptions are thrown by module
-     */
-    protected boolean ignoreExceptions = true;
-
-    /**
-     * Flag to finish process if module finished successfully
-     */
-    protected boolean canQuit = true;
+    private LoopOptions options;
 
     /**
      * Loop class use milliseconds for measurements
@@ -71,8 +60,7 @@ public abstract class Loop extends ModuleImpl {
     /**
      * Constructor
      *
-     * @param module            module for processing
-
+     * @param module module for processing
      * @throws NullPointerException     Is thrown if value of module or identity is null.
      * @throws IllegalArgumentException
      */
@@ -85,9 +73,8 @@ public abstract class Loop extends ModuleImpl {
     /**
      * Constructor
      *
-     * @param module            module for processing
-
-     * @param context           context the object is associated with
+     * @param module  module for processing
+     * @param context context the object is associated with
      * @throws NullPointerException Is thrown if value of module or identity is null.
      *                              throws IllegalArgumentException
      */
@@ -95,28 +82,22 @@ public abstract class Loop extends ModuleImpl {
                 LoopOptions options,
                 Context context)
             throws NullPointerException, IllegalArgumentException {
-        super();
-
-        this.setContext(context);
+        super(context);
 
         this.setModule(module);
 
-        this.setDelayTimeInMillis(delayTimeInMillis);
-
-        this.ignoreExceptions(ignoreExceptions);
-
-        this.canQuit(canQuit);
+        this.options = options;
     }
 
     /**
      * Copy Constructor
      *
      * @param loop object to copy
-     * @throws NullPointerException       Is thrown if value of parameter is null.
-     * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
+     * @throws NullPointerException          Is thrown if value of parameter is null.
+     * @throws UnsupportedOperationException Is thrown if child element doesn't support cloning.
      */
     public Loop(Loop loop)
-            throws NullPointerException, CloneNotSupportedException {
+            throws NullPointerException, UnsupportedOperationException {
         super(loop);
 
         this.setModule(loop.getModule().copy());
@@ -138,7 +119,6 @@ public abstract class Loop extends ModuleImpl {
     @Override
     public synchronized boolean setContext(final Context context) {
         return super.setContext(context) && this.module.setContext(context);
-
     }
 
     /**
@@ -154,6 +134,8 @@ public abstract class Loop extends ModuleImpl {
             ArgumentUtils.assertNotNull(module, "module");
 
             this.module = module;
+
+            this.module.setContext(this.context);
 
             return true;
         }
@@ -178,7 +160,9 @@ public abstract class Loop extends ModuleImpl {
      */
     public void setDelayTimeInMillis(long durationInMillis)
             throws IllegalArgumentException {
-        this.setDelayTimeInMillis(TimeUnit.MILLISECONDS, durationInMillis);
+        ArgumentUtils.assertGreaterOrEqualsZero(durationInMillis, "duration");
+
+        this.options.setDelayTime(durationInMillis);
     }
 
     /**
@@ -192,7 +176,6 @@ public abstract class Loop extends ModuleImpl {
     public void setDelayTimeInMillis(TimeUnit unit, long duration)
             throws NullPointerException, IllegalArgumentException {
         ArgumentUtils.assertNotNull(unit, "time unit");
-        ArgumentUtils.assertGreaterOrEqualsZero(duration, "duration");
 
         this.setDelayTimeInMillis(unit.toMillis(duration));
     }
