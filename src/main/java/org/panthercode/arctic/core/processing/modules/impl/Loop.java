@@ -39,7 +39,7 @@ public abstract class Loop extends ModuleImpl {
     /**
      *
      */
-    private LoopOptions options;
+    protected LoopOptions options;
 
     /**
      * Loop class use milliseconds for measurements
@@ -84,6 +84,8 @@ public abstract class Loop extends ModuleImpl {
             throws NullPointerException, IllegalArgumentException {
         super(context);
 
+        ArgumentUtils.assertNotNull(options, "options");
+
         this.setModule(module);
 
         this.options = options;
@@ -100,13 +102,9 @@ public abstract class Loop extends ModuleImpl {
             throws NullPointerException, UnsupportedOperationException {
         super(loop);
 
+        this.options = new LoopOptions(loop.getDelayTime(), loop.ignoreExceptions(), loop.canQuit());
+
         this.setModule(loop.getModule().copy());
-
-        this.setDelayTimeInMillis(loop.getDelayTimeInMillis());
-
-        this.ignoreExceptions(loop.ignoreExceptions());
-
-        this.canQuit(loop.canQuit());
     }
 
     /**
@@ -158,7 +156,7 @@ public abstract class Loop extends ModuleImpl {
      * @param durationInMillis new timeout
      * @throws IllegalArgumentException Is thrown if value of parameter is less than zero.
      */
-    public void setDelayTimeInMillis(long durationInMillis)
+    public void setDelayTime(long durationInMillis)
             throws IllegalArgumentException {
         ArgumentUtils.assertGreaterOrEqualsZero(durationInMillis, "duration");
 
@@ -173,11 +171,11 @@ public abstract class Loop extends ModuleImpl {
      * @throws IllegalArgumentException Is thrown if value of duration is less than zero.
      * @throws NullPointerException
      */
-    public void setDelayTimeInMillis(TimeUnit unit, long duration)
+    public void setDelayTime(TimeUnit unit, long duration)
             throws NullPointerException, IllegalArgumentException {
         ArgumentUtils.assertNotNull(unit, "time unit");
 
-        this.setDelayTimeInMillis(unit.toMillis(duration));
+        this.setDelayTime(unit.toMillis(duration));
     }
 
     /**
@@ -185,8 +183,8 @@ public abstract class Loop extends ModuleImpl {
      *
      * @return Returns the actual delay time the object is associated with.
      */
-    public long getDelayTimeInMillis() {
-        return this.delayTimeInMillis;
+    public long getDelayTime() {
+        return this.options.getDelayTime();
     }
 
     /**
@@ -196,10 +194,10 @@ public abstract class Loop extends ModuleImpl {
      * @return Returns the actual delay time the object is associated with.
      * @throws NullPointerException
      */
-    public long getDelayTimeInMillis(final TimeUnit unit) {
+    public long getDelayTime(final TimeUnit unit) {
         ArgumentUtils.assertNotNull(timeUnit, "timeUnit");
 
-        return unit.convert(this.delayTimeInMillis, this.timeUnit);
+        return unit.convert(this.options.getDelayTime(), this.timeUnit);
     }
 
     /**
@@ -208,7 +206,7 @@ public abstract class Loop extends ModuleImpl {
      * @return Returns <tt>true</tt> if object ignores exceptions; Otherwise <tt>false</tt>.
      */
     public boolean ignoreExceptions() {
-        return this.ignoreExceptions;
+        return this.options.isIgnoreExceptions();
     }
 
     /**
@@ -217,21 +215,21 @@ public abstract class Loop extends ModuleImpl {
      * @param ignoreExceptions flag tp ignore exceptions
      */
     public void ignoreExceptions(boolean ignoreExceptions) {
-        this.ignoreExceptions = ignoreExceptions;
+        this.options.ignoreExceptions(ignoreExceptions);
     }
 
     /**
      * @return
      */
     public boolean canQuit() {
-        return this.canQuit;
+        return this.options.canQuit();
     }
 
     /**
      * @param canQuit
      */
     public void canQuit(boolean canQuit) {
-        this.canQuit = canQuit;
+        this.options.canQuit(canQuit);
     }
 
     /**
@@ -274,9 +272,9 @@ public abstract class Loop extends ModuleImpl {
         return Math.abs(new HashCodeBuilder()
                 .append(super.hashCode())
                 .append(this.module.hashCode())
-                .append(this.delayTimeInMillis)
-                .append(this.ignoreExceptions)
-                .append(this.canQuit)
+                .append(this.getDelayTime())
+                .append(this.ignoreExceptions())
+                .append(this.canQuit())
                 .toHashCode());
     }
 
@@ -299,8 +297,8 @@ public abstract class Loop extends ModuleImpl {
         Loop loop = (Loop) obj;
         return super.equals(loop) &&
                 this.module.equals(loop.getModule()) &&
-                this.delayTimeInMillis == loop.getDelayTimeInMillis() &&
-                this.ignoreExceptions == loop.ignoreExceptions() &&
-                this.canQuit == loop.canQuit();
+                this.getDelayTime() == loop.getDelayTime() &&
+                this.ignoreExceptions() == loop.ignoreExceptions() &&
+                this.canQuit() == loop.canQuit();
     }
 }

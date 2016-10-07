@@ -16,7 +16,6 @@
 package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
@@ -39,7 +38,7 @@ public class Counter extends Loop {
     /**
      * maximal count of repeats
      */
-    private int count = 1;
+    //private int count = 1;
 
     /**
      * actual round
@@ -82,7 +81,7 @@ public class Counter extends Loop {
             throws NullPointerException {
         super(module, options, context);
 
-        this.setCount(count);
+        //this.setCount(count);
     }
 
     /**
@@ -91,12 +90,12 @@ public class Counter extends Loop {
      * @param counter object to copy
      * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
      */
-    public Counter(Counter counter)
-            throws CloneNotSupportedException {
+    public Counter(Counter counter) {
         super(counter);
 
         this.setCount(counter.getCount());
     }
+
 
     /**
      * Return the actual maximal number of repeats.
@@ -104,7 +103,7 @@ public class Counter extends Loop {
      * @return Return the actual maximal number of repeats.
      */
     public int getCount() {
-        return this.count;
+        return ((CounterOptions) this.options).getCount();
     }
 
     /**
@@ -114,9 +113,7 @@ public class Counter extends Loop {
      * @throws IllegalArgumentException Is thrown if value is zero or less.
      */
     public synchronized void setCount(final int count) {
-        ArgumentUtils.assertGreaterZero(count, "count");
-
-        this.count = count;
+        ((CounterOptions) this.options).setCount(count);
     }
 
     /**
@@ -144,31 +141,31 @@ public class Counter extends Loop {
             this.actualCount = 0;
             int loop;
 
-            for (loop = 0; loop <= this.count && this.isRunning(); loop++, this.actualCount = loop) {
+            for (loop = 0; loop <= this.getCount() && this.isRunning(); loop++, this.actualCount = loop) {
                 this.module.reset();
 
                 try {
                     this.module.start();
 
-                    if ((module.isSucceeded() && this.canQuit) || this.module.isStopped()) {
+                    if ((module.isSucceeded() && this.canQuit()) || this.module.isStopped()) {
                         break;
                     }
                 } catch (ProcessException e) {
-                    if (!this.ignoreExceptions) {
+                    if (!this.ignoreExceptions()) {
                         this.changeState(ProcessState.FAILED);
                         throw new ProcessException("While running the module an error occurred.", e);
                     }
                 }
 
                 try {
-                    Thread.sleep(this.getDelayTimeInMillis());
+                    Thread.sleep(this.getDelayTime());
                 } catch (InterruptedException e) {
                     throw new ProcessException(e);
                 }
             }
 
             if (!this.isStopped()) {
-                ProcessState result = (!this.canQuit || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
                         : ProcessState.FAILED;
 
                 if (!this.changeState(result)) {
@@ -186,7 +183,7 @@ public class Counter extends Loop {
 
     @Override
     public Counter copy()
-            throws UnsupportedOperationException, CloneNotSupportedException {
+            throws UnsupportedOperationException {
         return new Counter(this);
     }
 
@@ -199,7 +196,7 @@ public class Counter extends Loop {
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
                 .append(super.hashCode())
-                .append(this.count)
+                .append(this.getCount())
                 .toHashCode());
     }
 
@@ -221,8 +218,8 @@ public class Counter extends Loop {
 
         Counter counter = (Counter) obj;
         return super.equals(counter) &&
-                this.canQuit == counter.canQuit() &&
-                this.count == counter.getCount();
+                this.canQuit() == counter.canQuit() &&
+                this.getCount() == counter.getCount();
     }
 }
 
