@@ -91,9 +91,12 @@ public class Counter extends Loop {
      * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
      */
     public Counter(Counter counter) {
-        super(counter);
-
-        this.setCount(counter.getCount());
+        super(counter.module.copy(),
+                new CounterOptions(counter.getCount(),
+                        counter.getDelayTime(),
+                        counter.ignoreExceptions(),
+                        counter.canQuit()),
+                counter.getContext());
     }
 
 

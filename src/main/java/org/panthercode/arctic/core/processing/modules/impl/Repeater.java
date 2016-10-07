@@ -93,7 +93,7 @@ public class Repeater extends Loop {
      */
     public Repeater(Repeater repeater)
             throws UnsupportedOperationException {
-        super(repeater.getModule(),
+        super(repeater.getModule().copy(),
                 new RepeaterOptions(repeater.getMaximalDuration(),
                         repeater.getDelayTime(),
                         repeater.ignoreExceptions(),
