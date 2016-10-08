@@ -37,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 @VersionInfo(major = 1)
 public class Repeater extends Loop {
 
-
     /**
      * elapsed time after start the process
      */
@@ -78,8 +77,6 @@ public class Repeater extends Loop {
                     Context context)
             throws NullPointerException {
         super(module, options, context);
-
-        //this.setMaximalDurationInMillis(maximalDurationInMillis);
     }
 
 
@@ -132,7 +129,7 @@ public class Repeater extends Loop {
      */
     public void setMaximalDuration(TimeUnit unit, long duration)
             throws IllegalArgumentException {
-        this.setMaximalDurationInMillis(unit.toMillis(duration));
+        this.setMaximalDuration(unit.toMillis(duration));
     }
 
     /**
@@ -141,7 +138,7 @@ public class Repeater extends Loop {
      * @param durationInMillis new time limit
      * @throws IllegalArgumentException
      */
-    public void setMaximalDurationInMillis(long durationInMillis) {
+    public void setMaximalDuration(long durationInMillis) {
         ((RepeaterOptions) this.options).setMaximalDuration(durationInMillis);
     }
 
@@ -165,7 +162,7 @@ public class Repeater extends Loop {
     @Override
     public boolean start()
             throws ProcessException {
-        if (super.start()) {
+        if (this.changeState(ProcessState.RUNNING)) {
 
             this.before();
 
@@ -173,40 +170,13 @@ public class Repeater extends Loop {
             long durationInMillis = 0L;
 
             for (long start = System.currentTimeMillis();
-                 durationInMillis < this.getMaximalDuration() && this.isRunning();
-                 durationInMillis = System.currentTimeMillis() - start, this.actualDurationInMillis = durationInMillis) {
-                this.module.reset();
+                 durationInMillis < this.getMaximalDuration() && this.isRunning() && this.step();
+                 durationInMillis = System.currentTimeMillis() - start, this.actualDurationInMillis = durationInMillis)
+                ;
 
-                try {
-                    this.module.start();
+            this.setResult();
 
-                    if ((module.isSucceeded() && this.canQuit()) || this.isStopped()) {
-                        break;
-                    }
-                } catch (ProcessException e) {
-                    if (!this.ignoreExceptions()) {
-                        this.changeState(ProcessState.FAILED);
-                        throw new ProcessException("While running the module an error occurred.", e);
-                    }
-                }
-
-                try {
-                    Thread.sleep(this.getDelayTime());
-                } catch (InterruptedException e) {
-                    throw new ProcessException(e);
-                }
-            }
-
-            if (!this.isStopped()) {
-                ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
-                        : ProcessState.FAILED;
-
-                if (!this.changeState(result)) {
-                    throw new ProcessException("Failed to set status to " + result + ".");
-                }
-            }
-
-            after();
+            this.after();
 
             return !this.isStopped();
         }

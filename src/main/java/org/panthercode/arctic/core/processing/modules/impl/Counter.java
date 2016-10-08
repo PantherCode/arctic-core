@@ -138,43 +138,18 @@ public class Counter extends Loop {
     @Override
     public synchronized boolean start()
             throws ProcessException {
-        if (super.start()) {
+        if (this.changeState(ProcessState.RUNNING)) {
             before();
 
             this.actualCount = 0;
             int loop;
 
-            for (loop = 0; loop <= this.getCount() && this.isRunning(); loop++, this.actualCount = loop) {
-                this.module.reset();
+            for (loop = 0;
+                 loop < this.getCount() && this.isRunning() && this.step();
+                 loop++, this.actualCount = loop)
+                ;
 
-                try {
-                    this.module.start();
-
-                    if ((module.isSucceeded() && this.canQuit()) || this.module.isStopped()) {
-                        break;
-                    }
-                } catch (ProcessException e) {
-                    if (!this.ignoreExceptions()) {
-                        this.changeState(ProcessState.FAILED);
-                        throw new ProcessException("While running the module an error occurred.", e);
-                    }
-                }
-
-                try {
-                    Thread.sleep(this.getDelayTime());
-                } catch (InterruptedException e) {
-                    throw new ProcessException(e);
-                }
-            }
-
-            if (!this.isStopped()) {
-                ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
-                        : ProcessState.FAILED;
-
-                if (!this.changeState(result)) {
-                    throw new ProcessException("Failed to set status to " + result + ".");
-                }
-            }
+            this.setResult();
 
             after();
 

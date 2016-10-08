@@ -17,6 +17,7 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.options.LoopOptions;
@@ -235,13 +236,15 @@ public abstract class Loop extends ModuleImpl {
     /**
      * This method will be called before loop process starts.
      */
-    public void before() throws ProcessException {
+    public void before()
+            throws ProcessException {
     }
 
     /**
      * This method will be called after loop process finished.
      */
-    public void after() throws ProcessException {
+    public void after()
+            throws ProcessException {
     }
 
     /**
@@ -249,8 +252,9 @@ public abstract class Loop extends ModuleImpl {
      * @throws ProcessException
      */
     @Override
-    public synchronized boolean stop() throws ProcessException {
-        return super.stop() && this.module.stop();
+    public synchronized boolean stop()
+            throws ProcessException {
+        return this.changeState(ProcessState.STOPPED) && this.module.stop();
     }
 
     /**
@@ -258,8 +262,9 @@ public abstract class Loop extends ModuleImpl {
      * @throws ProcessException
      */
     @Override
-    public synchronized boolean reset() throws ProcessException {
-        return super.reset() && this.module.reset();
+    public synchronized boolean reset()
+            throws ProcessException {
+        return this.changeState(ProcessState.READY) && this.module.reset();
     }
 
     /**
@@ -300,5 +305,41 @@ public abstract class Loop extends ModuleImpl {
                 this.getDelayTime() == loop.getDelayTime() &&
                 this.ignoreExceptions() == loop.ignoreExceptions() &&
                 this.canQuit() == loop.canQuit();
+    }
+
+    protected boolean step() {
+        this.module.reset();
+
+        try {
+            this.module.start();
+
+            if ((module.isSucceeded() && this.canQuit()) || this.isStopped()) {
+                return false;
+            }
+        } catch (ProcessException e) {
+            if (!this.ignoreExceptions()) {
+                this.changeState(ProcessState.FAILED);
+                throw new ProcessException("While running the module an error occurred.", e);
+            }
+        }
+
+        try {
+            Thread.sleep(this.getDelayTime());
+        } catch (InterruptedException e) {
+            throw new ProcessException(e);
+        }
+
+        return true;
+    }
+
+    protected void setResult(){
+        if (!this.isStopped()) {
+            ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                    : ProcessState.FAILED;
+
+            if (!this.changeState(result)) {
+                throw new ProcessException("Failed to set status to " + result + ".");
+            }
+        }
     }
 }
