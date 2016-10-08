@@ -247,6 +247,30 @@ public abstract class Loop extends ModuleImpl {
             throws ProcessException {
     }
 
+    @Override
+    public boolean start() throws ProcessException {
+        if (this.changeState(ProcessState.RUNNING)) {
+            before();
+
+            this.loop();
+
+            if (!this.isStopped()) {
+                ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                        : ProcessState.FAILED;
+
+                if (!this.changeState(result)) {
+                    throw new ProcessException("Failed to set status to " + result + ".");
+                }
+            }
+
+            this.after();
+
+            return !this.isStopped();
+        }
+
+        return false;
+    }
+
     /**
      * @return
      * @throws ProcessException
@@ -307,6 +331,8 @@ public abstract class Loop extends ModuleImpl {
                 this.canQuit() == loop.canQuit();
     }
 
+    protected abstract void loop();
+
     protected boolean step() {
         this.module.reset();
 
@@ -330,16 +356,5 @@ public abstract class Loop extends ModuleImpl {
         }
 
         return true;
-    }
-
-    protected void setResult(){
-        if (!this.isStopped()) {
-            ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
-                    : ProcessState.FAILED;
-
-            if (!this.changeState(result)) {
-                throw new ProcessException("Failed to set status to " + result + ".");
-            }
-        }
     }
 }

@@ -19,8 +19,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
-import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.options.RepeaterOptions;
 import org.panthercode.arctic.core.settings.context.Context;
@@ -152,39 +150,6 @@ public class Repeater extends Loop {
     }
 
     /**
-     * Begin to repeat the modules start() method until the count limit is reached or (if set) the module finished
-     * successfully. Before repeating the before() is called. After finishing the after() method is called.
-     * <p>
-     * The time limit doesn't guarantee to abort the process if time is up, but after actual run.
-     *
-     * @throws ProcessException
-     */
-    @Override
-    public boolean start()
-            throws ProcessException {
-        if (this.changeState(ProcessState.RUNNING)) {
-
-            this.before();
-
-            this.actualDurationInMillis = 0L;
-            long durationInMillis = 0L;
-
-            for (long start = System.currentTimeMillis();
-                 durationInMillis < this.getMaximalDuration() && this.isRunning() && this.step();
-                 durationInMillis = System.currentTimeMillis() - start, this.actualDurationInMillis = durationInMillis)
-                ;
-
-            this.setResult();
-
-            this.after();
-
-            return !this.isStopped();
-        }
-
-        return false;
-    }
-
-    /**
      * Creates a copy of this object.
      *
      * @return Return a copy of this object.
@@ -231,5 +196,16 @@ public class Repeater extends Loop {
         return super.equals(repeater) &&
                 this.getMaximalDuration() == repeater.getMaximalDuration() &&
                 this.getDelayTime() == repeater.getDelayTime();
+    }
+
+    @Override
+    protected void loop() {
+        this.actualDurationInMillis = 0L;
+        long durationInMillis = 0L;
+
+        for (long start = System.currentTimeMillis();
+             durationInMillis < this.getMaximalDuration() && this.isRunning() && this.step();
+             durationInMillis = System.currentTimeMillis() - start, this.actualDurationInMillis = durationInMillis)
+            ;
     }
 }

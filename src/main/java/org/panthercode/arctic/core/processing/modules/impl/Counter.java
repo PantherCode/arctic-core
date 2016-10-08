@@ -18,8 +18,6 @@ package org.panthercode.arctic.core.processing.modules.impl;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
-import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.options.CounterOptions;
 import org.panthercode.arctic.core.settings.context.Context;
@@ -34,11 +32,6 @@ import org.panthercode.arctic.core.settings.context.Context;
 @IdentityInfo(name = "Standard Counter", group = "Counter Module")
 @VersionInfo(major = 1)
 public class Counter extends Loop {
-
-    /**
-     * maximal count of repeats
-     */
-    //private int count = 1;
 
     /**
      * actual round
@@ -88,7 +81,6 @@ public class Counter extends Loop {
      * Copy Constructor
      *
      * @param counter object to copy
-     * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
      */
     public Counter(Counter counter) {
         super(counter.module.copy(),
@@ -128,36 +120,6 @@ public class Counter extends Loop {
         return (this.isRunning()) ? this.actualCount : 0;
     }
 
-    /**
-     * Begin to repeat the modules start() method until the count limit is reached or (if set) the module finished
-     * successfully. Before repeating the before() is called. After finishing the after() method is called.
-     *
-     * @throws ProcessException Is thrown if an exceptions is thrown by module and flag <tt>ignoreExceptions</tt> is
-     *                          <tt>false</tt>.
-     */
-    @Override
-    public synchronized boolean start()
-            throws ProcessException {
-        if (this.changeState(ProcessState.RUNNING)) {
-            before();
-
-            this.actualCount = 0;
-            int loop;
-
-            for (loop = 0;
-                 loop < this.getCount() && this.isRunning() && this.step();
-                 loop++, this.actualCount = loop)
-                ;
-
-            this.setResult();
-
-            after();
-
-            return !isStopped();
-        }
-
-        return false;
-    }
 
     @Override
     public Counter copy()
@@ -198,6 +160,17 @@ public class Counter extends Loop {
         return super.equals(counter) &&
                 this.canQuit() == counter.canQuit() &&
                 this.getCount() == counter.getCount();
+    }
+
+    @Override
+    protected void loop() {
+        this.actualCount = 0;
+        int loop;
+
+        for (loop = 0;
+             loop < this.getCount() && this.isRunning() && this.step();
+             loop++, this.actualCount = loop)
+            ;
     }
 }
 
