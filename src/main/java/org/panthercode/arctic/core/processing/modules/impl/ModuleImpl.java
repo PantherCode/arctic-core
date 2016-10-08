@@ -106,7 +106,7 @@ public abstract class ModuleImpl implements Module {
     /**
      * Contains all allowed process state changes.
      */
-    protected HashMap<ProcessState, EnumSet<ProcessState>> stateMap;
+    private HashMap<ProcessState, EnumSet<ProcessState>> stateMap;
 
     /**
      * Standard Constructor
@@ -201,7 +201,7 @@ public abstract class ModuleImpl implements Module {
      * @param context new context
      */
     public synchronized boolean setContext(final Context context) {
-        if (!this.isRunning() && !this.isWaiting()) {
+        if (!this.canModify()) {
             this.context = (context == null) ? new Context() : context;
 
             return true;
@@ -301,20 +301,14 @@ public abstract class ModuleImpl implements Module {
      * @return
      * @throws ProcessException Is thrown if an error occurred while running the process.
      */
-    public synchronized boolean start()
-            throws ProcessException {
-        return this.isReady() && this.changeState(ProcessState.RUNNING);
-    }
+    public abstract boolean start() throws ProcessException;
 
     /**
      * Stops the actual run and set process state to 'Stopped'.
      *
      * @throws ProcessException Is thrown if an error occurred while stopping the process.
      */
-    public synchronized boolean stop()
-            throws ProcessException {
-        return this.changeState(ProcessState.STOPPED);
-    }
+    public abstract boolean stop() throws ProcessException;
 
     /**
      * Set the inner state to 'Ready'. This method can only called if object has inner state 'Succeeded', 'Failed' or
@@ -322,10 +316,7 @@ public abstract class ModuleImpl implements Module {
      *
      * @throws ProcessException Is thrown if an error occurred while resetting the object.
      */
-    public synchronized boolean reset()
-            throws ProcessException {
-        return this.changeState(ProcessState.READY);
-    }
+    public abstract boolean reset() throws ProcessException;
 
     /**
      * Function to check whether the new state is allowed or not.
@@ -349,6 +340,7 @@ public abstract class ModuleImpl implements Module {
 
             this.actualState = newState;
 
+            // Todo: try-catch if handler throws exception
             for (ProcessStateHandler handler : this.processStateHandlers) {
                 handler.handle(this, oldState);
             }
@@ -403,8 +395,7 @@ public abstract class ModuleImpl implements Module {
      * @throws UnsupportedOperationException Is thrown if object doesn't provide an implementation of <tt>clone()</tt>
      *                                       method.
      */
-    public abstract ModuleImpl copy()
-            throws UnsupportedOperationException;
+    public abstract ModuleImpl copy() throws UnsupportedOperationException;
 
     /**
      * Returns a string representation of the object. The representation contains the id, name and group name.
@@ -436,5 +427,12 @@ public abstract class ModuleImpl implements Module {
         this.stateMap.put(ProcessState.SUCCEEDED, EnumSet.of(ProcessState.SUCCEEDED, ProcessState.READY, ProcessState.FAILED));
         this.stateMap.put(ProcessState.FAILED, EnumSet.of(ProcessState.FAILED, ProcessState.READY, ProcessState.SUCCEEDED));
         this.stateMap.put(ProcessState.STOPPED, EnumSet.of(ProcessState.STOPPED, ProcessState.READY));
+    }
+
+    /**
+     * @return
+     */
+    protected boolean canModify() {
+        return (!this.isRunning() && !this.isWaiting());
     }
 }
