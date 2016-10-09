@@ -15,6 +15,7 @@
  */
 package org.panthercode.arctic.core.processing.modules.options;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 /**
@@ -41,75 +42,113 @@ public class LoopOptions {
     /**
      *
      */
-    public LoopOptions(){}
+    public LoopOptions() {
+    }
 
     /**
-     *
      * @param delayTimeInMillis
      */
-    public LoopOptions(long delayTimeInMillis){
+    public LoopOptions(long delayTimeInMillis) {
         this(delayTimeInMillis, true, true);
     }
 
     /**
-     *
      * @param delayTimeInMillis
      * @param ignoreExceptions
      * @param canQuit
      */
-    public LoopOptions(long delayTimeInMillis, boolean ignoreExceptions, boolean canQuit){
+    public LoopOptions(long delayTimeInMillis, boolean ignoreExceptions, boolean canQuit) {
         this.setDelayTime(delayTimeInMillis);
         this.ignoreExceptions(ignoreExceptions);
         this.canQuit(canQuit);
     }
 
     /**
-     *
      * @return
      */
-    public long getDelayTime(){
+    public long getDelayTime() {
         return this.delayTimeInMillis;
     }
 
     /**
-     *
      * @param delayTimeInMillis
      */
-    public void setDelayTime(long delayTimeInMillis){
+    public void setDelayTime(long delayTimeInMillis) {
         ArgumentUtils.assertGreaterOrEqualsZero(delayTimeInMillis, "delay time");
 
         this.delayTimeInMillis = delayTimeInMillis;
     }
 
     /**
-     *
      * @return
      */
-    public boolean isIgnoreExceptions(){
+    public boolean isIgnoreExceptions() {
         return this.ignoreExceptions;
     }
 
     /**
-     *
      * @param ignoreExceptions
      */
-    public void ignoreExceptions(boolean ignoreExceptions){
+    public void ignoreExceptions(boolean ignoreExceptions) {
         this.ignoreExceptions = ignoreExceptions;
     }
 
     /**
-     *
      * @return
      */
-    public boolean canQuit(){
+    public boolean canQuit() {
         return this.canQuit;
     }
 
     /**
-     *
      * @param canQuit
      */
-    public void canQuit(boolean canQuit){
+    public void canQuit(boolean canQuit) {
         this.canQuit = canQuit;
+    }
+
+
+    @Override
+    public String toString() {
+        return "delay time = " + this.delayTimeInMillis
+                + " ms, can quit = " + this.canQuit
+                + " ignore exception " + this.ignoreExceptions;
+    }
+
+    /**
+     * Returns a hash code value of this object.
+     *
+     * @return Returns a hash code value of this object.
+     */
+    @Override
+    public int hashCode() {
+        return Math.abs(new HashCodeBuilder()
+                .append(this.delayTimeInMillis)
+                .append(this.ignoreExceptions)
+                .append(this.canQuit)
+                .toHashCode());
+    }
+
+    /**
+     * Checks if this object is equals to another one.
+     *
+     * @param obj other object for comparison
+     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof LoopOptions)) {
+            return false;
+        }
+
+        LoopOptions options = (LoopOptions) obj;
+
+        return options.canQuit() == this.canQuit() &&
+                options.isIgnoreExceptions() == this.isIgnoreExceptions() &&
+                options.getDelayTime() == this.getDelayTime();
     }
 }

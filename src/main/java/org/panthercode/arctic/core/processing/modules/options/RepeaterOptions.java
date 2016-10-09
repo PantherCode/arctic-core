@@ -15,13 +15,14 @@
  */
 package org.panthercode.arctic.core.processing.modules.options;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 /**
  * TODO: documentation
  * TODO: Exceptions in function signature
  */
-public class RepeaterOptions extends LoopOptions{
+public class RepeaterOptions extends LoopOptions {
 
     /**
      *
@@ -31,29 +32,26 @@ public class RepeaterOptions extends LoopOptions{
     /**
      *
      */
-    public RepeaterOptions(){
+    public RepeaterOptions() {
         super();
     }
 
     /**
-     *
      * @param maximalDurationInMillis
      */
-    public RepeaterOptions(long maximalDurationInMillis){
+    public RepeaterOptions(long maximalDurationInMillis) {
         this(maximalDurationInMillis, 1000L);
     }
 
     /**
-     *
      * @param maximalDurationInMillis
      * @param delayTimeInMillis
      */
-    public RepeaterOptions(long maximalDurationInMillis, long delayTimeInMillis){
-        this(maximalDurationInMillis, delayTimeInMillis, true , true);
+    public RepeaterOptions(long maximalDurationInMillis, long delayTimeInMillis) {
+        this(maximalDurationInMillis, delayTimeInMillis, true, true);
     }
 
     /**
-     *
      * @param maximalDurationInMillis
      * @param delayTimeInMillis
      * @param ignoreExceptions
@@ -62,27 +60,65 @@ public class RepeaterOptions extends LoopOptions{
     public RepeaterOptions(long maximalDurationInMillis,
                            long delayTimeInMillis,
                            boolean ignoreExceptions,
-                           boolean canQuit){
+                           boolean canQuit) {
         super(delayTimeInMillis, ignoreExceptions, canQuit);
 
         this.setMaximalDuration(maximalDurationInMillis);
     }
 
     /**
-     *
      * @return
      */
-    public long getMaximalDuration(){
+    public long getMaximalDuration() {
         return this.maximalDurationInMillis;
     }
 
     /**
-     *
      * @param maximalDurationInMillis
      */
-    public void setMaximalDuration(long maximalDurationInMillis){
+    public void setMaximalDuration(long maximalDurationInMillis) {
         ArgumentUtils.assertGreaterOrEqualsZero(maximalDurationInMillis, "maximal duration");
 
         this.maximalDurationInMillis = maximalDurationInMillis;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " maximal duration = " + this.maximalDurationInMillis + " ms";
+    }
+
+    /**
+     * Returns a hash code value of this object.
+     *
+     * @return Returns a hash code value of this object.
+     */
+    @Override
+    public int hashCode() {
+        return Math.abs(new HashCodeBuilder()
+                .append(super.hashCode())
+                .append(this.maximalDurationInMillis)
+                .toHashCode());
+    }
+
+    /**
+     * Checks if this object is equals to another one.
+     *
+     * @param obj other object for comparison
+     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof RepeaterOptions)) {
+            return false;
+        }
+
+        RepeaterOptions options = (RepeaterOptions) obj;
+
+        return super.equals(obj) &&
+                this.getMaximalDuration() == options.getMaximalDuration();
     }
 }
