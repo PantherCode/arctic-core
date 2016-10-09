@@ -81,7 +81,7 @@ public abstract class ModuleImpl implements Module {
     /**
      * The local context the object is associated with.
      */
-    protected Context context;
+    private Context context;
 
     /**
      * The identity the object is associated with.
@@ -319,39 +319,6 @@ public abstract class ModuleImpl implements Module {
     public abstract boolean reset() throws ProcessException;
 
     /**
-     * Function to check whether the new state is allowed or not.
-     *
-     * @param newState new state the object would like to set
-     * @return Returns <tt>true</tt> if the new state is allowed; Otherwise <tt>false</tt>.
-     */
-    protected boolean canChangeState(final ProcessState newState) {
-        return this.stateMap.containsKey(this.actualState) &&
-                this.stateMap.get(this.actualState).contains(newState);
-    }
-
-    /**
-     * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
-     *
-     * @param newState new state of object
-     */
-    protected synchronized boolean changeState(final ProcessState newState) {
-        if (this.canChangeState(newState)) {
-            ProcessState oldState = this.actualState;
-
-            this.actualState = newState;
-
-            // Todo: try-catch if handler throws exception
-            for (ProcessStateHandler handler : this.processStateHandlers) {
-                handler.handle(this, oldState);
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Returns a hash code value of this object.
      *
      * @return Returns a hash code value of this object.
@@ -384,8 +351,7 @@ public abstract class ModuleImpl implements Module {
         ModuleImpl module = (ModuleImpl) obj;
 
         return this.identity.match(module.identity()) &&
-                this.version.equals(module.version) &&
-                this.context.equals(module.context);
+                this.version.equals(module.version);
     }
 
     /**
@@ -427,6 +393,43 @@ public abstract class ModuleImpl implements Module {
         this.stateMap.put(ProcessState.SUCCEEDED, EnumSet.of(ProcessState.SUCCEEDED, ProcessState.READY, ProcessState.FAILED));
         this.stateMap.put(ProcessState.FAILED, EnumSet.of(ProcessState.FAILED, ProcessState.READY, ProcessState.SUCCEEDED));
         this.stateMap.put(ProcessState.STOPPED, EnumSet.of(ProcessState.STOPPED, ProcessState.READY));
+    }
+
+    /**
+     * Function to check whether the new state is allowed or not.
+     *
+     * @param newState new state the object would like to set
+     * @return Returns <tt>true</tt> if the new state is allowed; Otherwise <tt>false</tt>.
+     */
+    protected boolean canChangeState(final ProcessState newState) {
+        return this.stateMap.containsKey(this.actualState) &&
+                this.stateMap.get(this.actualState).contains(newState);
+    }
+
+    /**
+     * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
+     *
+     * @param newState new state of object
+     */
+    protected synchronized boolean changeState(final ProcessState newState) {
+        if (this.canChangeState(newState)) {
+            ProcessState oldState = this.actualState;
+
+            this.actualState = newState;
+
+            for (ProcessStateHandler handler : this.processStateHandlers) {
+                try {
+                    handler.handle(this, oldState);
+                } catch (Exception e) {
+                    // TODO: explanation why ignoring handler
+                    // ignoring exceptions of handler
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
