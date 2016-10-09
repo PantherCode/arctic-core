@@ -84,6 +84,12 @@ public class Chunk extends Bundle {
         return this.canChangeState(ProcessState.STOPPED);
     }
 
+    @Override
+    public boolean reset() throws ProcessException {
+        //Todo: implement
+        return false;
+    }
+
     /**
      * @return
      * @throws UnsupportedOperationException
