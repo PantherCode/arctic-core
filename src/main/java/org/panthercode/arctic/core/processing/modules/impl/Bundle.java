@@ -76,11 +76,9 @@ public abstract class Bundle extends ModuleImpl {
         this.modules = new ArrayList<>(bundle.size());
 
         for (Module module : bundle.modules()) {
-            if (module == null) {
-                throw new NullPointerException("The bundle contains a null element");
+            if (module != null) {
+                this.modules.add(module.copy());
             }
-
-            this.modules.add(module.copy());
         }
     }
 
@@ -151,6 +149,7 @@ public abstract class Bundle extends ModuleImpl {
      */
     public synchronized void deploy(final int index, final Module module) {
         if (module != null) {
+            module.setContext((this.getContext()));
             this.modules.add(index, module);
         }
     }
@@ -161,11 +160,8 @@ public abstract class Bundle extends ModuleImpl {
      * @param module module to delete
      */
     public synchronized boolean undeploy(final Module module) {
-        if (module != null) {
-            return this.modules.remove(module);
-        }
+        return module != null && this.modules.remove(module);
 
-        return false;
     }
 
     /**
