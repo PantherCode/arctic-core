@@ -15,7 +15,6 @@
  */
 package org.panthercode.arctic.core.processing.modules.impl;
 
-import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.settings.context.Context;
@@ -60,11 +59,11 @@ public abstract class Step extends ModuleImpl {
      * Copy Constructor
      *
      * @param step object to copy
-     * @throws CloneNotSupportedException Is thrown if a module in bundle doesn't support cloning.
-     * @throws NullPointerException       Is thrown if value of parameter is null.
+     * @throws UnsupportedOperationException Is thrown if a module in bundle doesn't support cloning.
+     * @throws NullPointerException          Is thrown if value of parameter is null.
      */
     public Step(Step step)
-            throws NullPointerException, CloneNotSupportedException {
+            throws NullPointerException, UnsupportedOperationException {
         super(step);
     }
 
@@ -78,18 +77,14 @@ public abstract class Step extends ModuleImpl {
     @Override
     public synchronized boolean start()
             throws ProcessException {
-        if(super.start()) {
+        if (this.changeState(ProcessState.RUNNING)) {
 
             try {
                 ProcessState result = this.step() ? ProcessState.SUCCEEDED : ProcessState.FAILED;
 
-                this.changeState(result);
-
-                return true;
+                return this.changeState(result);
             } catch (Exception e) {
-                if (this.canChangeState(ProcessState.FAILED)) {
-                    this.changeState(ProcessState.FAILED);
-                }
+                this.changeState(ProcessState.FAILED);
 
                 throw new ProcessException("While running process step an error is occurred.", e);
             }
@@ -104,9 +99,7 @@ public abstract class Step extends ModuleImpl {
      * @return Returns <tt>true</tt> if the actual run was successful; Otherwise <tt>false</tt>.
      * @throws ProcessException Is thrown if an error occurred while running the step.
      */
-    public abstract boolean step()
-            throws ProcessException;
+    public abstract boolean step() throws ProcessException;
 
-    public abstract Step copy()
-        throws UnsupportedOperationException;
+    public abstract Step copy() throws UnsupportedOperationException;
 }
