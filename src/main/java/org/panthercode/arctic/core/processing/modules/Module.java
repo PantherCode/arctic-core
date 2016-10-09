@@ -19,13 +19,13 @@ import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
-import org.panthercode.arctic.core.reflect.ClassBuilder;
 import org.panthercode.arctic.core.settings.context.Context;
 
 
 //TODO: udpate documentation
 //TODO: explain  difference between return boolean and process state!
 //TODO: remove Identity parameter from all Module classes -> Identity is set by annotation.
+
 /**
  * A module is the basic unit for execution. It provides a little set of functionality for controlling and handling the
  * object at runtime. The concrete implementation should always contains a coherent inner state model, that

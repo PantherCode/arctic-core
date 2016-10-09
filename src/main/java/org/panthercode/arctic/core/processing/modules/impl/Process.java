@@ -15,7 +15,6 @@
  */
 package org.panthercode.arctic.core.processing.modules.impl;
 
-import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessState;
@@ -59,7 +58,7 @@ public class Process extends Bundle {
      * @param process object to copy
      */
     public Process(Process process)
-            throws CloneNotSupportedException, NullPointerException {
+            throws NullPointerException {
         super(process);
     }
 
@@ -80,7 +79,7 @@ public class Process extends Bundle {
     @Override
     public boolean start()
             throws ProcessException {
-        if(super.start()) {
+        if (this.changeState(ProcessState.RUNNING)) {
 
             try {
                 Iterator<Module> iterator = this.iterator();
@@ -123,19 +122,13 @@ public class Process extends Bundle {
             this.currentModule.stop();
         }
 
-        return super.stop();
+        return this.changeState(ProcessState.STOPPED);
     }
 
-    /**
-     * Creates a copy of this object.
-     *
-     * @return Return a copy of this object.
-     * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
-     */
     @Override
-    public Process clone()
-            throws CloneNotSupportedException, NullPointerException {
-        return new Process(this);
+    public boolean reset() throws ProcessException {
+        // Todo: implement
+        return false;
     }
 
     /**
@@ -167,5 +160,11 @@ public class Process extends Bundle {
         Process process = (Process) obj;
 
         return super.equals(process);
+    }
+
+    @Override
+    public Process copy()
+            throws UnsupportedOperationException {
+        return new Process(this);
     }
 }
