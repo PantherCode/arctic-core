@@ -22,7 +22,6 @@ import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.options.CounterOptions;
 import org.panthercode.arctic.core.settings.context.Context;
 
-//TODO: create Builder class
 //TODO: update documentation
 
 /**
@@ -73,8 +72,6 @@ public class Counter extends Loop {
                    Context context)
             throws NullPointerException {
         super(module, options, context);
-
-        //this.setCount(count);
     }
 
     /**
@@ -108,7 +105,9 @@ public class Counter extends Loop {
      * @throws IllegalArgumentException Is thrown if value is zero or less.
      */
     public synchronized void setCount(final int count) {
-        ((CounterOptions) this.options).setCount(count);
+        if (this.canModify()) {
+            ((CounterOptions) this.options).setCount(count);
+        }
     }
 
     /**
@@ -163,14 +162,18 @@ public class Counter extends Loop {
     }
 
     @Override
-    protected void loop() {
+    protected void initialiseLoop() {
         this.actualCount = 0;
-        int loop;
+    }
 
-        for (loop = 0;
-             loop < this.getCount() && this.isRunning() && this.step();
-             loop++, this.actualCount = loop)
-            ;
+    @Override
+    protected boolean loopCondition() {
+        return this.actualCount < this.getCount() && this.isRunning();
+    }
+
+    @Override
+    protected void afterLoop() {
+        this.actualCount++;
     }
 }
 
