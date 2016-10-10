@@ -18,7 +18,6 @@ package org.panthercode.arctic.core.resources.helper;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.reflect.ClassBuilder;
-import org.panthercode.arctic.core.reflect.ClassUtils;
 import org.panthercode.arctic.core.resources.Resource;
 import org.panthercode.arctic.core.settings.configuration.Configuration;
 
