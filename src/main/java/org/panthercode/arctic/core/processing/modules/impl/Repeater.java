@@ -60,7 +60,8 @@ public class Repeater extends Loop {
      * @throws NullPointerException
      */
     public Repeater(Module module,
-                    RepeaterOptions options) {
+                    RepeaterOptions options)
+            throws NullPointerException {
         this(module, options, null);
     }
 
