@@ -91,7 +91,7 @@ public class Repeater extends Loop {
         super(repeater.getModule().copy(),
                 new RepeaterOptions(repeater.getMaximalDuration(),
                         repeater.getDelayTime(),
-                        repeater.ignoreExceptions(),
+                        repeater.isIgnoreExceptions(),
                         repeater.canQuit()),
                 repeater.getContext());
     }

@@ -62,12 +62,11 @@ public abstract class Loop extends ModuleImpl {
      * Constructor
      *
      * @param module module for processing
-     * @throws NullPointerException     Is thrown if value of module or identity is null.
-     * @throws IllegalArgumentException
+     * @throws NullPointerException Is thrown if value of module or identity is null.
      */
     public Loop(Module module,
                 LoopOptions options)
-            throws NullPointerException, IllegalArgumentException {
+            throws NullPointerException {
         this(module, options, null);
     }
 
@@ -82,7 +81,7 @@ public abstract class Loop extends ModuleImpl {
     public Loop(Module module,
                 LoopOptions options,
                 Context context)
-            throws NullPointerException, IllegalArgumentException {
+            throws NullPointerException {
         super(context);
 
         ArgumentUtils.assertNotNull(options, "options");
@@ -103,7 +102,7 @@ public abstract class Loop extends ModuleImpl {
             throws NullPointerException, UnsupportedOperationException {
         super(loop);
 
-        this.options = new LoopOptions(loop.getDelayTime(), loop.ignoreExceptions(), loop.canQuit());
+        this.options = new LoopOptions(loop.getDelayTime(), loop.isIgnoreExceptions(), loop.canQuit());
 
         this.setModule(loop.getModule().copy());
     }
@@ -128,13 +127,13 @@ public abstract class Loop extends ModuleImpl {
      * @throws NullPointerException Is thrown if module parameter has value <tt>null</tt>
      */
     public synchronized boolean setModule(final Module module)
-            throws NullPointerException, IllegalStateException {
+            throws NullPointerException {
         if (this.isReady()) {
             ArgumentUtils.assertNotNull(module, "module");
 
             this.module = module;
 
-            this.module.setContext(this.context);
+            this.module.setContext(this.getContext());
 
             return true;
         }
@@ -157,10 +156,8 @@ public abstract class Loop extends ModuleImpl {
      * @param durationInMillis new timeout
      * @throws IllegalArgumentException Is thrown if value of parameter is less than zero.
      */
-    public void setDelayTime(long durationInMillis)
+    public synchronized void setDelayTime(long durationInMillis)
             throws IllegalArgumentException {
-        ArgumentUtils.assertGreaterOrEqualsZero(durationInMillis, "duration");
-
         this.options.setDelayTime(durationInMillis);
     }
 
@@ -172,7 +169,7 @@ public abstract class Loop extends ModuleImpl {
      * @throws IllegalArgumentException Is thrown if value of duration is less than zero.
      * @throws NullPointerException
      */
-    public void setDelayTime(TimeUnit unit, long duration)
+    public synchronized void setDelayTime(TimeUnit unit, long duration)
             throws NullPointerException, IllegalArgumentException {
         ArgumentUtils.assertNotNull(unit, "time unit");
 
@@ -206,7 +203,7 @@ public abstract class Loop extends ModuleImpl {
      *
      * @return Returns <tt>true</tt> if object ignores exceptions; Otherwise <tt>false</tt>.
      */
-    public boolean ignoreExceptions() {
+    public boolean isIgnoreExceptions() {
         return this.options.isIgnoreExceptions();
     }
 
@@ -215,7 +212,7 @@ public abstract class Loop extends ModuleImpl {
      *
      * @param ignoreExceptions flag tp ignore exceptions
      */
-    public void ignoreExceptions(boolean ignoreExceptions) {
+    public synchronized void ignoreExceptions(boolean ignoreExceptions) {
         this.options.ignoreExceptions(ignoreExceptions);
     }
 
@@ -229,36 +226,64 @@ public abstract class Loop extends ModuleImpl {
     /**
      * @param canQuit
      */
-    public void canQuit(boolean canQuit) {
+    public synchronized void canQuit(boolean canQuit) {
         this.options.canQuit(canQuit);
     }
 
     /**
      * This method will be called before loop process starts.
      */
-    public void before()
+    public synchronized void before()
             throws ProcessException {
     }
 
     /**
      * This method will be called after loop process finished.
      */
-    public void after()
+    public synchronized void after()
             throws ProcessException {
     }
 
+    //Todo: after method is not called if error occurs
+    //Todo: create more elegant solution to inherent loop control
     @Override
-    public boolean start() throws ProcessException {
+    public synchronized boolean start() throws ProcessException {
         if (this.changeState(ProcessState.RUNNING)) {
             before();
 
-            this.loop();
+            this.initialiseLoop();
+
+            while (this.loopCondition()) {
+                this.module.reset();
+
+                try {
+                    this.module.start();
+
+                    if ((module.isSucceeded() && this.canQuit()) || this.isStopped()) {
+                        break;
+                    }
+                } catch (ProcessException e) {
+                    if (!this.isIgnoreExceptions()) {
+                        this.changeState(ProcessState.FAILED);
+                        throw new ProcessException("While running the module an error occurred.", e);
+                    }
+                }
+
+                try {
+                    Thread.sleep(this.getDelayTime());
+                } catch (InterruptedException e) {
+                    throw new ProcessException(e);
+                }
+
+                this.afterLoop();
+            }
 
             if (!this.isStopped()) {
                 ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
                         : ProcessState.FAILED;
 
                 if (!this.changeState(result)) {
+
                     throw new ProcessException("Failed to set status to " + result + ".");
                 }
             }
@@ -302,7 +327,7 @@ public abstract class Loop extends ModuleImpl {
                 .append(super.hashCode())
                 .append(this.module.hashCode())
                 .append(this.getDelayTime())
-                .append(this.ignoreExceptions())
+                .append(this.isIgnoreExceptions())
                 .append(this.canQuit())
                 .toHashCode());
     }
@@ -327,34 +352,13 @@ public abstract class Loop extends ModuleImpl {
         return super.equals(loop) &&
                 this.module.equals(loop.getModule()) &&
                 this.getDelayTime() == loop.getDelayTime() &&
-                this.ignoreExceptions() == loop.ignoreExceptions() &&
+                this.isIgnoreExceptions() == loop.isIgnoreExceptions() &&
                 this.canQuit() == loop.canQuit();
     }
 
-    protected abstract void loop();
+    protected abstract void initialiseLoop();
 
-    protected boolean step() {
-        this.module.reset();
+    protected abstract boolean loopCondition();
 
-        try {
-            this.module.start();
-
-            if ((module.isSucceeded() && this.canQuit()) || this.isStopped()) {
-                return false;
-            }
-        } catch (ProcessException e) {
-            if (!this.ignoreExceptions()) {
-                this.changeState(ProcessState.FAILED);
-                throw new ProcessException("While running the module an error occurred.", e);
-            }
-        }
-
-        try {
-            Thread.sleep(this.getDelayTime());
-        } catch (InterruptedException e) {
-            throw new ProcessException(e);
-        }
-
-        return true;
-    }
+    protected abstract void afterLoop();
 }

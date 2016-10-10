@@ -86,7 +86,7 @@ public class Counter extends Loop {
         super(counter.module.copy(),
                 new CounterOptions(counter.getCount(),
                         counter.getDelayTime(),
-                        counter.ignoreExceptions(),
+                        counter.isIgnoreExceptions(),
                         counter.canQuit()),
                 counter.getContext());
     }
