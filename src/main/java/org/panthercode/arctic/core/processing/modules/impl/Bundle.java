@@ -18,6 +18,7 @@ package org.panthercode.arctic.core.processing.modules.impl;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.context.Context;
 
@@ -60,6 +61,15 @@ public abstract class Bundle extends ModuleImpl {
         super(context);
 
         modules = new ArrayList<>();
+    }
+
+    public synchronized void before()
+            throws ProcessException {
+    }
+
+    public synchronized void after()
+            throws ProcessException {
+
     }
 
     /**

@@ -81,6 +81,8 @@ public class Process extends Bundle {
             throws ProcessException {
         if (this.changeState(ProcessState.RUNNING)) {
 
+            this.before();
+
             try {
                 Iterator<Module> iterator = this.iterator();
                 while (iterator.hasNext() && this.isRunning()) {
@@ -100,10 +102,12 @@ public class Process extends Bundle {
 
                 this.changeState(ProcessState.SUCCEEDED);
 
+                this.after();
+
                 return true;
             } catch (Exception e) {
                 this.changeState(ProcessState.FAILED);
-                //Todo: throw exceptions if it's not ignored.
+                this.after();
             }
         }
 
