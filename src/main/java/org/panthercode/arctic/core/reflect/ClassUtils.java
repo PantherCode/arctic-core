@@ -18,6 +18,7 @@ package org.panthercode.arctic.core.reflect;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
 /**
  * Created by architect on 25.09.16.
@@ -45,27 +45,26 @@ public class ClassUtils {
      * @throws IOException              Is thrown if an error occurs while reading the .jar file.
      * @throws IllegalArgumentException Is thrown if path is null.
      */
-    public static List<String> getClassNamesFromJarFile(String path)
-            throws IllegalArgumentException, IOException {
+    public static List<String> extractClassNamesFromJar(String path)
+            throws NullPointerException, IOException {
         ArgumentUtils.assertNotNull(path, "path");
 
-        List<String> classNames = new ArrayList<String>();
-
         JarFile jarFile = new JarFile(path);
+
+        List<String> classNameList = new ArrayList<>();
+
         Enumeration<JarEntry> entries = jarFile.entries();
-        JarEntry currentEntry = null;
-        String currentClassName = null;
 
-        while (entries.hasMoreElements()) {
-            currentEntry = entries.nextElement();
-            currentClassName = currentEntry.getName().replace("/", ".");
-
-            if (currentClassName.endsWith(".class")) {
-                classNames.add(currentClassName);
+        for (JarEntry currentEntry = entries.nextElement();
+             entries.hasMoreElements();
+             currentEntry = entries.nextElement()) {
+            if (currentEntry != null &&
+                    currentEntry.getName().endsWith(".class")) {
+                classNameList.add(currentEntry.getName().replace("/", ".").split("\\.class", 2)[0]);
             }
         }
 
-        return classNames;
+        return classNameList;
     }
 
     /**
@@ -77,58 +76,73 @@ public class ClassUtils {
      * @throws ClassNotFoundException   Is thrown if the class is not found.
      * @throws IllegalArgumentException Is thrown if path is null.
      */
-    public static List<Class<?>> getClassesFromJarFile(String path)
+    public static List<Class<?>> extractClassesFromJar(String path)
             throws IOException, ClassNotFoundException, IllegalArgumentException {
         ArgumentUtils.assertNotNull(path, "path");
 
-        List<Class<?>> classes = new ArrayList<Class<?>>();
+        List<Class<?>> classList = new ArrayList<>();
 
-        URL url = new URL("jar:file:" + path + "!/");
-        URLClassLoader classLoader = new URLClassLoader(new URL[]{url});
-        //TODO: filter
-        for (String name : ClassUtils.getClassNamesFromJarFile(path)) {
-            name = name.substring(0, name.lastIndexOf(".class"));
-            Class<?> clazz = classLoader.loadClass(name);
-            classes.add(clazz);
+        URL[] urlArray = {new URL("jar:file:" + path + "!/")};
+        URLClassLoader classLoader = new URLClassLoader(urlArray);
+
+        for (String className : ClassUtils.extractClassNamesFromJar(path)) {
+            classList.add(classLoader.loadClass(className));
         }
 
-        return classes;
+        return classList;
     }
 
     /**
-     * Creates a list of classes fitting the filter from a specific .jar file.
-     *
-     * @param path   filepath to .jar file
-     * @param filter super class or interface to get classes of specific type.
-     * @return Returns a filtered list.
-     * @throws IOException              Is thrown if an error occurs while reading the .jar file.
-     * @throws ClassNotFoundException   Is thrown if class is not found.
-     * @throws IllegalArgumentException Is thrown if path is null.
+     * @param classList
+     * @param filter
+     * @return
+     * @throws NullPointerException
      */
-    public static List<Class<?>> getClassesFromJarFile(String path, Class<?> filter)
-            throws IOException, ClassNotFoundException, IllegalArgumentException {
-        ArgumentUtils.assertNotNull(path, "path");
+    public static List<Class<?>> filterClassList(final List<Class<?>> classList, final Class<?> filter)
+            throws NullPointerException {
+        ArgumentUtils.assertNotNull(classList, "list");
         ArgumentUtils.assertNotNull(filter, "filter");
 
-        List<Class<?>> classes = ClassUtils.getClassesFromJarFile(path).stream().filter(clazz -> org.apache.commons.lang3.ClassUtils.getAllInterfaces(clazz).contains(filter) ||
-                org.apache.commons.lang3.ClassUtils.getAllSuperclasses(clazz).contains(filter)).collect(Collectors.toList());
+        final List<Class<?>> filteredList = new ArrayList<>();
 
-        return classes;
+        filteredList.forEach(item -> {
+            if (item.isInstance(filter)) {
+                filteredList.add(item);
+            }
+        });
+
+        return filteredList;
     }
 
     /**
-     * Casts an object to it's real type.
-     *
-     * @param obj object, that should cast
-     * @param <T> type to be casted
-     * @return Returns a the casted object if object isn't null; Otherwise null.
+     * @param classList
+     * @param filter
+     * @return
+     * @throws NullPointerException
      */
-    public static <T> T cast(Object obj) {
-        if (obj != null) {
-            Class<T> clazz = (Class<T>) obj.getClass();
-            return (T) obj;
-        }
+    public static List<Class<?>> filterClassListByAnnotation(final List<Class<?>> classList,
+                                                             final Class<? extends Annotation> filter)
+            throws NullPointerException {
+        ArgumentUtils.assertNotNull(classList, "list");
+        ArgumentUtils.assertNotNull(filter, "filter");
 
-        return null;
+        final List<Class<?>> filteredList = new ArrayList<>();
+
+        filteredList.forEach(item -> {
+            if (ClassUtils.isAnnotated(item, filter)) {
+                filteredList.add(item);
+            }
+        });
+
+        return filteredList;
+    }
+
+    /**
+     * @param clazz
+     * @param annotation
+     * @return
+     */
+    public static boolean isAnnotated(final Class<?> clazz, final Class<? extends Annotation> annotation) {
+        return clazz != null && annotation != null && clazz.getAnnotation(annotation) != null;
     }
 }
