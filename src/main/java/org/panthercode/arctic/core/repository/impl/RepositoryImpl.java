@@ -75,7 +75,7 @@ public class RepositoryImpl<T extends Identifiable & Versionable> implements Rep
      */
     @Override
     public Identity identity() {
-        return this.identity.clone();
+        return this.identity.copy();
     }
 
     /**

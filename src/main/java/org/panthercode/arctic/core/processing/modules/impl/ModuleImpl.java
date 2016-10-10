@@ -173,7 +173,7 @@ public abstract class ModuleImpl implements Module {
      * @return Returns the identity the object is associated with.
      */
     public Identity identity() {
-        return this.identity.clone();
+        return this.identity.copy();
     }
 
     /**
@@ -357,7 +357,7 @@ public abstract class ModuleImpl implements Module {
      * Creates a copy of this object.
      *
      * @return Return a copy of this object.
-     * @throws UnsupportedOperationException Is thrown if object doesn't provide an implementation of <tt>clone()</tt>
+     * @throws UnsupportedOperationException Is thrown if object doesn't provide an implementation of <tt>copy()</tt>
      *                                       method.
      */
     public abstract ModuleImpl copy() throws UnsupportedOperationException;

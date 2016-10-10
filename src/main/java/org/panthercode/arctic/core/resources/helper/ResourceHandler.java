@@ -96,7 +96,7 @@ public class ResourceHandler implements Identifiable {
      * @return
      */
     public Identity identity() {
-        return this.identity.clone();
+        return this.identity.copy();
     }
 
     /**

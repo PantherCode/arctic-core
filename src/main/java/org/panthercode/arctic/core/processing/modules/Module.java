@@ -81,10 +81,10 @@ import org.panthercode.arctic.core.settings.context.Context;
  * }
  * </pre>
  * By default a module is not thread safe programmed. If this requirement is necessary you should add <tt>synchronized
- * </tt> to function signature of all inner field manipulating methods and <tt>clone()</tt>.
+ * </tt> to function signature of all inner field manipulating methods and <tt>copy()</tt>.
  * <p>
  * If you implement this interface or inherit from a module class, you should always override the following methods:
- * equals(), hashCode() and clone(). If you are not sure about that, you can look at existing implementations.
+ * equals(), hashCode() and copy(). If you are not sure about that, you can look at existing implementations.
  */
 public interface Module extends Identifiable, Versionable {
 

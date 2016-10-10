@@ -158,13 +158,12 @@ public final class Identity implements Freezable {
 
     /**
      * Creates and returns a copy of this object. The identifier of the copied object will be generated again.
-     * If you try <code>identity.equals(identity.clone())</code> the result always is <code>false</code>. This is done
+     * If you try <code>identity.equals(identity.copy())</code> the result always is <code>false</code>. This is done
      * to prevent objects with different content but same id.
      *
      * @return Return a copy of this object.
      */
-    @Override
-    public Identity clone() {
+    public Identity copy() {
         return new Identity(this.id, this.name, this.group);
     }
 

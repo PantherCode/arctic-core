@@ -90,7 +90,7 @@ public abstract class ResourceImpl extends ConfigurableObject implements Resourc
      */
     @Override
     public Identity identity() {
-        return this.identity.clone();
+        return this.identity.copy();
     }
 
     @Override
