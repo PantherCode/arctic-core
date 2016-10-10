@@ -40,13 +40,16 @@ public class Repeater extends Loop {
      */
     private long actualDurationInMillis;
 
+    private long startPoint;
+
     /**
      * Constructor
      *
      * @param module module for processing
      * @throws NullPointerException
      */
-    public Repeater(Module module) {
+    public Repeater(Module module)
+            throws NullPointerException {
         this(module, new RepeaterOptions());
     }
 
@@ -55,7 +58,6 @@ public class Repeater extends Loop {
      *
      * @param module module for processing
      * @throws NullPointerException
-     * @throws IllegalArgumentException
      */
     public Repeater(Module module,
                     RepeaterOptions options) {
@@ -68,7 +70,6 @@ public class Repeater extends Loop {
      * @param module  module for processing
      * @param context context the object is associated with
      * @throws NullPointerException
-     * @throws IllegalArgumentException
      */
     public Repeater(Module module,
                     RepeaterOptions options,
@@ -76,7 +77,6 @@ public class Repeater extends Loop {
             throws NullPointerException {
         super(module, options, context);
     }
-
 
     /**
      * Copy Constructor. Hint: Use only Copy Constructor construct LoopOption object, if you call getMaximalDuration()
@@ -87,7 +87,7 @@ public class Repeater extends Loop {
      * @throws IllegalArgumentException
      */
     public Repeater(Repeater repeater)
-            throws UnsupportedOperationException {
+            throws NullPointerException, UnsupportedOperationException {
         super(repeater.getModule().copy(),
                 new RepeaterOptions(repeater.getMaximalDuration(),
                         repeater.getDelayTime(),
@@ -136,7 +136,7 @@ public class Repeater extends Loop {
      * @param durationInMillis new time limit
      * @throws IllegalArgumentException
      */
-    public void setMaximalDuration(long durationInMillis) {
+    public synchronized void setMaximalDuration(long durationInMillis) {
         ((RepeaterOptions) this.options).setMaximalDuration(durationInMillis);
     }
 
@@ -199,13 +199,18 @@ public class Repeater extends Loop {
     }
 
     @Override
-    protected void loop() {
+    protected void initialiseLoop() {
         this.actualDurationInMillis = 0L;
-        long durationInMillis = 0L;
+        this.startPoint = System.currentTimeMillis();
+    }
 
-        for (long start = System.currentTimeMillis();
-             durationInMillis < this.getMaximalDuration() && this.isRunning() && this.step();
-             durationInMillis = System.currentTimeMillis() - start, this.actualDurationInMillis = durationInMillis)
-            ;
+    @Override
+    protected boolean loopCondition() {
+        return this.actualDuration() < this.getMaximalDuration();
+    }
+
+    @Override
+    protected void afterLoop() {
+        this.actualDurationInMillis = System.currentTimeMillis() - this.startPoint;
     }
 }

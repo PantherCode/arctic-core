@@ -105,9 +105,7 @@ public class Counter extends Loop {
      * @throws IllegalArgumentException Is thrown if value is zero or less.
      */
     public synchronized void setCount(final int count) {
-        if (this.canModify()) {
-            ((CounterOptions) this.options).setCount(count);
-        }
+        ((CounterOptions) this.options).setCount(count);
     }
 
     /**
