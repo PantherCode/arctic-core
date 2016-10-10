@@ -41,7 +41,7 @@ public abstract class Step extends ModuleImpl {
      */
     public Step()
             throws NullPointerException {
-        this((Context) null);
+        this(new Context());
     }
 
     /**
@@ -59,11 +59,10 @@ public abstract class Step extends ModuleImpl {
      * Copy Constructor
      *
      * @param step object to copy
-     * @throws UnsupportedOperationException Is thrown if a module in bundle doesn't support cloning.
-     * @throws NullPointerException          Is thrown if value of parameter is null.
+     * @throws NullPointerException Is thrown if value of parameter is null.
      */
     public Step(Step step)
-            throws NullPointerException, UnsupportedOperationException {
+            throws NullPointerException {
         super(step);
     }
 
@@ -83,10 +82,10 @@ public abstract class Step extends ModuleImpl {
                 ProcessState result = this.step() ? ProcessState.SUCCEEDED : ProcessState.FAILED;
 
                 return this.changeState(result);
-            } catch (Exception e) {
+            } catch (ProcessException e) {
                 this.changeState(ProcessState.FAILED);
 
-                throw new ProcessException("While running process step an error is occurred.", e);
+                throw new ProcessException("An error has occurred while executing the step module.", e);
             }
         }
 
