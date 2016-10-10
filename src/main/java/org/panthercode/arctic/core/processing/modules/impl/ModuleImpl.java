@@ -129,8 +129,7 @@ public abstract class ModuleImpl implements Module {
         if (Identity.isAnnotated(this)) {
             this.identity = Identity.fromAnnotation(this);
         } else {
-            //TODO: better exception message
-            throw new NullPointerException("The value of identity is null.");
+            throw new NullPointerException("The module doesn't have an identity annotation.");
         }
 
         if (Version.isAnnotated(this)) {
@@ -201,7 +200,7 @@ public abstract class ModuleImpl implements Module {
      * @param context new context
      */
     public synchronized boolean setContext(final Context context) {
-        if (!this.canModify()) {
+        if (this.canModify()) {
             this.context = (context == null) ? new Context() : context;
 
             return true;
@@ -351,7 +350,7 @@ public abstract class ModuleImpl implements Module {
         ModuleImpl module = (ModuleImpl) obj;
 
         return this.identity.match(module.identity()) &&
-                this.version.equals(module.version);
+                this.version.equals(module.version());
     }
 
     /**
