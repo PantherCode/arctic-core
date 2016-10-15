@@ -16,7 +16,6 @@
 package org.panthercode.arctic.core.xml;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.io.IOUtils;
 
 import javax.xml.bind.JAXB;
 import java.io.FileInputStream;
@@ -45,7 +44,7 @@ public class XmlUtils {
             throws IOException {
         ArgumentUtils.assertNotNull(obj, "object");
 
-        try (FileOutputStream stream = IOUtils.toFileOutputStream(path)) {
+        try (FileOutputStream stream = new FileOutputStream(path)) {
             JAXB.marshal(obj, stream);
         }
     }
@@ -66,7 +65,7 @@ public class XmlUtils {
 
         T result;
 
-        try (FileInputStream stream = IOUtils.toFileIntputStream(path)) {
+        try (FileInputStream stream = new FileInputStream(path)) {
             result = JAXB.unmarshal(stream, clazz);
         }
 
