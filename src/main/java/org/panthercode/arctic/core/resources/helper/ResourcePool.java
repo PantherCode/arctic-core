@@ -29,79 +29,79 @@ import java.util.Map;
 /**
  *
  */
-public class ResourcePool extends RepositoryImpl<ResourceHandler> {
+public class ResourcePool /* extends RepositoryImpl<ResourceHandler>*/ {
 
-    /**
-     *
-     * @param identity
-     */
-    public ResourcePool(Identity identity) {
-        super(identity);
-    }
-
-    /**
-     *
-     * @param key
-     * @return
-     */
-    @Override
-    public ResourceHandler get(String key) {
-        throw new UnsupportedOperationException(); //TODO
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public Collection<Map<Version, ResourceHandler>> elements() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public Map<String, Map<Version, ResourceHandler>> asMap() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     *
-     * @param name
-     * @return
-     */
-    public boolean canConnect(String name) {
-        return false;
-    }
-
-    /**
-     *
-     * @param name
-     * @return
-     * @throws InterruptedException
-     */
-    public synchronized Resource connect(String name) throws InterruptedException {
-        if (name != null) {
-            if (this.contains(name)) {
-                return this.get(name).create();
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     *
-     * @param resource
-     * @throws IOException
-     */
-    public synchronized void disconnect(Resource resource) throws IOException {
-        if(resource != null){
-            if(this.contains(resource.identity().getName())){
-                this.get(resource.identity().getName()).disconnect(resource);
-            }
-        }
-    }
+//    /**
+//     *
+//     * @param identity
+//     */
+//    public ResourcePool(Identity identity) {
+//        //super(identity);
+//    }
+//
+//    /**
+//     *
+//     * @param key
+//     * @return
+//     */
+//    @Override
+//    public ResourceHandler get(String key) {
+//        throw new UnsupportedOperationException(); //TODO
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    @Override
+//    public Collection<Map<Version, ResourceHandler>> elements() {
+//        throw new UnsupportedOperationException();
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    @Override
+//    public Map<String, Map<Version, ResourceHandler>> asMap() {
+//        throw new UnsupportedOperationException();
+//    }
+//
+//    /**
+//     *
+//     * @param name
+//     * @return
+//     */
+//    public boolean canConnect(String name) {
+//        return false;
+//    }
+//
+//    /**
+//     *
+//     * @param name
+//     * @return
+//     * @throws InterruptedException
+//     */
+//    public synchronized Resource connect(String name) throws InterruptedException {
+//        if (name != null) {
+//            if (this.contains(name)) {
+//                return this.get(name).create();
+//            }
+//        }
+//
+//        return null;
+//    }
+//
+//    /**
+//     *
+//     * @param resource
+//     * @throws IOException
+//     */
+//    public synchronized void disconnect(Resource resource) throws IOException {
+//        if(resource != null){
+//            if(this.contains(resource.identity().getName())){
+//                this.get(resource.identity().getName()).disconnect(resource);
+//            }
+//        }
+//    }
 }

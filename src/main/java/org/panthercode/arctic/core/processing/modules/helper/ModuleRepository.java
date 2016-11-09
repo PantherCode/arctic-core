@@ -32,82 +32,82 @@ import org.panthercode.arctic.core.settings.context.Context;
 @VersionInfo(major = 1)
 public class ModuleRepository extends RepositoryImpl<Module> {
 
-    /**
-     * TODO: Repository constructor without identity parameter -> annotation
-     * Constructor
-     *
-     * @param identity identity associated with this object
-     */
-    public ModuleRepository(Identity identity) {
-        super(identity);
-    }
-
-    /**
-     * Returns a new casted instance of a specific module given by its name.
-     *
-     * @param moduleClass class type of module
-     * @param name        name of module
-     * @param <T>         generic type of module
-     * @return Returns a new casted instance of module, if repository contains module and no ClassCastExceptions is
-     * thrown; Otherwise <tt>null</tt>.
-     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
-     */
-    public <T extends Module> T order(Class<T> moduleClass, final String name)
-            throws CloneNotSupportedException {
-        return this.order(moduleClass, name, null);
-    }
-
-    /**
-     * Returns a new casted instance of a specific module given by its name.
-     *
-     * @param moduleClass class type of module
-     * @param name        name of module
-     * @param context     context of new module instance
-     * @param <T>         generic type of module
-     * @return Returns a new casted instance of module, if repository contains module and no ClassCastExceptions is
-     * thrown; Otherwise <tt>null</tt>.
-     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Module> T order(Class<T> moduleClass, final String name, final Context context)
-            throws CloneNotSupportedException {
-        return (T) this.order(name, context);
-    }
-
-    /**
-     * Returns a new instance of a specific module given by its name.
-     *
-     * @param name name of module
-     * @return Returns a new casted instance of module, if repository contains module; Otherwise <tt>null</tt>.
-     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
-     */
-    public Module order(final String name) throws CloneNotSupportedException {
-        return this.order(name, null);
-    }
-
-    /**
-     * Returns a new instance of a specific module given by its name.
-     *
-     * @param name    name of module
-     * @param context context of new module instance
-     * @return Returns a new casted instance of module, if repository contains module; Otherwise <tt>null</tt>.
-     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
-     */
-    public Module order(final String name, final Context context) throws CloneNotSupportedException {
-        if (this.contains(name)) {
-            try {
-                Module module = this.get(name).copy();
-
-                if (context != null) {
-                    module.setContext(context);
-                }
-
-                return module;
-            } catch (ClassCastException e) {
-                return null;
-            }
-        }
-
-        return null;
-    }
+//    /**
+//     * TODO: Repository constructor without identity parameter -> annotation
+//     * Constructor
+//     *
+//     * @param identity identity associated with this object
+//     */
+//    public ModuleRepository(Identity identity) {
+//        super(identity);
+//    }
+//
+//    /**
+//     * Returns a new casted instance of a specific module given by its name.
+//     *
+//     * @param moduleClass class type of module
+//     * @param name        name of module
+//     * @param <T>         generic type of module
+//     * @return Returns a new casted instance of module, if repository contains module and no ClassCastExceptions is
+//     * thrown; Otherwise <tt>null</tt>.
+//     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
+//     */
+//    public <T extends Module> T order(Class<T> moduleClass, final String name)
+//            throws CloneNotSupportedException {
+//        return this.order(moduleClass, name, null);
+//    }
+//
+//    /**
+//     * Returns a new casted instance of a specific module given by its name.
+//     *
+//     * @param moduleClass class type of module
+//     * @param name        name of module
+//     * @param context     context of new module instance
+//     * @param <T>         generic type of module
+//     * @return Returns a new casted instance of module, if repository contains module and no ClassCastExceptions is
+//     * thrown; Otherwise <tt>null</tt>.
+//     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
+//     */
+//    @SuppressWarnings("unchecked")
+//    public <T extends Module> T order(Class<T> moduleClass, final String name, final Context context)
+//            throws CloneNotSupportedException {
+//        return (T) this.order(name, context);
+//    }
+//
+//    /**
+//     * Returns a new instance of a specific module given by its name.
+//     *
+//     * @param name name of module
+//     * @return Returns a new casted instance of module, if repository contains module; Otherwise <tt>null</tt>.
+//     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
+//     */
+//    public Module order(final String name) throws CloneNotSupportedException {
+//        return this.order(name, null);
+//    }
+//
+//    /**
+//     * Returns a new instance of a specific module given by its name.
+//     *
+//     * @param name    name of module
+//     * @param context context of new module instance
+//     * @return Returns a new casted instance of module, if repository contains module; Otherwise <tt>null</tt>.
+//     * @throws CloneNotSupportedException Is thrown if module doesn't support cloning.
+//     */
+//    public Module order(final String name, final Context context) throws CloneNotSupportedException {
+//        if (this.contains(name)) {
+//            try {
+//                Module module = this.get(name).copy();
+//
+//                if (context != null) {
+//                    module.setContext(context);
+//                }
+//
+//                return module;
+//            } catch (ClassCastException e) {
+//                return null;
+//            }
+//        }
+//
+//        return null;
+//    }
 }

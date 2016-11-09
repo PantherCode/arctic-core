@@ -30,7 +30,7 @@ import org.panthercode.arctic.core.settings.context.Context;
  */
 @IdentityInfo(name = "Standard Counter", group = "Counter Module")
 @VersionInfo(major = 1)
-public class Counter extends Loop {
+public class Counter extends Repeater {
 
     /**
      * actual round
@@ -149,7 +149,7 @@ public class Counter extends Loop {
             return true;
         }
 
-        if (!(obj instanceof Loop)) {
+        if (!(obj instanceof Repeater)) {
             return false;
         }
 
@@ -159,17 +159,17 @@ public class Counter extends Loop {
                 this.getCount() == counter.getCount();
     }
 
-    @Override
+   // @Override
     protected void initialiseLoop() {
         this.actualCount = 0;
     }
 
-    @Override
+    //@Override
     protected boolean loopCondition() {
         return this.actualCount < this.getCount() && this.isRunning();
     }
 
-    @Override
+    //@Override
     protected void afterLoop() {
         this.actualCount++;
     }

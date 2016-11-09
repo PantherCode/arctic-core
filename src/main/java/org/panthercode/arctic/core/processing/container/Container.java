@@ -68,9 +68,9 @@ public class Container extends ModuleImpl {
             throws CloneNotSupportedException {
         super(container);
 
-        this.setWorker(container.getWorker().clone());
+        //this.setWorker(container.getWorker().clone());
 
-        this.worker.setContext(container.context);
+      //  this.worker.setContext(container.context);
     }
 
     /**
@@ -86,9 +86,9 @@ public class Container extends ModuleImpl {
             throw new NullPointerException("There is no worker to execute.");
         }
 
-        if(super.start()) {
-            return this.worker.start();
-        }
+       // if(super.start()) {
+         //   return this.worker.start();
+        //}
 
         return false;
     }
@@ -104,7 +104,12 @@ public class Container extends ModuleImpl {
             this.worker.stop();
         }
 
-        return  super.stop();
+        return  false; //super.stop();
+    }
+
+    @Override
+    public boolean reset() throws ProcessException {
+        return false;
     }
 
     /**
@@ -117,7 +122,7 @@ public class Container extends ModuleImpl {
 
         if (this.isReady()) {
             this.worker = worker;
-            this.worker.setContext(this.context);
+           // this.worker.setContext(this.context);
         } else {
             throw new RuntimeException("The worker can only change in state 'Ready'.");
         }
@@ -196,5 +201,10 @@ public class Container extends ModuleImpl {
         Container container = (Container) obj;
 
         return super.equals(container) && this.worker.equals(container.getWorker());
+    }
+
+    @Override
+    public ModuleImpl copy() throws UnsupportedOperationException {
+        return null;
     }
 }

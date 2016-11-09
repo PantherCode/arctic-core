@@ -17,50 +17,61 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.processing.ProcessState;
+import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.processing.modules.options.RepeaterOptions;
+import org.panthercode.arctic.core.processing.modules.helper.Measurement;
+import org.panthercode.arctic.core.processing.modules.options.LoopOptions;
 import org.panthercode.arctic.core.settings.context.Context;
 
 import java.util.concurrent.TimeUnit;
 
-//TODO: udpate documentation
+//TODO: update documentation
 
 /**
- * The Repeater repeats the module's functionality until the time limit is reached or until the module finished
- * successfully.
+ * Class to repeat module's functionality. The Loop class provides some basic functions to control the loop process.
  */
-@IdentityInfo(name = "Standard Repeater", group = "Repeater Module")
-@VersionInfo(major = 1)
-public class Repeater extends Loop {
+public abstract class Repeater extends ModuleImpl {
 
     /**
-     * elapsed time after start the process
+     * Module for processing
      */
-    private long actualDurationInMillis;
+    protected Module module = null;
 
-    private long startPoint;
+    /**
+     *
+     */
+    protected LoopOptions options;
+
+    /**
+     *
+     */
+    protected Measurement<? extends Object> measurement;
+
+    /**
+     * Loop class use milliseconds for measurements
+     */
+    protected final TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 
     /**
      * Constructor
      *
      * @param module module for processing
-     * @throws NullPointerException
+     * @throws NullPointerException Is thrown if value of module or identity is null.
      */
     public Repeater(Module module)
             throws NullPointerException {
-        this(module, new RepeaterOptions());
+        this(module, new LoopOptions());
     }
 
     /**
      * Constructor
      *
      * @param module module for processing
-     * @throws NullPointerException
+     * @throws NullPointerException Is thrown if value of module or identity is null.
      */
     public Repeater(Module module,
-                    RepeaterOptions options)
+                    LoopOptions options)
             throws NullPointerException {
         this(module, options, null);
     }
@@ -70,96 +81,243 @@ public class Repeater extends Loop {
      *
      * @param module  module for processing
      * @param context context the object is associated with
-     * @throws NullPointerException
+     * @throws NullPointerException Is thrown if value of module or identity is null.
+     *                              throws IllegalArgumentException
      */
     public Repeater(Module module,
-                    RepeaterOptions options,
+                    LoopOptions options,
                     Context context)
             throws NullPointerException {
-        super(module, options, context);
+        super(context);
+
+        ArgumentUtils.assertNotNull(options, "options");
+
+        this.setModule(module);
+
+        this.options = options;
     }
 
     /**
-     * Copy Constructor. Hint: Use only Copy Constructor construct LoopOption object, if you call getMaximalDuration()
-     * a ClassCastException will be thrown. Therefore it's used a "normal" constructor.
+     * Copy Constructor
      *
      * @param repeater object to copy
-     * @throws NullPointerException
-     * @throws IllegalArgumentException
+     * @throws NullPointerException          Is thrown if value of parameter is null.
+     * @throws UnsupportedOperationException Is thrown if child element doesn't support cloning.
      */
     public Repeater(Repeater repeater)
             throws NullPointerException, UnsupportedOperationException {
-        super(repeater.getModule().copy(),
-                new RepeaterOptions(repeater.getMaximalDuration(),
-                        repeater.getDelayTime(),
-                        repeater.isIgnoreExceptions(),
-                        repeater.canQuit()),
-                repeater.getContext());
+        super(repeater);
+
+        this.options = new LoopOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
+
+        this.setModule(repeater.getModule().copy());
     }
 
     /**
-     * Returns the actual time limit (in ms).
+     * Set new context the object is associated with. It also sets the context of child element. You can only set a new
+     * context to this object if process state isn't "Running" or "Waiting".
      *
-     * @return Returns the actual time limit (in ms).
-     */
-    public long getMaximalDuration() {
-        return ((RepeaterOptions) this.options).getMaximalDuration();
-    }
-
-    /**
-     * Returns the actual time limit.
-     *
-     * @param unit alternative time unit
-     * @return Returns the actual time limit.
-     * @throws NullPointerException Is thrown if the value of unit is null.
-     */
-    public long getMaximalDuration(TimeUnit unit) {
-        ArgumentUtils.assertNotNull(unit, "time unit");
-
-        return unit.convert(this.getMaximalDuration(), this.timeUnit);
-    }
-
-    /**
-     * Set a new time limit.
-     *
-     * @param unit     time unit
-     * @param duration new time limit
-     * @throws IllegalArgumentException
-     */
-    public void setMaximalDuration(TimeUnit unit, long duration)
-            throws IllegalArgumentException {
-        this.setMaximalDuration(unit.toMillis(duration));
-    }
-
-    /**
-     * Set a new time limit.
-     *
-     * @param durationInMillis new time limit
-     * @throws IllegalArgumentException
-     */
-    public synchronized void setMaximalDuration(long durationInMillis) {
-        ((RepeaterOptions) this.options).setMaximalDuration(durationInMillis);
-    }
-
-    /**
-     * Returns the elapsed time after starting the process.
-     *
-     * @return Returns the elapsed time if object's process state is "Running"; Otherwise zero.
-     */
-    public long actualDuration() {
-        return this.isRunning() ? 0L : this.actualDurationInMillis;
-    }
-
-    /**
-     * Creates a copy of this object.
-     *
-     * @return Return a copy of this object.
-     * @throws CloneNotSupportedException Is thrown if child element doesn't support cloning.
+     * @param context new context
+     * @return
      */
     @Override
-    public Repeater copy()
-            throws UnsupportedOperationException {
-        return new Repeater(this);
+    public synchronized boolean setContext(final Context context) {
+        return super.setContext(context) && this.module.setContext(context);
+    }
+
+    /**
+     * Set a module the object is associated with. You can only set a new module, if objects process state is "Ready".
+     *
+     * @param module new module for processing
+     * @return
+     * @throws NullPointerException Is thrown if module parameter has value <tt>null</tt>
+     */
+    public synchronized boolean setModule(final Module module)
+            throws NullPointerException {
+        if (this.isReady()) {
+            ArgumentUtils.assertNotNull(module, "module");
+
+            this.module = module;
+
+            this.module.setContext(this.getContext());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the module the object is associated with.
+     *
+     * @return Returns the module the object is associated with.
+     */
+    public Module getModule() {
+        return this.module;
+    }
+
+    /**
+     * Set a new delay time the object is associated with. The value must be greater than or equals zero.
+     *
+     * @param durationInMillis new timeout
+     * @throws IllegalArgumentException Is thrown if value of parameter is less than zero.
+     */
+    public synchronized void setDelayTime(long durationInMillis)
+            throws IllegalArgumentException {
+        this.options.setDelayTime(durationInMillis);
+    }
+
+    /**
+     * Set a new delay time the object is associated with. The value must be greater than or equals zero.
+     *
+     * @param unit     time unit of duration
+     * @param duration new timeout value
+     * @throws IllegalArgumentException Is thrown if value of duration is less than zero.
+     * @throws NullPointerException
+     */
+    public synchronized void setDelayTime(TimeUnit unit, long duration)
+            throws NullPointerException, IllegalArgumentException {
+        ArgumentUtils.assertNotNull(unit, "time unit");
+
+        this.setDelayTime(unit.toMillis(duration));
+    }
+
+    /**
+     * Returns the actual delay time the object is associated with.
+     *
+     * @return Returns the actual delay time the object is associated with.
+     */
+    public long getDelayTime() {
+        return this.options.getDelayTime();
+    }
+
+    /**
+     * Returns the actual delay time the object is associated with.
+     *
+     * @param unit own time unit
+     * @return Returns the actual delay time the object is associated with.
+     * @throws NullPointerException
+     */
+    public long getDelayTime(final TimeUnit unit) {
+        ArgumentUtils.assertNotNull(timeUnit, "timeUnit");
+
+        return unit.convert(this.options.getDelayTime(), this.timeUnit);
+    }
+
+    /**
+     * Returns a flag representing whether the object ignores exceptions are thrown by module or not.
+     *
+     * @return Returns <tt>true</tt> if object ignores exceptions; Otherwise <tt>false</tt>.
+     */
+    public boolean isIgnoreExceptions() {
+        return this.options.isIgnoreExceptions();
+    }
+
+    /**
+     * Set a flag to ignore exceptions thrown by value or not.
+     *
+     * @param ignoreExceptions flag tp ignore exceptions
+     */
+    public synchronized void ignoreExceptions(boolean ignoreExceptions) {
+        this.options.ignoreExceptions(ignoreExceptions);
+    }
+
+    /**
+     * @return
+     */
+    public boolean canQuit() {
+        return this.options.canQuit();
+    }
+
+    /**
+     * @param canQuit
+     */
+    public synchronized void canQuit(boolean canQuit) {
+        this.options.canQuit(canQuit);
+    }
+
+    /**
+     * This method will be called before loop process starts.
+     */
+    public synchronized void before()
+            throws ProcessException {
+    }
+
+    /**
+     * This method will be called after loop process finished.
+     */
+    public synchronized void after()
+            throws ProcessException {
+    }
+
+    //Todo: after method is not called if error occurs
+    //Todo: create more elegant solution to inherent loop control
+    @Override
+    public synchronized boolean start() throws ProcessException {
+        if (this.changeState(ProcessState.RUNNING)) {
+            before();
+
+            this.measurement.reset();
+
+            while (this.measurement.updateAndCheck()) {
+                this.module.reset();
+
+                try {
+                    this.module.start();
+
+                    if ((module.isSucceeded() && this.canQuit()) || this.isStopped()) {
+                        break;
+                    }
+                } catch (ProcessException e) {
+                    if (!this.isIgnoreExceptions()) {
+                        this.changeState(ProcessState.FAILED);
+                        throw new ProcessException("While running the module an error occurred.", e);
+                    }
+                }
+
+                try {
+                    Thread.sleep(this.getDelayTime());
+                } catch (InterruptedException e) {
+                    throw new ProcessException(e);
+                }
+            }
+
+            if (!this.isStopped()) {
+                ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                        : ProcessState.FAILED;
+
+                if (!this.changeState(result)) {
+
+                    throw new ProcessException("Failed to set status to " + result + ".");
+                }
+            }
+
+            this.after();
+
+            return !this.isStopped();
+        }
+
+        return false;
+    }
+
+    /**
+     * @return
+     * @throws ProcessException
+     */
+    @Override
+    public synchronized boolean stop()
+            throws ProcessException {
+        return this.changeState(ProcessState.STOPPED) && this.module.stop();
+    }
+
+    /**
+     * @return
+     * @throws ProcessException
+     */
+    @Override
+    public synchronized boolean reset()
+            throws ProcessException {
+        return this.changeState(ProcessState.READY) && this.module.reset();
     }
 
     /**
@@ -171,8 +329,10 @@ public class Repeater extends Loop {
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
                 .append(super.hashCode())
-                .append(this.actualDurationInMillis)
+                .append(this.module.hashCode())
                 .append(this.getDelayTime())
+                .append(this.isIgnoreExceptions())
+                .append(this.canQuit())
                 .toHashCode());
     }
 
@@ -193,25 +353,10 @@ public class Repeater extends Loop {
         }
 
         Repeater repeater = (Repeater) obj;
-
         return super.equals(repeater) &&
-                this.getMaximalDuration() == repeater.getMaximalDuration() &&
-                this.getDelayTime() == repeater.getDelayTime();
-    }
-
-    @Override
-    protected void initialiseLoop() {
-        this.actualDurationInMillis = 0L;
-        this.startPoint = System.currentTimeMillis();
-    }
-
-    @Override
-    protected boolean loopCondition() {
-        return this.actualDuration() < this.getMaximalDuration();
-    }
-
-    @Override
-    protected void afterLoop() {
-        this.actualDurationInMillis = System.currentTimeMillis() - this.startPoint;
+                this.module.equals(repeater.getModule()) &&
+                this.getDelayTime() == repeater.getDelayTime() &&
+                this.isIgnoreExceptions() == repeater.isIgnoreExceptions() &&
+                this.canQuit() == repeater.canQuit();
     }
 }

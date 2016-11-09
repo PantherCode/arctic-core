@@ -177,7 +177,7 @@ public class ResourceFactory {
         ArgumentUtils.assertNotNull(path, "path");
         ArgumentUtils.assertNotNull(identity, "identity");
 
-        List<Class<?>> classes = ClassUtils.getClassesFromJarFile(path, Resource.class);
+        List<Class<?>> classes = null; //ClassUtils.getClassesFromJarFile(path, Resource.class);
 
         if (classes.isEmpty()) {
             throw new ClassNotFoundException("");//TODO: find no resource class in jar file

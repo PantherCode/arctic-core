@@ -15,8 +15,9 @@
  */
 package org.panthercode.arctic.core.settings.configuration;
 
-import org.panthercode.arctic.core.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class Configuration extends Properties {
      * Constructor
      *
      * @param defaults default properties value
-     * @param comment comment associated to this configuration
+     * @param comment  comment associated to this configuration
      */
     public Configuration(Properties defaults, String comment) {
         super(defaults);
@@ -94,7 +95,7 @@ public class Configuration extends Properties {
      * @throws IOException Is thrown if an error occurs while reading file.
      */
     public void load(final String path) throws IOException {
-        try (FileInputStream stream = IOUtils.toFileIntputStream(path)) {
+        try (FileInputStream stream = FileUtils.openInputStream(new File(path))) {
             load(stream);
         }
     }
@@ -106,7 +107,7 @@ public class Configuration extends Properties {
      * @throws IOException Is thrown if an error occurs while writing in file.
      */
     public void store(final String path) throws IOException {
-        try (FileOutputStream stream = IOUtils.toFileOutputStream(path)) {
+        try (FileOutputStream stream = FileUtils.openOutputStream(new File(path))) {
             store(stream, this.comment);
         }
     }
