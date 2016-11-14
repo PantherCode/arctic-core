@@ -16,9 +16,10 @@
 package org.panthercode.arctic.core.arguments;
 
 /**
- * This class contains functions to check arguments, whether they
- * have a valid value. It's useful to asserting the right value of
- * (method) parameters before using for processing.
+ * This class contains functions to check arguments, whether they have a valid value. It's useful to asserting valid
+ * value of (method) parameters before using those for processing.
+ *
+ * @author PantherCode
  */
 public class ArgumentUtils {
 
@@ -28,7 +29,7 @@ public class ArgumentUtils {
     private static String PREFIX = "The value of ";
 
     /**
-     * private constructor
+     * private Constructor
      */
     private ArgumentUtils() {
     }
