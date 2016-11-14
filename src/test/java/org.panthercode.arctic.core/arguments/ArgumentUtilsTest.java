@@ -108,7 +108,7 @@ public class ArgumentUtilsTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void T18_assertLessThan_Long_Equals() {
+    public void T18_assertLessThan_Long_Fail_Equals() {
         ArgumentUtils.assertLessThan(LONG_ZERO, LONG_ZERO, TEST_OBJECT_NAME);
     }
 
@@ -138,8 +138,8 @@ public class ArgumentUtilsTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void T24_assertGreaterThan_Long_Equals() {
-        ArgumentUtils.assertLessThan(LONG_ZERO, LONG_ZERO, TEST_OBJECT_NAME);
+    public void T24_assertGreaterThan_Long_Fail_Equals() {
+        ArgumentUtils.assertGreaterThan(LONG_ZERO, LONG_ZERO, TEST_OBJECT_NAME);
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
@@ -162,5 +162,193 @@ public class ArgumentUtilsTest {
         ArgumentUtils.assertGreaterOrEqualsThan(LONG_NEGATIVE_VALUE, LONG_ZERO, TEST_OBJECT_NAME);
     }
 
+    @Test
+    public void T29_assertLimits_Long() {
+        ArgumentUtils.assertLimits(LONG_ZERO, LONG_NEGATIVE_VALUE, LONG_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
 
+    @Test
+    public void T30_assertLimits_Long_EqualsLowerLimit() {
+        ArgumentUtils.assertLimits(LONG_NEGATIVE_VALUE, LONG_NEGATIVE_VALUE, LONG_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T31_assertLimits_Long_EqualsUpperLimit() {
+        ArgumentUtils.assertLimits(LONG_POSITIVE_VALUE, LONG_NEGATIVE_VALUE, LONG_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T32_assertLimits_Long_Fail_Less() {
+        ArgumentUtils.assertLimits(LONG_NEGATIVE_VALUE, LONG_ZERO, LONG_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T33_assertLimits_Long_Fail_Greater() {
+        ArgumentUtils.assertLimits(LONG_POSITIVE_VALUE, LONG_NEGATIVE_VALUE, LONG_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T34_assertLessZero_Double() {
+        ArgumentUtils.assertLessZero(DOUBLE_NEGATIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T35_assertLessZero_Double_Fail_Zero() {
+        ArgumentUtils.assertLessZero(DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T36_assertLessZero_Double_Fail_GreaterZero() {
+        ArgumentUtils.assertLessZero(DOUBLE_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T37_assertGreaterZero_Double() {
+        ArgumentUtils.assertGreaterZero(DOUBLE_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T38_assertGreaterZero_Double_Fail_Zero() {
+        ArgumentUtils.assertGreaterZero(DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T39_assertGreaterZero_Double_Fail_LessZero() {
+        ArgumentUtils.assertGreaterZero(DOUBLE_NEGATIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T40_assertLessOrEqualsZero_Double() {
+        ArgumentUtils.assertLessOrEqualsZero(DOUBLE_NEGATIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T41_assertLessOrEqualsZero_Double_Zero() {
+        ArgumentUtils.assertLessOrEqualsZero(DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T42_assertLessOrEqualsZero_Double_Fail_GreaterZero() {
+        ArgumentUtils.assertLessOrEqualsZero(DOUBLE_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T43_assertGreaterOrEqualsZero_Double() {
+        ArgumentUtils.assertGreaterOrEqualsZero(DOUBLE_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T44_assertGreaterOrEqualsZero_Double_Zero() {
+        ArgumentUtils.assertGreaterOrEqualsZero(DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T45_assertGreaterOrEqualsZero_Double_Fail_LessZero() {
+        ArgumentUtils.assertGreaterOrEqualsZero(DOUBLE_NEGATIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T46_assertLessThan_Double() {
+        ArgumentUtils.assertLessThan(DOUBLE_NEGATIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T47_assertLessThan_Double_Fail_Equals() {
+        ArgumentUtils.assertLessThan(DOUBLE_ZERO, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T48_assertLessThan_Double_Fail_Greater() {
+        ArgumentUtils.assertLessThan(DOUBLE_POSITIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T49_assertLessOrEqualsThan_Double() {
+        ArgumentUtils.assertLessOrEqualsThan(DOUBLE_NEGATIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T50_assertLessOrEqualsThan_Double_Equals() {
+        ArgumentUtils.assertLessOrEqualsThan(DOUBLE_ZERO, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T51_assertLessThanOrEquals_Double_Fail_Greater() {
+        ArgumentUtils.assertLessOrEqualsThan(DOUBLE_POSITIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T52_assertGreaterThan_Double() {
+        ArgumentUtils.assertGreaterThan(DOUBLE_POSITIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T53_assertGreaterThan_Double_Fail_Equals() {
+        ArgumentUtils.assertGreaterThan(DOUBLE_ZERO, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T54_assertGreaterThan_Double_Fail_Less() {
+        ArgumentUtils.assertGreaterThan(DOUBLE_NEGATIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T55_assertGreaterOrEqualsThan_Double() {
+        ArgumentUtils.assertGreaterOrEqualsThan(DOUBLE_POSITIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T56_assertLessOrEqualsThan_Double_Equals() {
+        ArgumentUtils.assertGreaterOrEqualsThan(DOUBLE_ZERO, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T57_assertGreaterThanOrEquals_Double_Fail_Less() {
+        ArgumentUtils.assertGreaterOrEqualsThan(DOUBLE_NEGATIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T58_assertLimits_Double() {
+        ArgumentUtils.assertLimits(DOUBLE_ZERO, DOUBLE_NEGATIVE_VALUE, DOUBLE_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T59_assertLimits_Double_EqualsLowerLimit() {
+        ArgumentUtils.assertLimits(DOUBLE_NEGATIVE_VALUE, DOUBLE_NEGATIVE_VALUE, DOUBLE_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T60_assertLimits_Double_EqualsUpperLimit() {
+        ArgumentUtils.assertLimits(DOUBLE_POSITIVE_VALUE, DOUBLE_NEGATIVE_VALUE, DOUBLE_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T61_assertLimits_Double_Fail_Less() {
+        ArgumentUtils.assertLimits(DOUBLE_NEGATIVE_VALUE, DOUBLE_ZERO, DOUBLE_POSITIVE_VALUE, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T62_assertLimits_Double_Fail_Greater() {
+        ArgumentUtils.assertLimits(DOUBLE_POSITIVE_VALUE, DOUBLE_NEGATIVE_VALUE, DOUBLE_ZERO, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T63_assertEquals() {
+        ArgumentUtils.assertEquals(VALID_STRING, VALID_STRING, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T64_assertEquals_Fail() {
+        ArgumentUtils.assertEquals(NULL_STRING, VALID_STRING, TEST_OBJECT_NAME);
+    }
+
+    @Test
+    public void T65_assertNotEquals() {
+        ArgumentUtils.assertNotEquals(NULL_STRING, VALID_STRING, TEST_OBJECT_NAME);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T66_assertNotEquals_Fail() {
+        ArgumentUtils.assertNotEquals(NULL_STRING, NULL_STRING, TEST_OBJECT_NAME);
+    }
 }
