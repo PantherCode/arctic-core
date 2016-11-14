@@ -1,5 +1,5 @@
 /**
- * Provides a utility class for checking parameters.
+ * Provides a utility functions for checking parameters.
  *
  * @author PantherCode
  */
