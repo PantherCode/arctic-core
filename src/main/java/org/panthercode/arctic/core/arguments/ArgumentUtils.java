@@ -188,15 +188,10 @@ public class ArgumentUtils {
      * @param name  getName of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is out of the given boundary.
      */
-    public static void assertInLimits(final long value, final long lower, final long upper, final String name)
+    public static void assertLimits(final long value, final long lower, final long upper, final String name)
             throws IllegalArgumentException {
-        if (value <= lower) {
-            throw new IllegalArgumentException(PREFIX + name + " is less than lower limit.");
-        }
-
-        if (value >= upper) {
-            throw new IllegalArgumentException(PREFIX + name + " is greater than upper limit.");
-        }
+        ArgumentUtils.assertGreaterOrEqualsThan(value, lower, name);
+        ArgumentUtils.assertLessOrEqualsThan(value, upper, name);
     }
 
     /**
@@ -325,15 +320,10 @@ public class ArgumentUtils {
      * @param name  name of parameter, which appears in error message
      * @throws IllegalArgumentException Is thrown if the value is out of the given boundary.
      */
-    public static void assertInLimits(final double value, final double lower, final double upper, final String name)
+    public static void assertLimits(final double value, final double lower, final double upper, final String name)
             throws IllegalArgumentException {
-        if (value <= lower) {
-            throw new IllegalArgumentException(PREFIX + name + " is less than lower limit.");
-        }
-
-        if (value >= upper) {
-            throw new IllegalArgumentException(PREFIX + name + " is greater than upper limit.");
-        }
+        ArgumentUtils.assertGreaterOrEqualsThan(value, lower, name);
+        ArgumentUtils.assertLessOrEqualsThan(value, upper, name);
     }
 
     /**
