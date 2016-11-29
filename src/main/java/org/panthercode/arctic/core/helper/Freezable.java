@@ -24,6 +24,8 @@ package org.panthercode.arctic.core.helper;
  * <p>
  * To block all modifications you can activate the lock mechanism in freeze() function or by constructor and forbid to
  * unfreeze the object by implementing an empty function body, better throwing a UnsupportedOperationException.
+ *
+ * @author PantherCode
  */
 public interface Freezable {
 
