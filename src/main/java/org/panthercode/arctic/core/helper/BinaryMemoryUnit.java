@@ -16,9 +16,14 @@
 package org.panthercode.arctic.core.helper;
 
 /**
+ * Enumeration of units to handle memory capacity or the size of a binary object.
+ *
  * @author PantherCode
  */
 public enum BinaryMemoryUnit {
+    /**
+     * Bit
+     */
     BIT("b") {
         public double toBit(double size) {
             return size;
@@ -65,6 +70,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * Byte
+     */
     BYTE("B") {
         public double toBit(double size) {
             return size * 8.0;
@@ -111,6 +119,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * KibiByte
+     */
     KIBIBYTE("KiB") {
         public double toBit(double size) {
             return size * KiB * 8.0;
@@ -157,6 +168,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * MebiByte
+     */
     MEBIBYTE("MiB") {
         public double toBit(double size) {
             return size * MiB * 8.0;
@@ -203,6 +217,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * GibiByte
+     */
     GIBIBYTE("GiB") {
         public double toBit(double size) {
             return size * GiB * 8.0;
@@ -249,6 +266,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * TebiByte
+     */
     TEBIBYTE("TiB") {
         public double toBit(double size) {
             return size * TiB * 8.0;
@@ -295,6 +315,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * PebiByte
+     */
     PEBIBYTE("PiB") {
         public double toBit(double size) {
             return size * PiB * 8.0;
@@ -341,6 +364,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * ExbiByte
+     */
     EXBIBYTE("EiB") {
         public double toBit(double size) {
             return size * EiB * 8.0;
@@ -387,6 +413,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * ZebiByte
+     */
     ZEBIBYTE("ZiB") {
         public double toBit(double size) {
             return size * ZiB * 8.0;
@@ -433,6 +462,9 @@ public enum BinaryMemoryUnit {
         }
     },
 
+    /**
+     * YobiByte
+     */
     YOBIBYTE("YiB") {
         public double toBit(double size) {
             return size * YiB * 8.0;
@@ -479,59 +511,164 @@ public enum BinaryMemoryUnit {
         }
     };
 
-    static double KiB = 1024.0;
-    static double MiB = 1024.0 * KiB;
-    static double GiB = 1024.0 * MiB;
-    static double TiB = 1024.0 * GiB;
-    static double PiB = 1024.0 * TiB;
-    static double EiB = 1024.0 * PiB;
-    static double ZiB = 1024.0 * EiB;
-    static double YiB = 1024.0 * ZiB;
+    /**
+     * const size of KibiByte
+     */
+    private static final double KiB = 1024.0;
 
+    /**
+     * const size of MebiByte
+     */
+    private static final double MiB = 1024.0 * KiB;
+
+    /**
+     * const size of GibiByte
+     */
+    private static final double GiB = 1024.0 * MiB;
+
+    /**
+     * const size of TebiByte
+     */
+    private static final double TiB = 1024.0 * GiB;
+
+    /**
+     * const size of PebiByte
+     */
+    private static final double PiB = 1024.0 * TiB;
+
+    /**
+     * const size of ExbiByte
+     */
+    private static final double EiB = 1024.0 * PiB;
+
+    /**
+     * const size of ZebiByte
+     */
+    private static final double ZiB = 1024.0 * EiB;
+
+    /**
+     * const size of YobiByte
+     */
+    private static final double YiB = 1024.0 * ZiB;
+
+    /**
+     * Convert value to bit.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toBit(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to byte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to KibiByte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toKibiByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to MebiByte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toMebiByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to GibiByte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toGibiByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to TebiByte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toTebiByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to PebiByte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toPebiByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to ExbiByte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toExbiByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to ZebiByte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toZebiByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to YobiByte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toYobiByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Converts the value to another unit.
+     *
+     * @param size value to convert
+     * @param unit unit the value should convert to
+     * @return Returns the converted value.
+     */
     public double convert(double size, BinaryMemoryUnit unit) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert a given value to the most fitting unit.
+     *
+     * @param size given value
+     * @param unit memory unit of value
+     * @return Returns the most fitting unit to given value.
+     */
     public static BinaryMemoryUnit valueOf(double size, BinaryMemoryUnit unit) {
 
         if (BinaryMemoryUnit.KIBIBYTE.convert(size, unit) < 1.0) {
@@ -569,12 +706,25 @@ public enum BinaryMemoryUnit {
         return BinaryMemoryUnit.YOBIBYTE;
     }
 
+    /**
+     * actual value
+     */
     private final String unit;
 
+    /**
+     * Constructor
+     *
+     * @param unit value of unit
+     */
     BinaryMemoryUnit(String unit) {
         this.unit = unit;
     }
 
+    /**
+     * Returns the actual value.
+     *
+     * @return Returns the actual value.
+     */
     public String unit() {
         return this.unit;
     }
