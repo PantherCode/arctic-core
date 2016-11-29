@@ -34,6 +34,8 @@ import java.util.Random;
  * <p>
  * To create an new instance of the identity class use the generate() function:
  * <tt>Identity identity = Identity.generate(...);</tt>
+ *
+ * @author PantherCode
  */
 public final class Identity implements Freezable {
 
