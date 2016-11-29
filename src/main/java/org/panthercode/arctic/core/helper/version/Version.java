@@ -19,10 +19,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.Freezable;
 import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.reflect.ReflectionUtils;
 
 /**
  * This class is used to control and manage objects by version. The scheme follows the major.minor[.build[.revision]]
  * pattern.
+ *
+ * @author PantherCode
  */
 public class Version implements Freezable {
 
@@ -244,7 +247,7 @@ public class Version implements Freezable {
      * @return Returns <code>true</code> if the object offers an VersionInfo annotation; Otherwise <code>false</code>.
      */
     public synchronized static boolean isAnnotated(final Object obj) {
-        return obj != null && obj.getClass().getAnnotation(VersionInfo.class) != null;
+        return obj != null && ReflectionUtils.isAnnotated(obj.getClass(), VersionInfo.class);
 
     }
 
