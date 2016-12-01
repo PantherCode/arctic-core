@@ -24,6 +24,8 @@ import java.lang.annotation.Target;
  * This annotation is used to set the identity of an class. It's used to generate the identity object automatically.
  * <p>
  * Example: <code>@IdentityInfo(name = "exampleName", group= "exampleGroup)</code>
+ *
+ * @author PantherCode
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

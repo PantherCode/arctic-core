@@ -16,9 +16,14 @@
 package org.panthercode.arctic.core.helper;
 
 /**
+ * Enumeration of units to handle memory capacity or the size of a binary object.
+ *
  * @author PantherCode
  */
 public enum MemoryUnit {
+    /**
+     * Bit
+     */
     BIT("b") {
         public double toBit(double size) {
             return size;
@@ -65,6 +70,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Byte
+     */
     BYTE("B") {
         public double toBit(double size) {
             return size * 8.0;
@@ -111,6 +119,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Kilobyte
+     */
     KILOBYTE("KB") {
         public double toBit(double size) {
             return size * KB * 8.0;
@@ -157,6 +168,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Megabyte
+     */
     MEGABYTE("MB") {
         public double toBit(double size) {
             return size * MB * 8.0;
@@ -203,6 +217,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Gigabyte
+     */
     GIGABYTE("GB") {
         public double toBit(double size) {
             return size * GB * 8.0;
@@ -249,6 +266,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Terabyte
+     */
     TERABYTE("TB") {
         public double toBit(double size) {
             return size * TB * 8.0;
@@ -295,6 +315,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Petabyte
+     */
     PETABYTE("PT") {
         public double toBit(double size) {
             return size * PB * 8.0;
@@ -341,6 +364,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Exabyte
+     */
     EXABYTE("EB") {
         public double toBit(double size) {
             return size * EB * 8.0;
@@ -387,6 +413,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Zetabyte
+     */
     ZETTABYTE("ZB") {
         public double toBit(double size) {
             return size * ZB * 8.0;
@@ -433,6 +462,9 @@ public enum MemoryUnit {
         }
     },
 
+    /**
+     * Yottabyte
+     */
     YOTTABYTE("YB") {
         public double toBit(double size) {
             return size * YB * 8.0;
@@ -479,59 +511,164 @@ public enum MemoryUnit {
         }
     };
 
-    static double KB = 1000.0;
-    static double MB = 1000.0 * KB;
-    static double GB = 1000.0 * MB;
-    static double TB = 1000.0 * GB;
-    static double PB = 1000.0 * TB;
-    static double EB = 1000.0 * PB;
-    static double ZB = 1000.0 * EB;
-    static double YB = 1000.0 * ZB;
+    /**
+     * const size of Kilobyte
+     */
+    private static final double KB = 1000.0;
 
+    /**
+     * const size of Megabyte
+     */
+    private static final double MB = 1000.0 * KB;
+
+    /**
+     * const size of Gigabyte
+     */
+    private static final double GB = 1000.0 * MB;
+
+    /**
+     * const size of Terabyte
+     */
+    private static final double TB = 1000.0 * GB;
+
+    /**
+     * const size of Petabyte
+     */
+    private static final double PB = 1000.0 * TB;
+
+    /**
+     * const size of Exabyte
+     */
+    private static final double EB = 1000.0 * PB;
+
+    /**
+     * const size of Zettabyte
+     */
+    private static final double ZB = 1000.0 * EB;
+
+    /**
+     * const size of Yottabyte
+     */
+    private static final double YB = 1000.0 * ZB;
+
+    /**
+     * Convert value to bit.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toBit(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to byte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to Kilobyte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toKiloByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to Megabyte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toMegaByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to Gigabyte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toGigaByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to Terabyte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toTeraByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to Petabyte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toPetaByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to Exayte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toExaByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to Zettabyte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toZettaByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert value to Yottayte.
+     *
+     * @param size value to convert
+     * @return Returns the converted value.
+     */
     public double toYottaByte(double size) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Converts the value to another unit.
+     *
+     * @param size value to convert
+     * @param unit unit the value should convert to
+     * @return Returns the converted value.
+     */
     public double convert(double size, MemoryUnit unit) {
         throw new AbstractMethodError();
     }
 
+    /**
+     * Convert a given value to the most fitting unit.
+     *
+     * @param size given value
+     * @param unit memory unit of value
+     * @return Returns the most fitting unit to given value.
+     */
     public static MemoryUnit valueOf(double size, MemoryUnit unit) {
 
         if (MemoryUnit.KILOBYTE.convert(size, unit) < 1.0) {
@@ -569,12 +706,25 @@ public enum MemoryUnit {
         return MemoryUnit.YOTTABYTE;
     }
 
+    /**
+     * actual value
+     */
     private final String unit;
 
+    /**
+     * Constructor
+     *
+     * @param unit value of unit
+     */
     MemoryUnit(String unit) {
         this.unit = unit;
     }
 
+    /**
+     * Returns the actual value.
+     *
+     * @return Returns the actual value.
+     */
     public String unit() {
         return this.unit;
     }

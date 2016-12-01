@@ -17,6 +17,8 @@ package org.panthercode.arctic.core.helper.version;
 
 /**
  * Enumeration to represent the parts of the version number.
+ *
+ * @author PantherCode
  */
 public enum VersionField {
     /**
@@ -45,7 +47,7 @@ public enum VersionField {
     private final String value;
 
     /**
-     * constructor
+     * Constructor
      *
      * @param value string value of field
      */

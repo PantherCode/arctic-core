@@ -22,7 +22,7 @@ import java.util.HashMap;
 /**
  * @author PantherCode
  */
-public class StringReplaceMap extends HashMap<Object, String> {
+public class PlaceholderMap extends HashMap<Object, String> {
 
     /**
      *
@@ -39,8 +39,8 @@ public class StringReplaceMap extends HashMap<Object, String> {
      * @param placeholderRegex
      * @throws NullPointerException
      */
-    public StringReplaceMap(String value,
-                            String placeholderRegex)
+    public PlaceholderMap(String value,
+                          String placeholderRegex)
             throws NullPointerException {
         super();
 

@@ -25,6 +25,8 @@ import java.lang.annotation.Target;
  * using the <code>Version.fromAnnotation()</code> function.
  * <p>
  * Example: <code>@VersionInfo(major = 1, minor = 2, build = 3, build = 4)</code> stands for 1.2.3.4
+ *
+ * @author PantherCode
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

@@ -18,6 +18,7 @@ package org.panthercode.arctic.core.helper.identity;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.helper.Freezable;
 import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
+import org.panthercode.arctic.core.reflect.ReflectionUtils;
 
 import java.util.Random;
 
@@ -33,6 +34,8 @@ import java.util.Random;
  * <p>
  * To create an new instance of the identity class use the generate() function:
  * <tt>Identity identity = Identity.generate(...);</tt>
+ *
+ * @author PantherCode
  */
 public final class Identity implements Freezable {
 
@@ -149,10 +152,11 @@ public final class Identity implements Freezable {
     }
 
     /**
+     * Returns a string representation of the object. The representation contains the name and group name.
      *
-     * @return
+     * @return Returns a string representation of the object.
      */
-    public String asShortString(){
+    public String asShortString() {
         return "name = " + this.name + ", group = " + this.group;
     }
 
@@ -200,8 +204,7 @@ public final class Identity implements Freezable {
      * @return Returns <code>true</code> if the object offers an IdentityInfo annotation; Otherwise <code>false</code>.
      */
     public static boolean isAnnotated(final Object object) {
-        return object != null && object.getClass().getAnnotation(IdentityInfo.class) != null;
-
+        return object != null && ReflectionUtils.isAnnotated(object.getClass(), IdentityInfo.class);
     }
 
     /**
@@ -237,7 +240,7 @@ public final class Identity implements Freezable {
     }
 
     /**
-     * Compares to identity objects and check if both have same name and same group.
+     * Compares two identity objects and check if both have same name and same group.
      *
      * @param identity identity to check
      * @return Returns <tt>true</tt> if both objects have same name and same group.
