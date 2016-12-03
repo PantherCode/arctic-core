@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation is used to set the version of an class. It's possible to generate the version object automatically by
- * using the <code>Version.fromAnnotation()</code> function.
+ * using the <tt>Version.fromAnnotation()</tt> function.
  * <p>
- * Example: <code>@VersionInfo(major = 1, minor = 2, build = 3, build = 4)</code> stands for 1.2.3.4
+ * Example: <tt>@VersionInfo(major = 1, minor = 2, build = 3, build = 4)</tt> stands for 1.2.3.4
  *
  * @author PantherCode
  */
