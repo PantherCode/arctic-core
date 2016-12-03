@@ -20,7 +20,9 @@ import org.apache.commons.lang3.reflect.ConstructorUtils;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Utility class to create new instances of objects
+ * Utility class to create new instances of objects.
+ *
+ * @author PantherCode
  */
 public class ClassBuilder<T> {
 
