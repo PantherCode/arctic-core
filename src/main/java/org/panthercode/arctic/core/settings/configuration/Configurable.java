@@ -17,6 +17,8 @@ package org.panthercode.arctic.core.settings.configuration;
 
 /**
  * Interface to make an object configurable.
+ *
+ * @author PantherCode
  */
 public interface Configurable {
 

@@ -17,6 +17,8 @@ package org.panthercode.arctic.core.settings.configuration;
 
 /**
  * Abstract class that implements the <tt>Configurable</tt> interface.
+ *
+ * @author PantherCode
  */
 public abstract class ConfigurableObject implements Configurable {
 

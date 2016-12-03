@@ -20,6 +20,8 @@ import java.util.Map;
 
 /**
  * The context class is a Hashtable to store related items at runtime. The items are not stored persistently.
+ *
+ * @author PantherCode
  */
 public class Context extends Hashtable<Object, Object> {
 

@@ -24,6 +24,8 @@ import java.io.IOException;
 
 /**
  * Utils class that contains a set of functions to handle xml files and objects.
+ *
+ * @author PantherCode
  */
 public class XmlUtils {
 
@@ -72,5 +74,5 @@ public class XmlUtils {
         return result;
     }
 
-    //Todo: Implement methods to load file in Document class
+    //TODO: implement methods to load file in Document class
 }

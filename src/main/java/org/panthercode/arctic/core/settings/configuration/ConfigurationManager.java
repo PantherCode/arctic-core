@@ -21,6 +21,8 @@ import java.util.*;
  * The ConfigurationManager class handle a set of configuration associated by keys.
  * <p>
  * It's a Multiton design pattern implementation.
+ *
+ * @author PantherCode
  */
 public class ConfigurationManager {
 
