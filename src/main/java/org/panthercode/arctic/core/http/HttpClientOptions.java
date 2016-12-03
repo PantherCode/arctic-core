@@ -168,7 +168,7 @@ public class HttpClientOptions {
     }
 
 
-    //Todo: getter with timeunit
+    //TODO: implement Getter with Timeunit parameter
 
     /**
      * Sets the timeout for waiting for a server response.
@@ -204,7 +204,7 @@ public class HttpClientOptions {
         return this.connectionTimeoutInMillis;
     }
 
-    //Todo: getter with timeunit
+    //TODO: implement Getter with Timeunit parameter
 
     /**
      * Sets the timeout for waiting for connection to the server.
@@ -230,9 +230,9 @@ public class HttpClientOptions {
         this.setSocketTimeout((int) this.timeUnit.convert(duration, unit));
     }
 
-    //Todo: method to return client as HttpClient
+    //TODO: implement method to return client as HttpClient
 
-    //Todo: method to return proxy as HttpHost
+    //TODO: implement method to return proxy as HttpHost
 
     /**
      * Returns a new http post request.
@@ -653,7 +653,7 @@ public class HttpClientOptions {
             return this.socketTimeoutInMillis;
         }
 
-        //Todo: getter with time unit
+        //TODO: implement Getter with Timeunit parameter
 
         /**
          * Returns the timeout for waiting to connect to the server (in millis).
@@ -664,7 +664,7 @@ public class HttpClientOptions {
             return this.connectionTimeoutInMillis;
         }
 
-        //Todo: getter with time unit
+        //TODO: implement Getter with Timeunit parameter
 
         /**
          * Returns the default of the host machine.
