@@ -126,14 +126,14 @@ public abstract class ModuleImpl implements Module {
      */
     public ModuleImpl(Context context)
             throws NullPointerException {
-        if (Identity.isAnnotated(this)) {
-            this.identity = Identity.fromAnnotation(this);
+        if (Identity.isAnnotated(this.getClass())) {
+            this.identity = Identity.fromAnnotation(this.getClass());
         } else {
             throw new NullPointerException("The module doesn't have an identity annotation.");
         }
 
-        if (Version.isAnnotated(this)) {
-            this.version = Version.fromAnnotation(this);
+        if (Version.isAnnotated(this.getClass())) {
+            this.version = Version.fromAnnotation(this.getClass());
         } else {
             this.version = new Version();
         }

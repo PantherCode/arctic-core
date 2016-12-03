@@ -102,7 +102,7 @@ public class PlaceholderMap extends HashMap<Object, String> {
      */
     public String get(Object key, String value)
             throws NullPointerException {
-        return this.get(key, this.value, this.placeholderRegex);
+        return this.get(key, value, this.placeholderRegex);
     }
 
     /**

@@ -57,14 +57,14 @@ public class RepositoryImpl<T extends Identifiable & Versionable> implements Rep
      *
      */
     public RepositoryImpl() {
-        if (Identity.isAnnotated(this)) {
-            this.identity = Identity.fromAnnotation(this);
+        if (Identity.isAnnotated(this.getClass())) {
+            this.identity = Identity.fromAnnotation(this.getClass());
         } else {
             throw new NullPointerException("The value of identity is null.");
         }
 
-        if (Version.isAnnotated(this)) {
-            this.version = Version.fromAnnotation(this);
+        if (Version.isAnnotated(this.getClass())) {
+            this.version = Version.fromAnnotation(this.getClass());
         } else {
             this.version = new Version();
         }

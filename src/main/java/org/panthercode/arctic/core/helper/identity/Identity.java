@@ -203,8 +203,8 @@ public final class Identity implements Freezable {
      * @param object object to check
      * @return Returns <code>true</code> if the object offers an IdentityInfo annotation; Otherwise <code>false</code>.
      */
-    public static boolean isAnnotated(final Object object) {
-        return object != null && ReflectionUtils.isAnnotated(object.getClass(), IdentityInfo.class);
+    public static <T> boolean isAnnotated(final Class<T> clazz) {
+        return ReflectionUtils.isAnnotated(clazz, IdentityInfo.class);
     }
 
     /**
@@ -213,9 +213,9 @@ public final class Identity implements Freezable {
      *
      * @return Returns an identity made of annotation information.
      */
-    public static Identity fromAnnotation(final Object object) {
-        if (object != null) {
-            IdentityInfo info = object.getClass().getAnnotation(IdentityInfo.class);
+    public static <T> Identity fromAnnotation(final Class<T> clazz) {
+        if (clazz != null) {
+            IdentityInfo info = clazz.getAnnotation(IdentityInfo.class);
 
             if (info != null) {
                 return Identity.generate(info.name(), info.group());

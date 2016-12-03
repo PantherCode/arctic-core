@@ -246,8 +246,8 @@ public class Version implements Freezable {
      * @param obj object to check
      * @return Returns <code>true</code> if the object offers an VersionInfo annotation; Otherwise <code>false</code>.
      */
-    public synchronized static boolean isAnnotated(final Object obj) {
-        return obj != null && ReflectionUtils.isAnnotated(obj.getClass(), VersionInfo.class);
+    public static <T> boolean isAnnotated(final Class<T> clazz) {
+        return ReflectionUtils.isAnnotated(clazz, VersionInfo.class);
 
     }
 
@@ -258,9 +258,9 @@ public class Version implements Freezable {
      * @param object object with annotation
      * @return Returns a new version object made of annotation information.
      */
-    public synchronized static Version fromAnnotation(final Object object) {
-        if (object != null) {
-            VersionInfo info = object.getClass().getAnnotation(VersionInfo.class);
+    public static <T> Version fromAnnotation(final Class<T> clazz) {
+        if (clazz != null) {
+            VersionInfo info = clazz.getAnnotation(VersionInfo.class);
 
             if (info != null) {
                 return new Version(info);
@@ -343,6 +343,10 @@ public class Version implements Freezable {
     @Override
     public boolean canModify() {
         return this.canModify;
+    }
+
+    public Version copy() {
+        return new Version(this.major, this.minor, this.build, this.revision);
     }
 
     /**
