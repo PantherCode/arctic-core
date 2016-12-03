@@ -20,7 +20,7 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import java.io.*;
 
 /**
- * Utils class that contains a set of functions to deal with files.
+ * Utility class that contains a set of functions to deal with files.
  */
 public class IOUtils {
 
