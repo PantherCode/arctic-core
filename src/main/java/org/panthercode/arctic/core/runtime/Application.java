@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * Todo
+ * TODO: class documentation
  *
  * @author PantherCode
  */
