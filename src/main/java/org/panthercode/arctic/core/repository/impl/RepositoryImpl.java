@@ -17,10 +17,10 @@ package org.panthercode.arctic.core.repository.impl;
 
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.identity.Identity;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
+import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.Versionable;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.repository.Repository;
 
 import java.util.ArrayList;
@@ -57,14 +57,14 @@ public class RepositoryImpl<T extends Identifiable & Versionable> implements Rep
      *
      */
     public RepositoryImpl() {
-        if (Identity.isAnnotated(this)) {
-            this.identity = Identity.fromAnnotation(this);
+        if (Identity.isAnnotated(this.getClass())) {
+            this.identity = Identity.fromAnnotation(this.getClass());
         } else {
             throw new NullPointerException("The value of identity is null.");
         }
 
-        if (Version.isAnnotated(this)) {
-            this.version = Version.fromAnnotation(this);
+        if (Version.isAnnotated(this.getClass())) {
+            this.version = Version.fromAnnotation(this.getClass());
         } else {
             this.version = new Version();
         }

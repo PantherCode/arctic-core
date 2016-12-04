@@ -13,13 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules.annotation;
+package org.panthercode.arctic.core.settings;
 
 /**
- * If a .jar file contains more than one module class for class loader it's not possible to detect the root element.
- * Therefore it's always necessary to annotate the root element to indicate the right one. Every .jar file must contains
- * one and only one root element, also if the library contains only one module. Otherwise class loader will react with
- * an error, that the library doesn't contain any executable code and reject the .jar file.
+ * Interface to make an object configurable.
+ *
+ * @author PantherCode
  */
-public @interface RootModule {
+public interface Configurable {
+
+    /**
+     * Set the configuration associated with the object.
+     *
+     * @param configuration new configuration associated with the object
+     */
+    void configure(Configuration configuration);
+
+    /**
+     * Returns the configuration associated with the object.
+     *
+     * @return Returns the configuration associated with the object.
+     */
+    Configuration configuration();
 }

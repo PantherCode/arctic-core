@@ -21,9 +21,9 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessStateHandler;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.settings.Context;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -126,14 +126,14 @@ public abstract class ModuleImpl implements Module {
      */
     public ModuleImpl(Context context)
             throws NullPointerException {
-        if (Identity.isAnnotated(this)) {
-            this.identity = Identity.fromAnnotation(this);
+        if (Identity.isAnnotated(this.getClass())) {
+            this.identity = Identity.fromAnnotation(this.getClass());
         } else {
             throw new NullPointerException("The module doesn't have an identity annotation.");
         }
 
-        if (Version.isAnnotated(this)) {
-            this.version = Version.fromAnnotation(this);
+        if (Version.isAnnotated(this.getClass())) {
+            this.version = Version.fromAnnotation(this.getClass());
         } else {
             this.version = new Version();
         }

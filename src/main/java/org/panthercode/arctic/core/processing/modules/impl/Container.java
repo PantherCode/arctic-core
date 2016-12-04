@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.container;
+package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.identity.Identity;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
-import org.panthercode.arctic.core.processing.modules.impl.ModuleImpl;
+import org.panthercode.arctic.core.helper.identity.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.VersionInfo;
+import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.settings.Context;
 
 /**
  * Container are used as root elements for processing.

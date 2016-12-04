@@ -17,12 +17,12 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.processing.modules.helper.Measurement;
-import org.panthercode.arctic.core.processing.modules.options.LoopOptions;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.processing.modules.helper.Controller;
+import org.panthercode.arctic.core.processing.modules.helper.RepeaterOptions;
+import org.panthercode.arctic.core.settings.Context;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,17 +36,17 @@ public abstract class Repeater extends ModuleImpl {
     /**
      * Module for processing
      */
-    protected Module module = null;
+    private Module module = null;
 
     /**
      *
      */
-    protected LoopOptions options;
+    protected RepeaterOptions options;
 
     /**
      *
      */
-    protected Measurement<? extends Object> measurement;
+    private Controller<? extends Object> controller;
 
     /**
      * Loop class use milliseconds for measurements
@@ -61,7 +61,7 @@ public abstract class Repeater extends ModuleImpl {
      */
     public Repeater(Module module)
             throws NullPointerException {
-        this(module, new LoopOptions());
+        this(module, new RepeaterOptions());
     }
 
     /**
@@ -71,7 +71,7 @@ public abstract class Repeater extends ModuleImpl {
      * @throws NullPointerException Is thrown if value of module or identity is null.
      */
     public Repeater(Module module,
-                    LoopOptions options)
+                    RepeaterOptions options)
             throws NullPointerException {
         this(module, options, null);
     }
@@ -85,7 +85,7 @@ public abstract class Repeater extends ModuleImpl {
      *                              throws IllegalArgumentException
      */
     public Repeater(Module module,
-                    LoopOptions options,
+                    RepeaterOptions options,
                     Context context)
             throws NullPointerException {
         super(context);
@@ -93,6 +93,8 @@ public abstract class Repeater extends ModuleImpl {
         ArgumentUtils.assertNotNull(options, "options");
 
         this.setModule(module);
+
+        this.setController(this.createController());
 
         this.options = options;
     }
@@ -108,9 +110,17 @@ public abstract class Repeater extends ModuleImpl {
             throws NullPointerException, UnsupportedOperationException {
         super(repeater);
 
-        this.options = new LoopOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
-
         this.setModule(repeater.getModule().copy());
+
+        this.setController(this.createController());
+
+        this.options = new RepeaterOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
+    }
+
+    private void setController(Controller<? extends Object> controller) {
+        ArgumentUtils.assertNotNull(controller, "controller");
+
+        this.controller = controller;
     }
 
     /**
@@ -250,16 +260,12 @@ public abstract class Repeater extends ModuleImpl {
             throws ProcessException {
     }
 
-    //Todo: after method is not called if error occurs
-    //Todo: create more elegant solution to inherent loop control
     @Override
     public synchronized boolean start() throws ProcessException {
         if (this.changeState(ProcessState.RUNNING)) {
             before();
 
-            this.measurement.reset();
-
-            while (this.measurement.updateAndCheck()) {
+            for (controller.reset(); controller.accept(); controller.update()) {
                 this.module.reset();
 
                 try {
@@ -268,15 +274,13 @@ public abstract class Repeater extends ModuleImpl {
                     if ((module.isSucceeded() && this.canQuit()) || this.isStopped()) {
                         break;
                     }
+
+                    Thread.sleep(this.getDelayTime());
                 } catch (ProcessException e) {
                     if (!this.isIgnoreExceptions()) {
                         this.changeState(ProcessState.FAILED);
                         throw new ProcessException("While running the module an error occurred.", e);
                     }
-                }
-
-                try {
-                    Thread.sleep(this.getDelayTime());
                 } catch (InterruptedException e) {
                     throw new ProcessException(e);
                 }
@@ -287,7 +291,6 @@ public abstract class Repeater extends ModuleImpl {
                         : ProcessState.FAILED;
 
                 if (!this.changeState(result)) {
-
                     throw new ProcessException("Failed to set status to " + result + ".");
                 }
             }
@@ -340,7 +343,7 @@ public abstract class Repeater extends ModuleImpl {
      * Checks if this object is equals to another one.
      *
      * @param obj other object for comparison
-     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if both objects are equal; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean equals(final Object obj) {
@@ -359,4 +362,11 @@ public abstract class Repeater extends ModuleImpl {
                 this.isIgnoreExceptions() == repeater.isIgnoreExceptions() &&
                 this.canQuit() == repeater.canQuit();
     }
+
+    /**
+     * Creates a new controller instance to control the repeating process.
+     *
+     * @return Returns a new instance of a controller.
+     */
+    protected abstract Controller<? extends Object> createController();
 }

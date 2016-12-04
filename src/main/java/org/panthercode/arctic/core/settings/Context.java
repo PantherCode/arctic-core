@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.settings.context;
+package org.panthercode.arctic.core.settings;
 
 import java.util.Hashtable;
 import java.util.Map;
 
 /**
  * The context class is a Hashtable to store related items at runtime. The items are not stored persistently.
+ *
+ * @author PantherCode
  */
 public class Context extends Hashtable<Object, Object> {
 

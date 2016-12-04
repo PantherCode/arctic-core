@@ -13,49 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules.options;
+package org.panthercode.arctic.core.processing.modules.helper;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 /**
- * TODO: documentation
- * TODO: Exceptions in function signature
+ * Builder class to configure parameters for controlling the loop process of the <tt>Counter</tt> class.
+ *
+ * @author PantherCode
  */
-public class CounterOptions extends LoopOptions {
+public class CounterOptions extends RepeaterOptions {
 
     /**
-     *
+     * actual maximal count of loop steps
      */
     private int count = 1;
 
     /**
-     *
+     * Constructor
      */
     public CounterOptions() {
         super();
     }
 
     /**
-     * @param count
+     * Constructor
+     *
+     * @param count maximal count of loop steps
      */
     public CounterOptions(int count) {
         this(1, 1000L);
     }
 
     /**
-     * @param count
-     * @param delayTimeInMillis
+     * Constructor
+     *
+     * @param count             maximal count of loop steps
+     * @param delayTimeInMillis delay time after each loop step
      */
     public CounterOptions(int count, long delayTimeInMillis) {
         this(1, delayTimeInMillis, true, true);
     }
 
     /**
-     * @param count
-     * @param delayTimeInMillis
-     * @param ignoreExceptions
-     * @param canQuit
+     * Constructor
+     *
+     * @param count             maximal count of loop steps
+     * @param delayTimeInMillis delay time after each loop step
+     * @param ignoreExceptions  flag to ignore occurred exceptions
+     * @param canQuit           flag to quit process
      */
     public CounterOptions(int count, long delayTimeInMillis, boolean ignoreExceptions, boolean canQuit) {
         super(delayTimeInMillis, ignoreExceptions, canQuit);
@@ -64,14 +71,18 @@ public class CounterOptions extends LoopOptions {
     }
 
     /**
-     * @return
+     * Returns the actual value of the maximal count of loop steps.
+     *
+     * @return Returns the actual value of the maximal count of loop steps.
      */
     public int getCount() {
         return this.count;
     }
 
     /**
-     * @param count
+     * Sets the maximal count of loop steps.
+     *
+     * @param count maximal count of loop steps
      */
     public void setCount(int count) {
         ArgumentUtils.assertGreaterOrEqualsZero(count, "count");
@@ -79,6 +90,11 @@ public class CounterOptions extends LoopOptions {
         this.count = count;
     }
 
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return Returns a string representation of the object.
+     */
     @Override
     public String toString() {
         return super.toString() + " count = " + this.count;
@@ -101,7 +117,7 @@ public class CounterOptions extends LoopOptions {
      * Checks if this object is equals to another one.
      *
      * @param obj other object for comparison
-     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if both objects are equal; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean equals(final Object obj) {

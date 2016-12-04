@@ -20,7 +20,9 @@ import org.apache.commons.lang3.reflect.ConstructorUtils;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Utility class to create new instances of objects
+ * Utility class to create new instances of objects.
+ *
+ * @author PantherCode
  */
 public class ClassBuilder<T> {
 
@@ -74,7 +76,7 @@ public class ClassBuilder<T> {
      * @return Returns a new instance.
      * @throws NoSuchMethodException     Is thrown if no matching constructor exists to the given argument signature.
      * @throws IllegalAccessException    Is thrown if invocation is not permitted by security. For example the constructor
-     *                                   you would like to call has not modification <code>public</code>.
+     *                                   you would like to call has not modification <tt>public</tt>.
      * @throws InstantiationException    Is thrown if an error occurs on instantiation.
      * @throws InvocationTargetException Is thrown if an error occurs on invocation.
      */

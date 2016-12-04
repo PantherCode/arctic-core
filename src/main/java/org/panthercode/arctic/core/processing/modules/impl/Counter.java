@@ -16,11 +16,12 @@
 package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.helper.identity.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.processing.modules.options.CounterOptions;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.processing.modules.helper.Controller;
+import org.panthercode.arctic.core.processing.modules.helper.CounterOptions;
+import org.panthercode.arctic.core.settings.Context;
 
 //TODO: update documentation
 
@@ -32,10 +33,7 @@ import org.panthercode.arctic.core.settings.context.Context;
 @VersionInfo(major = 1)
 public class Counter extends Repeater {
 
-    /**
-     * actual round
-     */
-    private int actualCount = 0;
+    private CounterController controller = null;
 
     /**
      * Constructor
@@ -80,7 +78,7 @@ public class Counter extends Repeater {
      * @param counter object to copy
      */
     public Counter(Counter counter) {
-        super(counter.module.copy(),
+        super(counter.getModule().copy(),
                 new CounterOptions(counter.getCount(),
                         counter.getDelayTime(),
                         counter.isIgnoreExceptions(),
@@ -114,7 +112,7 @@ public class Counter extends Repeater {
      * @return Returns the actual number of repeats have done or zero if process state is not "Running".
      */
     public int actualCount() {
-        return (this.isRunning()) ? this.actualCount : 0;
+        return (this.isRunning()) ? this.controller.actualCount : 0;
     }
 
 
@@ -159,19 +157,36 @@ public class Counter extends Repeater {
                 this.getCount() == counter.getCount();
     }
 
-   // @Override
-    protected void initialiseLoop() {
-        this.actualCount = 0;
+    @Override
+    protected Controller<? extends Object> createController() {
+        this.controller = new CounterController();
+
+        return this.controller;
     }
 
-    //@Override
-    protected boolean loopCondition() {
-        return this.actualCount < this.getCount() && this.isRunning();
-    }
+    private class CounterController extends Controller<Integer> {
 
-    //@Override
-    protected void afterLoop() {
-        this.actualCount++;
+        private int actualCount = 0;
+
+        @Override
+        public void reset() {
+            this.actualCount = 0;
+        }
+
+        @Override
+        public Integer value() {
+            return this.actualCount;
+        }
+
+        @Override
+        public void update() {
+            this.actualCount++;
+        }
+
+        @Override
+        public boolean accept() {
+            return this.actualCount < getCount();
+        }
     }
 }
 

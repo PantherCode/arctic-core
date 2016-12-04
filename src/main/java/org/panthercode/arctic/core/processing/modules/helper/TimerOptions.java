@@ -13,68 +13,79 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules.options;
+package org.panthercode.arctic.core.processing.modules.helper;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 /**
- * TODO: documentation
- * TODO: Exceptions in function signature
+ * Builder class to configure parameters for controlling the loop process of the <tt>Timer</tt> class.
+ *
+ * @author PantherCode
  */
-public class RepeaterOptions extends LoopOptions {
+public class TimerOptions extends RepeaterOptions {
 
     /**
-     *
+     * actual value of maximal duration of loop process
      */
     private long maximalDurationInMillis = 60000L;
 
     /**
-     *
+     * Default Constructor
      */
-    public RepeaterOptions() {
+    public TimerOptions() {
         super();
     }
 
     /**
-     * @param maximalDurationInMillis
+     * Constructor
+     *
+     * @param maximalDurationInMillis maximal duration of loop process
      */
-    public RepeaterOptions(long maximalDurationInMillis) {
+    public TimerOptions(long maximalDurationInMillis) {
         this(maximalDurationInMillis, 1000L);
     }
 
     /**
-     * @param maximalDurationInMillis
-     * @param delayTimeInMillis
+     * Constructor
+     *
+     * @param maximalDurationInMillis maximal duration of loop process
+     * @param delayTimeInMillis       delay time after each loop step
      */
-    public RepeaterOptions(long maximalDurationInMillis, long delayTimeInMillis) {
+    public TimerOptions(long maximalDurationInMillis, long delayTimeInMillis) {
         this(maximalDurationInMillis, delayTimeInMillis, true, true);
     }
 
     /**
-     * @param maximalDurationInMillis
-     * @param delayTimeInMillis
-     * @param ignoreExceptions
-     * @param canQuit
+     * Constructor
+     *
+     * @param maximalDurationInMillis maximal duration of loop process
+     * @param delayTimeInMillis       delay time after each loop step
+     * @param ignoreExceptions        flag to ignore occurred exceptions
+     * @param canQuit                 flag to quit process
      */
-    public RepeaterOptions(long maximalDurationInMillis,
-                           long delayTimeInMillis,
-                           boolean ignoreExceptions,
-                           boolean canQuit) {
+    public TimerOptions(long maximalDurationInMillis,
+                        long delayTimeInMillis,
+                        boolean ignoreExceptions,
+                        boolean canQuit) {
         super(delayTimeInMillis, ignoreExceptions, canQuit);
 
         this.setMaximalDuration(maximalDurationInMillis);
     }
 
     /**
-     * @return
+     * Returns the actual value of maximal duration of loop process.
+     *
+     * @return Returns the actual value of maximal duration of loop process.
      */
     public long getMaximalDuration() {
         return this.maximalDurationInMillis;
     }
 
     /**
-     * @param maximalDurationInMillis
+     * Sets the maximal duration of loop process.
+     *
+     * @param maximalDurationInMillis maximal duration of loop process
      */
     public void setMaximalDuration(long maximalDurationInMillis) {
         ArgumentUtils.assertGreaterOrEqualsZero(maximalDurationInMillis, "maximal duration");
@@ -82,6 +93,11 @@ public class RepeaterOptions extends LoopOptions {
         this.maximalDurationInMillis = maximalDurationInMillis;
     }
 
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return Returns a string representation of the object.
+     */
     @Override
     public String toString() {
         return super.toString() + " maximal duration = " + this.maximalDurationInMillis + " ms";
@@ -104,7 +120,7 @@ public class RepeaterOptions extends LoopOptions {
      * Checks if this object is equals to another one.
      *
      * @param obj other object for comparison
-     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if both objects are equal; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean equals(final Object obj) {
@@ -112,11 +128,11 @@ public class RepeaterOptions extends LoopOptions {
             return true;
         }
 
-        if (!(obj instanceof RepeaterOptions)) {
+        if (!(obj instanceof TimerOptions)) {
             return false;
         }
 
-        RepeaterOptions options = (RepeaterOptions) obj;
+        TimerOptions options = (TimerOptions) obj;
 
         return super.equals(obj) &&
                 this.getMaximalDuration() == options.getMaximalDuration();

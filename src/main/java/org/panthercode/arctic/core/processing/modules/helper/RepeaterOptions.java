@@ -13,65 +13,74 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules.options;
+package org.panthercode.arctic.core.processing.modules.helper;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 /**
- * TODO: documentation
- * TODO: Exceptions in function signature
+ * Builder class to configure parameters for controlling the loop process of the <tt>Repeater</tt> class.
+ *
+ * @author PantherCode
  */
-public class LoopOptions {
+public class RepeaterOptions {
 
     /**
-     *
+     * actual delay time after each loop step
      */
     private long delayTimeInMillis = 1000L;
 
     /**
-     *
+     * flag whether occurred exceptions are ignored or not.
      */
     private boolean ignoreExceptions = true;
 
     /**
-     *
+     * flag whether the process can quit after first successful loop step or not
      */
     private boolean canQuit = true;
 
     /**
-     *
+     * Default Constructor
      */
-    public LoopOptions() {
+    public RepeaterOptions() {
     }
 
     /**
-     * @param delayTimeInMillis
+     * Constructor
+     *
+     * @param delayTimeInMillis delay time after each loop step
      */
-    public LoopOptions(long delayTimeInMillis) {
+    public RepeaterOptions(long delayTimeInMillis) {
         this(delayTimeInMillis, true, true);
     }
 
     /**
-     * @param delayTimeInMillis
-     * @param ignoreExceptions
-     * @param canQuit
+     * Constructor
+     *
+     * @param delayTimeInMillis delay time after each loop step
+     * @param ignoreExceptions  flag to ignore occurred exceptions
+     * @param canQuit           flag to quit process
      */
-    public LoopOptions(long delayTimeInMillis, boolean ignoreExceptions, boolean canQuit) {
+    public RepeaterOptions(long delayTimeInMillis, boolean ignoreExceptions, boolean canQuit) {
         this.setDelayTime(delayTimeInMillis);
         this.ignoreExceptions(ignoreExceptions);
         this.canQuit(canQuit);
     }
 
     /**
-     * @return
+     * Returns the actual delay time.
+     *
+     * @return Returns the actual time.
      */
     public long getDelayTime() {
         return this.delayTimeInMillis;
     }
 
     /**
-     * @param delayTimeInMillis
+     * Sets the actual delay time.
+     *
+     * @param delayTimeInMillis delay time after each loop step
      */
     public void setDelayTime(long delayTimeInMillis) {
         ArgumentUtils.assertGreaterOrEqualsZero(delayTimeInMillis, "delay time");
@@ -80,34 +89,47 @@ public class LoopOptions {
     }
 
     /**
-     * @return
+     * Returns a flag that indicates whether occurred exceptions are ignored or not.
+     *
+     * @return Returns <tt>true</tt> if flag is set; Otherwise <tt>false</tt>.
      */
     public boolean isIgnoreExceptions() {
         return this.ignoreExceptions;
     }
 
     /**
-     * @param ignoreExceptions
+     * Sets a flag that indicates whether occurred exceptions are ignored or not.
+     *
+     * @param ignoreExceptions value of flag
      */
     public void ignoreExceptions(boolean ignoreExceptions) {
         this.ignoreExceptions = ignoreExceptions;
     }
 
     /**
-     * @return
+     * Returns a flag that indicates whether the process can quit after first successful loop step or not.
+     *
+     * @return Returns <tt>true</tt> if flag is set; Otherwise <tt>false</tt>.
      */
     public boolean canQuit() {
         return this.canQuit;
     }
 
     /**
-     * @param canQuit
+     * Sets a flag that indicates whether the process can quit after first successfil loop step or not
+     *
+     * @param canQuit value of flag
      */
     public void canQuit(boolean canQuit) {
         this.canQuit = canQuit;
     }
 
 
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return Returns a string representation of the object.
+     */
     @Override
     public String toString() {
         return "delay time = " + this.delayTimeInMillis
@@ -133,7 +155,7 @@ public class LoopOptions {
      * Checks if this object is equals to another one.
      *
      * @param obj other object for comparison
-     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if both objects are equal; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean equals(final Object obj) {
@@ -141,11 +163,11 @@ public class LoopOptions {
             return true;
         }
 
-        if (!(obj instanceof LoopOptions)) {
+        if (!(obj instanceof RepeaterOptions)) {
             return false;
         }
 
-        LoopOptions options = (LoopOptions) obj;
+        RepeaterOptions options = (RepeaterOptions) obj;
 
         return options.canQuit() == this.canQuit() &&
                 options.isIgnoreExceptions() == this.isIgnoreExceptions() &&

@@ -22,8 +22,8 @@ package org.panthercode.arctic.core.resources.impl;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.resources.Resource;
-import org.panthercode.arctic.core.settings.configuration.ConfigurableObject;
-import org.panthercode.arctic.core.settings.configuration.Configuration;
+import org.panthercode.arctic.core.settings.ConfigurableObject;
+import org.panthercode.arctic.core.settings.Configuration;
 
 import java.io.Closeable;
 
@@ -69,15 +69,15 @@ public abstract class ResourceImpl extends ConfigurableObject implements Resourc
         if (identity != null) {
             this.identity = identity;
         } else {
-            if (Identity.isAnnotated(this)) {
-                this.identity = Identity.fromAnnotation(this);
+            if (Identity.isAnnotated(this.getClass())) {
+                this.identity = Identity.fromAnnotation(this.getClass());
             } else {
                 throw new NullPointerException("The value of identity is null.");
             }
         }
 
-        if (Version.isAnnotated(this)) {
-            this.version = Version.fromAnnotation(this);
+        if (Version.isAnnotated(this.getClass())) {
+            this.version = Version.fromAnnotation(this.getClass());
         } else {
             this.version = new Version();
         }

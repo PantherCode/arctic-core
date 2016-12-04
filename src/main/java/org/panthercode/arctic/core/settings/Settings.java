@@ -15,12 +15,12 @@
  */
 package org.panthercode.arctic.core.settings;
 
-import org.panthercode.arctic.core.settings.configuration.Configuration;
-
 /**
  * Convert the configuration class to singleton object. This class is used if it's enough to handle configuration items
  * in one instance. Otherwise if it's more elegant to divide item in separate instances than use the
  * <tt>ConfigurationManager</tt> class.
+ *
+ * @author PantherCode
  */
 public class Settings extends Configuration {
 

@@ -16,8 +16,8 @@
 package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.processing.ProcessException;
+import org.panthercode.arctic.core.settings.Context;
 
 //TODO: update documentation
 

@@ -20,7 +20,7 @@ import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.resources.impl.ResourceImpl;
 import org.panthercode.arctic.core.resources.Resource;
-import org.panthercode.arctic.core.settings.configuration.Configuration;
+import org.panthercode.arctic.core.settings.Configuration;
 
 import java.io.Closeable;
 import java.io.IOException;

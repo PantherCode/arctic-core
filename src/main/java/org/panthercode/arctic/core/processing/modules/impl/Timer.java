@@ -17,11 +17,12 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.helper.identity.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.processing.modules.options.RepeaterOptions;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.processing.modules.helper.Controller;
+import org.panthercode.arctic.core.processing.modules.helper.TimerOptions;
+import org.panthercode.arctic.core.settings.Context;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,16 +32,11 @@ import java.util.concurrent.TimeUnit;
  * The Repeater repeats the module's functionality until the time limit is reached or until the module finished
  * successfully.
  */
-@IdentityInfo(name = "Standard Repeater", group = "Repeater Module")
+@IdentityInfo(name = "Timer", group = "Repeater Module")
 @VersionInfo(major = 1)
 public class Timer extends Repeater {
 
-    /**
-     * elapsed time after start the process
-     */
-    private long actualDurationInMillis;
-
-    private long startPoint;
+    private TimerController controller = null;
 
     /**
      * Constructor
@@ -50,7 +46,7 @@ public class Timer extends Repeater {
      */
     public Timer(Module module)
             throws NullPointerException {
-        this(module, new RepeaterOptions());
+        this(module, new TimerOptions());
     }
 
     /**
@@ -60,7 +56,7 @@ public class Timer extends Repeater {
      * @throws NullPointerException
      */
     public Timer(Module module,
-                 RepeaterOptions options)
+                 TimerOptions options)
             throws NullPointerException {
         this(module, options, null);
     }
@@ -73,7 +69,7 @@ public class Timer extends Repeater {
      * @throws NullPointerException
      */
     public Timer(Module module,
-                 RepeaterOptions options,
+                 TimerOptions options,
                  Context context)
             throws NullPointerException {
         super(module, options, context);
@@ -90,7 +86,7 @@ public class Timer extends Repeater {
     public Timer(Timer timer)
             throws NullPointerException, UnsupportedOperationException {
         super(timer.getModule().copy(),
-                new RepeaterOptions(timer.getMaximalDuration(),
+                new TimerOptions(timer.getMaximalDuration(),
                         timer.getDelayTime(),
                         timer.isIgnoreExceptions(),
                         timer.canQuit()),
@@ -103,7 +99,7 @@ public class Timer extends Repeater {
      * @return Returns the actual time limit (in ms).
      */
     public long getMaximalDuration() {
-        return ((RepeaterOptions) this.options).getMaximalDuration();
+        return ((TimerOptions) this.options).getMaximalDuration();
     }
 
     /**
@@ -138,7 +134,7 @@ public class Timer extends Repeater {
      * @throws IllegalArgumentException
      */
     public synchronized void setMaximalDuration(long durationInMillis) {
-        ((RepeaterOptions) this.options).setMaximalDuration(durationInMillis);
+        ((TimerOptions) this.options).setMaximalDuration(durationInMillis);
     }
 
     /**
@@ -147,7 +143,7 @@ public class Timer extends Repeater {
      * @return Returns the elapsed time if object's process state is "Running"; Otherwise zero.
      */
     public long actualDuration() {
-        return this.isRunning() ? 0L : this.actualDurationInMillis;
+        return this.isRunning() ? this.controller.value() : 0L;
     }
 
     /**
@@ -171,7 +167,7 @@ public class Timer extends Repeater {
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
                 .append(super.hashCode())
-                .append(this.actualDurationInMillis)
+                .append(this.actualDuration())
                 .append(this.getDelayTime())
                 .toHashCode());
     }
@@ -199,19 +195,36 @@ public class Timer extends Repeater {
                 this.getDelayTime() == timer.getDelayTime();
     }
 
-    //@Override
-    protected void initialiseLoop() {
-        this.actualDurationInMillis = 0L;
-        this.startPoint = System.currentTimeMillis();
+    @Override
+    protected Controller<? extends Object> createController() {
+        this.controller = new TimerController();
+
+        return this.controller;
     }
 
-    //@Override
-    protected boolean loopCondition() {
-        return this.actualDuration() < this.getMaximalDuration();
-    }
+    private class TimerController extends Controller<Long> {
+        private long actualDurationInMillis = 0;
 
-    //@Override
-    protected void afterLoop() {
-        this.actualDurationInMillis = System.currentTimeMillis() - this.startPoint;
+        private long startTimeInMillis = 0;
+
+        @Override
+        public void reset() {
+            this.actualDurationInMillis = 0;
+        }
+
+        @Override
+        public Long value() {
+            return this.actualDurationInMillis;
+        }
+
+        @Override
+        public void update() {
+            this.actualDurationInMillis = this.startTimeInMillis - System.currentTimeMillis();
+        }
+
+        @Override
+        public boolean accept() {
+            return this.actualDurationInMillis < getMaximalDuration();
+        }
     }
 }

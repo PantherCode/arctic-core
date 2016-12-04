@@ -30,11 +30,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Created by architect on 25.09.16.
+ * Utility class that contains methods to load classes from jar archives and filter lists.
+ *
+ * @author PantherCode
  */
 public class ReflectionUtils {
     /**
-     * private constructor
+     * private Constructor
      */
     private ReflectionUtils() {
     }
@@ -48,7 +50,7 @@ public class ReflectionUtils {
      * @param arguments    parameters the method will be called with
      * @throws NoSuchMethodException     Is thrown if no matching method is found.
      * @throws IllegalAccessException    Is thrown if invocation is not permitted by security. For example the constructor
-     *                                   you would like to call has not modification <code>public</code>.
+     *                                   you would like to call has not modification <tt>public</tt>.
      * @throws InvocationTargetException Is thrown if an error occurs on invocation.
      */
     public static void invokeMethod(Object object, String functionName, Object... arguments)
@@ -68,7 +70,7 @@ public class ReflectionUtils {
      * @return Returns the output of the invoked method.
      * @throws NoSuchMethodException     Is thrown if no matching mehtod is found.
      * @throws IllegalAccessException    Is thrown if invovation is not permitted by security. security. For example the constructor
-     *                                   you would like to call has not modification <code>public</code>.
+     *                                   you would like to call has not modification <tt>public</tt>.
      * @throws InvocationTargetException Is thrown if  an error occurs on invocation.
      */
     @SuppressWarnings("unchecked")
@@ -78,9 +80,9 @@ public class ReflectionUtils {
     }
 
     /**
-     * Reads all names of classes as path from a specific .jar file.
+     * Reads all names of classes as path from a specific jar file.
      *
-     * @param path filepath to .jar file
+     * @param path filepath to jar file
      * @return Returns a list of class paths
      * @throws IOException              Is thrown if an error occurs while reading the .jar file.
      * @throws IllegalArgumentException Is thrown if path is null.
@@ -108,10 +110,10 @@ public class ReflectionUtils {
     }
 
     /**
-     * Creates a list of all classes from a specific .jar file.
+     * Creates a list of all classes from a specific jar file.
      *
-     * @param path filepath to .jar file
-     * @return Returns a list with all classes in .jar file. If .jar doesn't contain any class, the list will be empty.
+     * @param path filepath to jar file
+     * @return Returns a list with all classes in jar file. If jar file doesn't contain any class, the list will be empty.
      * @throws IOException              Is thrown if an error occurs while reading the .jar file.
      * @throws ClassNotFoundException   Is thrown if the class is not found.
      * @throws IllegalArgumentException Is thrown if path is null.
@@ -133,10 +135,12 @@ public class ReflectionUtils {
     }
 
     /**
-     * @param classList
-     * @param filter
-     * @return
-     * @throws NullPointerException
+     * Filters a list of classes with a given pattern.
+     *
+     * @param classList list with classes
+     * @param filter    pattern for filtering
+     * @return Returns a filtered list.
+     * @throws NullPointerException Is thrown if one of the parameters is <tt>null</tt>.
      */
     public static List<Class<?>> filterClassList(final List<Class<?>> classList, final Class<?> filter)
             throws NullPointerException {
@@ -145,20 +149,22 @@ public class ReflectionUtils {
 
         final List<Class<?>> filteredList = new ArrayList<>();
 
-        filteredList.forEach(item -> {
-            if (item.isInstance(filter)) {
-                filteredList.add(item);
+        for (Class<?> clazz : classList) {
+            if (filter.equals(clazz)) {
+                filteredList.add(clazz);
             }
-        });
+        }
 
         return filteredList;
     }
 
     /**
-     * @param classList
-     * @param filter
-     * @return
-     * @throws NullPointerException
+     * Filters a list of classes with a given pattern.
+     *
+     * @param classList list with classes
+     * @param filter    pattern for filtering
+     * @return Returns a filtered list.
+     * @throws NullPointerException Is thrown if one of the parameters is <tt>null</tt>.
      */
     public static List<Class<?>> filterClassListByAnnotation(final List<Class<?>> classList,
                                                              final Class<? extends Annotation> filter)
@@ -178,9 +184,11 @@ public class ReflectionUtils {
     }
 
     /**
-     * @param clazz
-     * @param annotation
-     * @return
+     * Returns a flag that indicates whether the given class is annotated with a specified annotation or not.
+     *
+     * @param clazz      class to check
+     * @param annotation annotation to check
+     * @return Returns <tt>true</tt> if the class is annotated with the given annotation; Otherwise <tt>false</tt>.
      */
     public static boolean isAnnotated(final Class<?> clazz, final Class<? extends Annotation> annotation) {
         return clazz != null && annotation != null && clazz.getAnnotation(annotation) != null;

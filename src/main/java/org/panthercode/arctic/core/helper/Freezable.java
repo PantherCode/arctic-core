@@ -42,7 +42,7 @@ public interface Freezable {
     /**
      * Returns a flag representing the inner state of the object can be modified or not.
      *
-     * @return Returns <code>true</code> if the object can be modified; Otherwise <code>false</code>.
+     * @return Returns <tt>true</tt> if the object can be modified; Otherwise <tt>false</tt>.
      */
     boolean canModify();
 }

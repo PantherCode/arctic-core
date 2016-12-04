@@ -18,7 +18,6 @@ package org.panthercode.arctic.core.helper.version;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.Freezable;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
 
 /**
@@ -27,7 +26,7 @@ import org.panthercode.arctic.core.reflect.ReflectionUtils;
  *
  * @author PantherCode
  */
-public class Version implements Freezable {
+public class Version implements Freezable, Comparable<Version> {
 
     /**
      * major number of version
@@ -106,7 +105,7 @@ public class Version implements Freezable {
     }
 
     /**
-     * Increment the major number. This function is <code>synchronized</code>.
+     * Increment the major number. This function is <tt>synchronized</tt>.
      */
     public synchronized void upgrade() {
         if (this.canModify) {
@@ -115,7 +114,7 @@ public class Version implements Freezable {
     }
 
     /**
-     * Increment the minor number. This function is <code>synchronized</code>.
+     * Increment the minor number. This function is <tt>synchronized</tt>.
      */
     public synchronized void update() {
         if (this.canModify) {
@@ -124,7 +123,7 @@ public class Version implements Freezable {
     }
 
     /**
-     * Increment the build number. This function is <code>synchronized</code>.
+     * Increment the build number. This function is <tt>synchronized</tt>.
      */
     public synchronized void build() {
         if (this.canModify) {
@@ -133,7 +132,7 @@ public class Version implements Freezable {
     }
 
     /**
-     * Increment the revision number. This function is <code>synchronized</code>.
+     * Increment the revision number. This function is <tt>synchronized</tt>.
      */
     public synchronized void review() {
         if (this.canModify) {
@@ -179,7 +178,7 @@ public class Version implements Freezable {
 
     /**
      * Set all fields to zero. After reset the version has the value <tt>0.0.0.0</tt>. This function is
-     * <code>synchronized</code>.
+     * <tt>synchronized</tt>.
      */
     public synchronized void reset() {
         if (this.canModify) {
@@ -188,7 +187,7 @@ public class Version implements Freezable {
     }
 
     /**
-     * Set the value of a specific field. This function is <code>synchronized</code>.
+     * Set the value of a specific field. This function is <tt>synchronized</tt>.
      *
      * @param field version field to set
      * @param value new value
@@ -217,7 +216,7 @@ public class Version implements Freezable {
     }
 
     /**
-     * Set new values to version. This function is <code>synchronized</code>.
+     * Set new values to version. This function is <tt>synchronized</tt>.
      *
      * @param major    new major number
      * @param minor    new minor number
@@ -243,11 +242,11 @@ public class Version implements Freezable {
     /**
      * Checks if an object offers a VersionInfo annotation.
      *
-     * @param obj object to check
-     * @return Returns <code>true</code> if the object offers an VersionInfo annotation; Otherwise <code>false</code>.
+     * @param clazz class to check
+     * @return Returns <tt>true</tt> if the object offers an VersionInfo annotation; Otherwise <code>false</code>.
      */
-    public synchronized static boolean isAnnotated(final Object obj) {
-        return obj != null && ReflectionUtils.isAnnotated(obj.getClass(), VersionInfo.class);
+    public static <T> boolean isAnnotated(final Class<T> clazz) {
+        return ReflectionUtils.isAnnotated(clazz, VersionInfo.class);
 
     }
 
@@ -255,12 +254,12 @@ public class Version implements Freezable {
      * Create a new version from the annotation information given by the object. If the annotation is empty or the
      * object has no annotation at all a default identity object is returned.
      *
-     * @param object object with annotation
+     * @param clazz class with annotation
      * @return Returns a new version object made of annotation information.
      */
-    public synchronized static Version fromAnnotation(final Object object) {
-        if (object != null) {
-            VersionInfo info = object.getClass().getAnnotation(VersionInfo.class);
+    public static <T> Version fromAnnotation(final Class<T> clazz) {
+        if (clazz != null) {
+            VersionInfo info = clazz.getAnnotation(VersionInfo.class);
 
             if (info != null) {
                 return new Version(info);
@@ -273,7 +272,7 @@ public class Version implements Freezable {
     /**
      * Parse a string to an version object. The function splits the string at each "." character and converts the parts
      * to numbers. If the string contains other characters than numeric ones an exception is thrown. If the string has
-     * more than 4 parts the rest is ignored. This function is <code>synchronized</code>.
+     * more than 4 parts the rest is ignored. This function is <tt>synchronized</tt>.
      *
      * @param version version as string
      * @return Returns a new version object.
@@ -320,7 +319,7 @@ public class Version implements Freezable {
     }
 
     /**
-     * Freeze this object. The object can't be modified. This function is <code>synchronized</code>.
+     * Freeze this object. The object can't be modified. This function is <tt>synchronized</tt>.
      */
     @Override
     public synchronized void freeze() {
@@ -328,7 +327,7 @@ public class Version implements Freezable {
     }
 
     /**
-     * Unfreeze this object. The object can be modified. This function is <code>synchronized</code>.
+     * Unfreeze this object. The object can be modified. This function is <tt>synchronized</tt>.
      */
     @Override
     public synchronized void unfreeze() {
@@ -345,11 +344,15 @@ public class Version implements Freezable {
         return this.canModify;
     }
 
+    public Version copy() {
+        return new Version(this.major, this.minor, this.build, this.revision);
+    }
+
     /**
      * Checks if this object is equals to another one. Two version objects are equals if the have the same field values.
      *
      * @param obj other object to check
-     * @return Returns <code>true</code> if both objects have the same values; Otherwise <code>false</code>.
+     * @return Returns <tt>true</tt> if both objects have the same values; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean equals(final Object obj) {
@@ -379,5 +382,27 @@ public class Version implements Freezable {
                 .append(this.revision)
                 .append(this.build)
                 .toHashCode());
+    }
+
+    /**
+     * Compares two version objects.
+     *
+     * @param other other version for comparison.
+     * @return Returns 1 if this version is higher, -1 if this version is less and 0 if both are equals.
+     */
+    @Override
+    public int compareTo(Version other) {
+        int[] actualVersion = {this.majorNumber(), this.minorNumber(), this.buildNumber(), this.revisionNumber()};
+        int[] otherVersion = {other.majorNumber(), other.minorNumber(), other.buildNumber(), other.revisionNumber()};
+
+        for (int i = 0; i < 4; i++) {
+            if (actualVersion[i] > otherVersion[i]) {
+                return 1;
+            } else if (actualVersion[i] < otherVersion[i]) {
+                return -1;
+            }
+        }
+
+        return 0;
     }
 }

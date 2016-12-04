@@ -20,8 +20,7 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import java.io.*;
 
 /**
- * Utils class that contains a set of functions to deal with files.
- * TODO: update Documentation
+ * Utility class that contains a set of functions to deal with files.
  */
 public class IOUtils {
 
@@ -32,7 +31,7 @@ public class IOUtils {
     }
 
     /**
-     * Opens a specific file path as BufferedReader.
+     * Opens a specific file as BufferedReader.
      *
      * @param path path to file
      * @return Returns an opened BufferedReader.
@@ -49,7 +48,7 @@ public class IOUtils {
     }
 
     /**
-     * Opens a specific file path as BufferedReader.
+     * Opens a specific file as BufferedReader.
      *
      * @param path path to file
      * @return Returns an opened BufferedWriter.
@@ -62,7 +61,7 @@ public class IOUtils {
     }
 
     /**
-     * Opens a specific file path as BufferedReader.
+     * Opens a specific file as BufferedReader.
      *
      * @param path path to file
      * @return Returns an opened BufferedWriter.

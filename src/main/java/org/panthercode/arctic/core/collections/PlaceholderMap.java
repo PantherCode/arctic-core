@@ -20,73 +20,90 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import java.util.HashMap;
 
 /**
+ * TODO: class documentation
+ *
  * @author PantherCode
  */
 public class PlaceholderMap extends HashMap<Object, String> {
 
     /**
-     *
+     * value that should be replaced
      */
-    private String placeholderRegex = "";
+    private String placeholder = "";
 
     /**
-     *
+     * value to replace the placeholder
      */
     private String value = "";
 
     /**
-     * @param value
-     * @param placeholderRegex
-     * @throws NullPointerException
+     * Constructor
+     *
+     * @param value       value for replacing
+     * @param placeholder value that should replaced
+     * @throws NullPointerException Is thrown if one of the parameters is <tt>null</tt>.
      */
     public PlaceholderMap(String value,
-                          String placeholderRegex)
+                          String placeholder)
             throws NullPointerException {
         super();
 
-        this.setPlaceholder(placeholderRegex);
+        this.setPlaceholder(placeholder);
         this.setValue(value);
     }
 
-    //Todo: constructors
 
     /**
-     * @return
+     * Returns the actual placeholder.
+     *
+     * @return Returns the actual placeholder.
      */
-    public String getPlaceholer() {
-        return this.placeholderRegex;
+    public String getPlaceholder() {
+        return this.placeholder;
     }
 
     /**
-     * @param placeholderRegex
-     * @throws NullPointerException
+     * Sets the actual placeholder.
+     *
+     * @param placeholder value that should be replaced
+     * @throws NullPointerException Is thrown if the value is <tt>null</tt>.
      */
-    public void setPlaceholder(String placeholderRegex)
+    public void setPlaceholder(String placeholder)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(placeholderRegex, "placeholder");
+        ArgumentUtils.assertNotNull(placeholder, "placeholder");
 
-        this.placeholderRegex = placeholderRegex;
+        this.placeholder = placeholder;
     }
 
+    /**
+     * Returns the actual default value that is used for replacing.
+     *
+     * @return Returns the actual default value that is used for replacing.
+     */
     public String getValue() {
         return this.value;
     }
 
     /**
-     * @param valueRegex
-     * @throws NullPointerException
+     * Sets the actual value that is used for replacing.
+     *
+     * @param value value that is used for replacing
+     * @throws NullPointerException Is thrown if the parameter is <tt>null</tt>.
      */
-    public void setValue(String valueRegex)
+    public void setValue(String value)
             throws NullPointerException {
         ArgumentUtils.assertNotNull(this.value, "value");
 
-        this.value = valueRegex;
+        this.value = value;
     }
 
     /**
-     * @param key
-     * @return
-     * @throws NullPointerException
+     * Returns the corresponding value that is stored under the given key in the map and replaces the placeholder with
+     * the actual value.
+     *
+     * @param key key that represents the stored value
+     * @return Returns the corresponding value to the key or <tt>null</tt> if the key doesn't exists.
+     * @throws NullPointerException Is thrown if the key is <tt>null</tt>.
      */
     @Override
     public String get(Object key)
@@ -95,31 +112,36 @@ public class PlaceholderMap extends HashMap<Object, String> {
     }
 
     /**
-     * @param key
-     * @param value
-     * @return
-     * @throws NullPointerException
+     * Returns the corresponding value that is stored under the given key in the map and replaces the placeholder with
+     * the given value.
+     *
+     * @param key   key that represents the stored value
+     * @param value value that is used for replacing instead of default value
+     * @return Returns the corresponding value to the key or <tt>null</tt> if the key doesn't exists.
+     * @throws NullPointerException Is thrown if one of the parameters is <tt>null</tt>.
      */
     public String get(Object key, String value)
             throws NullPointerException {
-        return this.get(key, this.value, this.placeholderRegex);
+        return this.get(key, value, this.placeholder);
     }
 
     /**
-     * @param key
-     * @param value
-     * @param placeholderRegex
-     * @return
-     * @throws NullPointerException
+     * Returns the corresponding value that is stored under the given key in the map and replaces the placeholder with
+     * the given value.
+     *
+     * @param key         key that represents the stored value
+     * @param value       value that is used for replacing instead of default value
+     * @param placeholder placeholder that is used instead of the default one
+     * @return Returns the corresponding value to the key or <tt>null</tt> if the key doesn't exists.
+     * @throws NullPointerException Is thrown if one of the parameters is <tt>null</tt>
      */
-    public String get(Object key, String value, String placeholderRegex)
+    public String get(Object key, String value, String placeholder)
             throws NullPointerException {
         ArgumentUtils.assertNotNull(value, "value");
-        ArgumentUtils.assertNotNull(placeholderRegex, "placeholer");
+        ArgumentUtils.assertNotNull(placeholder, "placeholder");
 
         String result = super.get(key);
 
-        //replaces only the first finding of version
-        return result == null ? result : result.replaceAll(placeholderRegex, value);
+        return (result == null) ? null : result.replace(placeholder, value);
     }
 }

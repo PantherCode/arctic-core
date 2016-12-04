@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.settings.configuration;
+package org.panthercode.arctic.core.settings;
 
 import org.apache.commons.io.FileUtils;
 
@@ -26,6 +26,8 @@ import java.util.Properties;
 /**
  * Class to store related items persistently. This class make the read and write operation a little bit more comfortable
  * than <tt>Properties</tt> class do.
+ *
+ * @author PantherCode
  */
 public class Configuration extends Properties {
 
