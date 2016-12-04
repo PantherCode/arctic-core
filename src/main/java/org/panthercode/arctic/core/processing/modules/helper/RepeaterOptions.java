@@ -19,72 +19,122 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 /**
- * TODO: documentation
- * TODO: Exceptions in function signature
+ * Builder class to configure parameters for controlling the loop process of the <tt>Repeater</tt> class.
+ *
+ * @author PantherCode
  */
-public class RepeaterOptions extends LoopOptions {
+public class RepeaterOptions {
 
     /**
-     *
+     * actual delay time after each loop step
      */
-    private long maximalDurationInMillis = 60000L;
+    private long delayTimeInMillis = 1000L;
 
     /**
-     *
+     * flag whether occurred exceptions are ignored or not.
+     */
+    private boolean ignoreExceptions = true;
+
+    /**
+     * flag whether the process can quit after first successful loop step or not
+     */
+    private boolean canQuit = true;
+
+    /**
+     * Default Constructor
      */
     public RepeaterOptions() {
-        super();
     }
 
     /**
-     * @param maximalDurationInMillis
+     * Constructor
+     *
+     * @param delayTimeInMillis delay time after each loop step
      */
-    public RepeaterOptions(long maximalDurationInMillis) {
-        this(maximalDurationInMillis, 1000L);
+    public RepeaterOptions(long delayTimeInMillis) {
+        this(delayTimeInMillis, true, true);
     }
 
     /**
-     * @param maximalDurationInMillis
-     * @param delayTimeInMillis
+     * Constructor
+     *
+     * @param delayTimeInMillis delay time after each loop step
+     * @param ignoreExceptions  flag to ignore occurred exceptions
+     * @param canQuit           flag to quit process
      */
-    public RepeaterOptions(long maximalDurationInMillis, long delayTimeInMillis) {
-        this(maximalDurationInMillis, delayTimeInMillis, true, true);
+    public RepeaterOptions(long delayTimeInMillis, boolean ignoreExceptions, boolean canQuit) {
+        this.setDelayTime(delayTimeInMillis);
+        this.ignoreExceptions(ignoreExceptions);
+        this.canQuit(canQuit);
     }
 
     /**
-     * @param maximalDurationInMillis
-     * @param delayTimeInMillis
-     * @param ignoreExceptions
-     * @param canQuit
+     * Returns the actual delay time.
+     *
+     * @return Returns the actual time.
      */
-    public RepeaterOptions(long maximalDurationInMillis,
-                           long delayTimeInMillis,
-                           boolean ignoreExceptions,
-                           boolean canQuit) {
-        super(delayTimeInMillis, ignoreExceptions, canQuit);
-
-        this.setMaximalDuration(maximalDurationInMillis);
+    public long getDelayTime() {
+        return this.delayTimeInMillis;
     }
 
     /**
-     * @return
+     * Sets the actual delay time.
+     *
+     * @param delayTimeInMillis delay time after each loop step
      */
-    public long getMaximalDuration() {
-        return this.maximalDurationInMillis;
+    public void setDelayTime(long delayTimeInMillis) {
+        ArgumentUtils.assertGreaterOrEqualsZero(delayTimeInMillis, "delay time");
+
+        this.delayTimeInMillis = delayTimeInMillis;
     }
 
     /**
-     * @param maximalDurationInMillis
+     * Returns a flag that indicates whether occurred exceptions are ignored or not.
+     *
+     * @return Returns <tt>true</tt> if flag is set; Otherwise <tt>false</tt>.
      */
-    public void setMaximalDuration(long maximalDurationInMillis) {
-        ArgumentUtils.assertGreaterOrEqualsZero(maximalDurationInMillis, "maximal duration");
-
-        this.maximalDurationInMillis = maximalDurationInMillis;
+    public boolean isIgnoreExceptions() {
+        return this.ignoreExceptions;
     }
 
+    /**
+     * Sets a flag that indicates whether occurred exceptions are ignored or not.
+     *
+     * @param ignoreExceptions value of flag
+     */
+    public void ignoreExceptions(boolean ignoreExceptions) {
+        this.ignoreExceptions = ignoreExceptions;
+    }
+
+    /**
+     * Returns a flag that indicates whether the process can quit after first successful loop step or not.
+     *
+     * @return Returns <tt>true</tt> if flag is set; Otherwise <tt>false</tt>.
+     */
+    public boolean canQuit() {
+        return this.canQuit;
+    }
+
+    /**
+     * Sets a flag that indicates whether the process can quit after first successfil loop step or not
+     *
+     * @param canQuit value of flag
+     */
+    public void canQuit(boolean canQuit) {
+        this.canQuit = canQuit;
+    }
+
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return Returns a string representation of the object.
+     */
     @Override
     public String toString() {
-        return super.toString() + " maximal duration = " + this.maximalDurationInMillis + " ms";
+        return "delay time = " + this.delayTimeInMillis
+                + " ms, can quit = " + this.canQuit
+                + " ignore exception " + this.ignoreExceptions;
     }
 
     /**
@@ -95,8 +145,9 @@ public class RepeaterOptions extends LoopOptions {
     @Override
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
-                .append(super.hashCode())
-                .append(this.maximalDurationInMillis)
+                .append(this.delayTimeInMillis)
+                .append(this.ignoreExceptions)
+                .append(this.canQuit)
                 .toHashCode());
     }
 
@@ -104,7 +155,7 @@ public class RepeaterOptions extends LoopOptions {
      * Checks if this object is equals to another one.
      *
      * @param obj other object for comparison
-     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if both objects are equal; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean equals(final Object obj) {
@@ -118,7 +169,8 @@ public class RepeaterOptions extends LoopOptions {
 
         RepeaterOptions options = (RepeaterOptions) obj;
 
-        return super.equals(obj) &&
-                this.getMaximalDuration() == options.getMaximalDuration();
+        return options.canQuit() == this.canQuit() &&
+                options.isIgnoreExceptions() == this.isIgnoreExceptions() &&
+                options.getDelayTime() == this.getDelayTime();
     }
 }
