@@ -59,19 +59,4 @@ public class Context extends Hashtable<Object, Object> {
     public Context(Map<? extends String, ? extends Object> map) {
         super(map);
     }
-
-    /**
-     * Returns the value associated by key in its original class type.
-     *
-     * @param key key associated with value
-     * @param <T> generic type of value
-     * @return Returne the value associated by key if hashtable contains key; Otherwise <tt>null</tt>.
-     */
-    public <T> T gets(final Object key) {
-        /*if (this.containsKey(key)) {
-            return ClassUtils.cast(super.get(key));
-        }*/
-
-        return null;
-    }
 }

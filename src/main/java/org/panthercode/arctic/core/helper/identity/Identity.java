@@ -28,7 +28,7 @@ import java.util.Random;
  * <p>
  * Each object has an identifier which represents in a (pseudo) unique manner. But it's no guaranteed at all. For
  * generating a new identifier a hash code consisting of name and group name is calculated and multiplied with a random
- * number. Therefore the result of <code>new Identity("name","group").equals(new Identity("name","group"))</code>
+ * number. Therefore the result of <tt>new Identity("name","group").equals(new Identity("name","group"))</tt>
  * returns always false.
  * <p>
  * To create an new instance of the identity class use the generate() function:
@@ -82,7 +82,7 @@ public final class Identity implements Freezable {
 
     /**
      * Set a new identifier. If the new identifier is less than zero the absolute value is used. This function is
-     * <code>synchronized</code>.
+     * <tt>synchronized</tt>.
      *
      * @param id new identifier
      */
@@ -101,7 +101,7 @@ public final class Identity implements Freezable {
 
     /**
      * Set a new name if the object can be modified. If the value is null the name is set to 'unknown'.
-     * This function is <code>synchronized</code>.
+     * This function is <tt>synchronized</tt>.
      *
      * @param name new object name
      * @throws RuntimeException Is thrown if the name is tried to modify, but it's not allowed.
@@ -126,7 +126,7 @@ public final class Identity implements Freezable {
 
     /**
      * Set a new group name if the object can be modified. If the value is null the group name is set to 'default'.
-     * This function is <code>synchronized</code>.
+     * This function is <tt>synchronized</tt>.
      *
      * @param group new group name
      * @throws RuntimeException Is thrown if the group name is tried to modify, but it's not allowed.
@@ -161,7 +161,7 @@ public final class Identity implements Freezable {
 
     /**
      * Creates and returns a copy of this object. The identifier of the copied object will be generated again.
-     * If you try <code>identity.equals(identity.copy())</code> the result always is <code>false</code>. This is done
+     * If you try <tt>identity.equals(identity.copy())</tt> the result always is <tt>false</tt>. This is done
      * to prevent objects with different content but same id.
      *
      * @return Return a copy of this object.
@@ -171,7 +171,7 @@ public final class Identity implements Freezable {
     }
 
     /**
-     * Freeze this object. The object can't be modified. This function is <code>synchronized</code>.
+     * Freeze this object. The object can't be modified. This function is <tt>synchronized</tt>.
      */
     @Override
     public synchronized void freeze() {
@@ -179,7 +179,7 @@ public final class Identity implements Freezable {
     }
 
     /**
-     * Unfreeze this object. The object can be modified. This function is <code>synchronized</code>.
+     * Unfreeze this object. The object can be modified. This function is <tt>synchronized</tt>.
      */
     @Override
     public synchronized void unfreeze() {
@@ -200,7 +200,7 @@ public final class Identity implements Freezable {
      * Checks if an object offers an IdentityInfo annotation.
      *
      * @param object object to check
-     * @return Returns <code>true</code> if the object offers an IdentityInfo annotation; Otherwise <code>false</code>.
+     * @return Returns <tt>true</tt> if the object offers an IdentityInfo annotation; Otherwise <tt>false</tt>.
      */
     public static <T> boolean isAnnotated(final Class<T> clazz) {
         return ReflectionUtils.isAnnotated(clazz, IdentityInfo.class);
@@ -254,7 +254,7 @@ public final class Identity implements Freezable {
      * the same group name. The identifier is ignored.
      *
      * @param obj other object to check
-     * @return Returns <code>true</code> if two identity objects have the same name and group name.
+     * @return Returns <tt>true</tt> if two identity objects have the same name and group name.
      */
     @Override
     public boolean equals(final Object obj) {
@@ -293,7 +293,7 @@ public final class Identity implements Freezable {
 
     /**
      * Generates a new identity object with given object and group name.
-     * This function is <code>synchronized</code>.
+     * This function is <tt>synchronized</tt>.
      *
      * @param name  new object name
      * @param group new group name
