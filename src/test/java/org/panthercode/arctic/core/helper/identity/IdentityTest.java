@@ -1,6 +1,5 @@
 package org.panthercode.arctic.core.helper.identity;
 
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -47,7 +46,7 @@ public class IdentityTest {
     public void T03_Identity_isAnnotated() {
         TestClass testClass = new TestClass();
 
-        boolean isAnnotated = Identity.isAnnotated(testClass);
+        boolean isAnnotated = Identity.isAnnotated(testClass.getClass());
 
         Assert.assertTrue(isAnnotated, "Class is annotated.");
     }
@@ -56,7 +55,7 @@ public class IdentityTest {
     public void T04_Identity_generate_fromAnnotation() {
         TestClass testClass = new TestClass();
 
-        Identity identity = Identity.fromAnnotation(testClass);
+        Identity identity = Identity.fromAnnotation(testClass.getClass());
 
         Assert.assertEquals(identity.getName(), TEST_NAME, "Name of identity");
 
@@ -67,7 +66,7 @@ public class IdentityTest {
     public void T05_Identity_generate_fromAnnotationAnonymous() {
         AnonymousTestClass testClass = new AnonymousTestClass();
 
-        Identity identity = Identity.fromAnnotation(testClass);
+        Identity identity = Identity.fromAnnotation(testClass.getClass());
 
         Assert.assertEquals(identity.getName(), UNKNOWN, "Name of identity");
 
@@ -78,7 +77,7 @@ public class IdentityTest {
     public void T06_Identity_match() {
         TestClass testClass = new TestClass();
 
-        Identity expectedIdentity = Identity.fromAnnotation(testClass);
+        Identity expectedIdentity = Identity.fromAnnotation(testClass.getClass());
 
         Identity actualIdentity = Identity.generate(TEST_NAME, TEST_GROUP);
 
@@ -91,7 +90,7 @@ public class IdentityTest {
     public void T07_Identity_copy() {
         TestClass testClass = new TestClass();
 
-        Identity expectedIdentity = Identity.fromAnnotation(testClass);
+        Identity expectedIdentity = Identity.fromAnnotation(testClass.getClass());
 
         Identity actualIdentity = expectedIdentity.copy();
 

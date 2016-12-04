@@ -1,6 +1,5 @@
 package org.panthercode.arctic.core.helper.version;
 
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -36,14 +35,14 @@ public class VersionTest {
     public void T02_Version_isAnnotated() {
         TestClass testClass = new TestClass();
 
-        Assert.assertTrue(Version.isAnnotated(testClass), "Class is annotated.");
+        Assert.assertTrue(Version.isAnnotated(testClass.getClass()), "Class is annotated.");
     }
 
     @Test
     public void T03_Version_fromAnnotation() {
         TestClass testClass = new TestClass();
 
-        Version actualVersion = Version.fromAnnotation(testClass);
+        Version actualVersion = Version.fromAnnotation(testClass.getClass());
 
         boolean result = TEST_VERSION_CLASS.equals(actualVersion);
 

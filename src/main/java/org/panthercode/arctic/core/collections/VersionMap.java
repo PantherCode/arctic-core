@@ -51,7 +51,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V>{
             throws NullPointerException {
         ArgumentUtils.assertNotNull(key, "key");
 
-        if (this.contains(key)) {
+        if (this.containsKey(key)) {
             return this.map.get(key).lastEntry().getValue();
         }
 
@@ -104,15 +104,18 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V>{
      * @param key
      * @param value
      */
-    public void put(Object key, V value) {
+    @Override
+    public V put(K key, V value) {
         ArgumentUtils.assertNotNull(key, "key");
         ArgumentUtils.assertNotNull(value, "value");
 
         TreeMap<Version, V> treeMap = (this.map.containsKey(key)) ? this.map.get(key) : new TreeMap<Version, V>();
 
-        treeMap.put(value.version(), value);
+        V result = treeMap.put(value.version(), value);
 
         this.map.put(key, treeMap);
+
+        return result;
     }
 
     @Override
@@ -157,15 +160,6 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V>{
         }
 
         return Collections.EMPTY_SET;
-    }
-
-    /**
-     * @param key
-     */
-    public void remove(K key) {
-        if (this.contains(key)) {
-            this.map.remove(key);
-        }
     }
 
     /**
