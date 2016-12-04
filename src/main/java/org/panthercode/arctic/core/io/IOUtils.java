@@ -21,6 +21,8 @@ import java.io.*;
 
 /**
  * Utility class that contains a set of functions to deal with files.
+ *
+ * @author PantherCode
  */
 public class IOUtils {
 

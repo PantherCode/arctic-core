@@ -243,7 +243,7 @@ public class Version implements Freezable, Comparable<Version> {
      * Checks if an object offers a VersionInfo annotation.
      *
      * @param clazz class to check
-     * @return Returns <tt>true</tt> if the object offers an VersionInfo annotation; Otherwise <code>false</code>.
+     * @return Returns <tt>true</tt> if the object offers an VersionInfo annotation; Otherwise <tt>false</tt>.
      */
     public static <T> boolean isAnnotated(final Class<T> clazz) {
         return ReflectionUtils.isAnnotated(clazz, VersionInfo.class);
