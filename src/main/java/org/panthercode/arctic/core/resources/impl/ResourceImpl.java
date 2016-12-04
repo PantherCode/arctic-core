@@ -22,8 +22,8 @@ package org.panthercode.arctic.core.resources.impl;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.resources.Resource;
-import org.panthercode.arctic.core.settings.configuration.ConfigurableObject;
-import org.panthercode.arctic.core.settings.configuration.Configuration;
+import org.panthercode.arctic.core.settings.ConfigurableObject;
+import org.panthercode.arctic.core.settings.Configuration;
 
 import java.io.Closeable;
 

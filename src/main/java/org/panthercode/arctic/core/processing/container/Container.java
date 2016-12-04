@@ -22,7 +22,7 @@ import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.impl.ModuleImpl;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.settings.Context;
 
 /**
  * Container are used as root elements for processing.

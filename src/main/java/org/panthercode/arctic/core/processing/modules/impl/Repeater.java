@@ -22,7 +22,7 @@ import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.helper.Measurement;
 import org.panthercode.arctic.core.processing.modules.options.LoopOptions;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.settings.Context;
 
 import java.util.concurrent.TimeUnit;
 

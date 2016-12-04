@@ -20,7 +20,6 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
-import org.panthercode.arctic.core.runtime.exceptions.ShutdownException;
 import org.panthercode.arctic.core.settings.Settings;
 
 import java.io.InputStream;

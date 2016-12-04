@@ -19,7 +19,7 @@ import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.settings.Context;
 
 
 //TODO: udpate documentation

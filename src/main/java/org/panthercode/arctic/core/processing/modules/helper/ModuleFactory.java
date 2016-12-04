@@ -19,7 +19,7 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.reflect.ClassBuilder;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.settings.Context;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

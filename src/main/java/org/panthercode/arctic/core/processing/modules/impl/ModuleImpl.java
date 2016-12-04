@@ -23,7 +23,7 @@ import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessStateHandler;
 import org.panthercode.arctic.core.processing.exceptions.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.settings.context.Context;
+import org.panthercode.arctic.core.settings.Context;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

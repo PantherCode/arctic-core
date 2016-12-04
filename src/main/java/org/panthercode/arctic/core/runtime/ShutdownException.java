@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.runtime.exceptions;
+package org.panthercode.arctic.core.runtime;
 
 /**
  * Class to close the application in a controlled way.
