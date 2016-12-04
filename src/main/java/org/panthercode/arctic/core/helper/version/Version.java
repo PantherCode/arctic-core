@@ -26,7 +26,7 @@ import org.panthercode.arctic.core.reflect.ReflectionUtils;
  *
  * @author PantherCode
  */
-public class Version implements Freezable {
+public class Version implements Freezable, Comparable<Version> {
 
     /**
      * major number of version
@@ -382,5 +382,27 @@ public class Version implements Freezable {
                 .append(this.revision)
                 .append(this.build)
                 .toHashCode());
+    }
+
+    /**
+     * TODO: documentation
+     *
+     * @param other
+     * @return
+     */
+    @Override
+    public int compareTo(Version other) {
+        int[] actualVersion = {this.majorNumber(), this.minorNumber(), this.buildNumber(), this.revisionNumber()};
+        int[] otherVersion = {other.majorNumber(), other.minorNumber(), other.buildNumber(), other.revisionNumber()};
+
+        for (int i = 0; i < 4; i++) {
+            if (actualVersion[i] > otherVersion[i]) {
+                return 1;
+            } else if (actualVersion[i] < otherVersion[i]) {
+                return -1;
+            }
+        }
+
+        return 0;
     }
 }

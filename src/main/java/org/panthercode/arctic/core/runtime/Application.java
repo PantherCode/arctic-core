@@ -207,6 +207,17 @@ public abstract class Application {
     }
 
     /**
+     * TODO: documentation
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T extends Application> T current(Class<T> clazz) {
+        return (T) current();
+    }
+
+    /**
      * Method with functionality, that will executed after starting the application.
      *
      * @param args (commandline) arguments
