@@ -21,7 +21,7 @@ import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.helper.Controller;
-import org.panthercode.arctic.core.processing.modules.helper.RepeaterOptions;
+import org.panthercode.arctic.core.processing.modules.helper.TimerOptions;
 import org.panthercode.arctic.core.settings.Context;
 
 import java.util.concurrent.TimeUnit;
@@ -46,7 +46,7 @@ public class Timer extends Repeater {
      */
     public Timer(Module module)
             throws NullPointerException {
-        this(module, new RepeaterOptions());
+        this(module, new TimerOptions());
     }
 
     /**
@@ -56,7 +56,7 @@ public class Timer extends Repeater {
      * @throws NullPointerException
      */
     public Timer(Module module,
-                 RepeaterOptions options)
+                 TimerOptions options)
             throws NullPointerException {
         this(module, options, null);
     }
@@ -69,7 +69,7 @@ public class Timer extends Repeater {
      * @throws NullPointerException
      */
     public Timer(Module module,
-                 RepeaterOptions options,
+                 TimerOptions options,
                  Context context)
             throws NullPointerException {
         super(module, options, context);
@@ -86,7 +86,7 @@ public class Timer extends Repeater {
     public Timer(Timer timer)
             throws NullPointerException, UnsupportedOperationException {
         super(timer.getModule().copy(),
-                new RepeaterOptions(timer.getMaximalDuration(),
+                new TimerOptions(timer.getMaximalDuration(),
                         timer.getDelayTime(),
                         timer.isIgnoreExceptions(),
                         timer.canQuit()),
@@ -99,7 +99,7 @@ public class Timer extends Repeater {
      * @return Returns the actual time limit (in ms).
      */
     public long getMaximalDuration() {
-        return ((RepeaterOptions) this.options).getMaximalDuration();
+        return ((TimerOptions) this.options).getMaximalDuration();
     }
 
     /**
@@ -134,7 +134,7 @@ public class Timer extends Repeater {
      * @throws IllegalArgumentException
      */
     public synchronized void setMaximalDuration(long durationInMillis) {
-        ((RepeaterOptions) this.options).setMaximalDuration(durationInMillis);
+        ((TimerOptions) this.options).setMaximalDuration(durationInMillis);
     }
 
     /**

@@ -21,7 +21,7 @@ import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.helper.Controller;
-import org.panthercode.arctic.core.processing.modules.helper.LoopOptions;
+import org.panthercode.arctic.core.processing.modules.helper.RepeaterOptions;
 import org.panthercode.arctic.core.settings.Context;
 
 import java.util.concurrent.TimeUnit;
@@ -41,7 +41,7 @@ public abstract class Repeater extends ModuleImpl {
     /**
      *
      */
-    protected LoopOptions options;
+    protected RepeaterOptions options;
 
     /**
      *
@@ -61,7 +61,7 @@ public abstract class Repeater extends ModuleImpl {
      */
     public Repeater(Module module)
             throws NullPointerException {
-        this(module, new LoopOptions());
+        this(module, new RepeaterOptions());
     }
 
     /**
@@ -71,7 +71,7 @@ public abstract class Repeater extends ModuleImpl {
      * @throws NullPointerException Is thrown if value of module or identity is null.
      */
     public Repeater(Module module,
-                    LoopOptions options)
+                    RepeaterOptions options)
             throws NullPointerException {
         this(module, options, null);
     }
@@ -85,7 +85,7 @@ public abstract class Repeater extends ModuleImpl {
      *                              throws IllegalArgumentException
      */
     public Repeater(Module module,
-                    LoopOptions options,
+                    RepeaterOptions options,
                     Context context)
             throws NullPointerException {
         super(context);
@@ -114,7 +114,7 @@ public abstract class Repeater extends ModuleImpl {
 
         this.setController(this.createController());
 
-        this.options = new LoopOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
+        this.options = new RepeaterOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
     }
 
     private void setController(Controller<? extends Object> controller) {
