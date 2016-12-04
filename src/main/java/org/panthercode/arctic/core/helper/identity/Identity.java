@@ -17,7 +17,6 @@ package org.panthercode.arctic.core.helper.identity;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.helper.Freezable;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
 
 import java.util.Random;

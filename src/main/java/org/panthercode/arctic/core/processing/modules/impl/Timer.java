@@ -17,8 +17,8 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.helper.identity.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.options.RepeaterOptions;
 import org.panthercode.arctic.core.settings.context.Context;

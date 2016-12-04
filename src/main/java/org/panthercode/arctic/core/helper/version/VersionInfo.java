@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.helper.version.annotation;
+package org.panthercode.arctic.core.helper.version;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

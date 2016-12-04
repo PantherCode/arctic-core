@@ -18,7 +18,6 @@ package org.panthercode.arctic.core.helper.version;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.Freezable;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
 
 /**

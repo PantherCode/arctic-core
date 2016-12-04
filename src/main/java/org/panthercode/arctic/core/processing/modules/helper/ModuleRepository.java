@@ -15,12 +15,10 @@
  */
 package org.panthercode.arctic.core.processing.modules.helper;
 
-import org.panthercode.arctic.core.helper.identity.Identity;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.helper.identity.IdentityInfo;
+import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.repository.impl.RepositoryImpl;
-import org.panthercode.arctic.core.settings.context.Context;
 
 //TODO: implement auto-identification via annotation
 //TODO: change CloneNotSupportedException

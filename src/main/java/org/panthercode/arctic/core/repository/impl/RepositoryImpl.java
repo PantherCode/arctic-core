@@ -17,10 +17,10 @@ package org.panthercode.arctic.core.repository.impl;
 
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.identity.Identity;
-import org.panthercode.arctic.core.helper.identity.annotation.IdentityInfo;
+import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.Versionable;
-import org.panthercode.arctic.core.helper.version.annotation.VersionInfo;
+import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.repository.Repository;
 
 import java.util.ArrayList;
