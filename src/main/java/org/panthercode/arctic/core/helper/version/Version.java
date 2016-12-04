@@ -385,10 +385,10 @@ public class Version implements Freezable, Comparable<Version> {
     }
 
     /**
-     * TODO: documentation
+     * Compares two version objects.
      *
-     * @param other
-     * @return
+     * @param other other version for comparison.
+     * @return Returns 1 if this version is higher, -1 if this version is less and 0 if both are equals.
      */
     @Override
     public int compareTo(Version other) {
