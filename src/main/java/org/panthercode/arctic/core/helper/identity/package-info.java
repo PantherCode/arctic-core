@@ -1,5 +1,5 @@
 /**
- * Classes to identify objects.
+ * Classes to identify and separate objects.
  *
  * @author PantherCode
  */
