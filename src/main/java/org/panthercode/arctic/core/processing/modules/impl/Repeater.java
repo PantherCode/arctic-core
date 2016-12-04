@@ -117,7 +117,7 @@ public abstract class Repeater extends ModuleImpl {
         this.options = new LoopOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
     }
 
-    private void setController(Controller<? extends Object> controller){
+    private void setController(Controller<? extends Object> controller) {
         ArgumentUtils.assertNotNull(controller, "controller");
 
         this.controller = controller;
@@ -260,8 +260,6 @@ public abstract class Repeater extends ModuleImpl {
             throws ProcessException {
     }
 
-    //Todo: after method is not called if error occurs
-    //Todo: create more elegant solution to inherent loop control
     @Override
     public synchronized boolean start() throws ProcessException {
         if (this.changeState(ProcessState.RUNNING)) {
@@ -276,15 +274,13 @@ public abstract class Repeater extends ModuleImpl {
                     if ((module.isSucceeded() && this.canQuit()) || this.isStopped()) {
                         break;
                     }
+
+                    Thread.sleep(this.getDelayTime());
                 } catch (ProcessException e) {
                     if (!this.isIgnoreExceptions()) {
                         this.changeState(ProcessState.FAILED);
                         throw new ProcessException("While running the module an error occurred.", e);
                     }
-                }
-
-                try {
-                    Thread.sleep(this.getDelayTime());
                 } catch (InterruptedException e) {
                     throw new ProcessException(e);
                 }
@@ -295,7 +291,6 @@ public abstract class Repeater extends ModuleImpl {
                         : ProcessState.FAILED;
 
                 if (!this.changeState(result)) {
-
                     throw new ProcessException("Failed to set status to " + result + ".");
                 }
             }
@@ -348,7 +343,7 @@ public abstract class Repeater extends ModuleImpl {
      * Checks if this object is equals to another one.
      *
      * @param obj other object for comparison
-     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if both objects are equal; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean equals(final Object obj) {
@@ -368,5 +363,10 @@ public abstract class Repeater extends ModuleImpl {
                 this.canQuit() == repeater.canQuit();
     }
 
+    /**
+     * Creates a new controller instance to control the repeating process.
+     *
+     * @return Returns a new instance of a controller.
+     */
     protected abstract Controller<? extends Object> createController();
 }
