@@ -17,10 +17,10 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.processing.modules.helper.Measurement;
+import org.panthercode.arctic.core.processing.modules.helper.Controller;
 import org.panthercode.arctic.core.processing.modules.helper.LoopOptions;
 import org.panthercode.arctic.core.settings.Context;
 
@@ -36,7 +36,7 @@ public abstract class Repeater extends ModuleImpl {
     /**
      * Module for processing
      */
-    protected Module module = null;
+    private Module module = null;
 
     /**
      *
@@ -46,7 +46,7 @@ public abstract class Repeater extends ModuleImpl {
     /**
      *
      */
-    protected Measurement<? extends Object> measurement;
+    private Controller<? extends Object> controller;
 
     /**
      * Loop class use milliseconds for measurements
@@ -94,6 +94,8 @@ public abstract class Repeater extends ModuleImpl {
 
         this.setModule(module);
 
+        this.setController(this.createController());
+
         this.options = options;
     }
 
@@ -108,9 +110,17 @@ public abstract class Repeater extends ModuleImpl {
             throws NullPointerException, UnsupportedOperationException {
         super(repeater);
 
-        this.options = new LoopOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
-
         this.setModule(repeater.getModule().copy());
+
+        this.setController(this.createController());
+
+        this.options = new LoopOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
+    }
+
+    private void setController(Controller<? extends Object> controller){
+        ArgumentUtils.assertNotNull(controller, "controller");
+
+        this.controller = controller;
     }
 
     /**
@@ -257,9 +267,7 @@ public abstract class Repeater extends ModuleImpl {
         if (this.changeState(ProcessState.RUNNING)) {
             before();
 
-            this.measurement.reset();
-
-            while (this.measurement.updateAndCheck()) {
+            for (controller.reset(); controller.accept(); controller.update()) {
                 this.module.reset();
 
                 try {
@@ -359,4 +367,6 @@ public abstract class Repeater extends ModuleImpl {
                 this.isIgnoreExceptions() == repeater.isIgnoreExceptions() &&
                 this.canQuit() == repeater.canQuit();
     }
+
+    protected abstract Controller<? extends Object> createController();
 }
