@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules.options;
+package org.panthercode.arctic.core.processing.modules.helper;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
@@ -22,69 +22,66 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
  * TODO: documentation
  * TODO: Exceptions in function signature
  */
-public class RepeaterOptions extends LoopOptions {
+public class CounterOptions extends LoopOptions {
 
     /**
      *
      */
-    private long maximalDurationInMillis = 60000L;
+    private int count = 1;
 
     /**
      *
      */
-    public RepeaterOptions() {
+    public CounterOptions() {
         super();
     }
 
     /**
-     * @param maximalDurationInMillis
+     * @param count
      */
-    public RepeaterOptions(long maximalDurationInMillis) {
-        this(maximalDurationInMillis, 1000L);
+    public CounterOptions(int count) {
+        this(1, 1000L);
     }
 
     /**
-     * @param maximalDurationInMillis
+     * @param count
      * @param delayTimeInMillis
      */
-    public RepeaterOptions(long maximalDurationInMillis, long delayTimeInMillis) {
-        this(maximalDurationInMillis, delayTimeInMillis, true, true);
+    public CounterOptions(int count, long delayTimeInMillis) {
+        this(1, delayTimeInMillis, true, true);
     }
 
     /**
-     * @param maximalDurationInMillis
+     * @param count
      * @param delayTimeInMillis
      * @param ignoreExceptions
      * @param canQuit
      */
-    public RepeaterOptions(long maximalDurationInMillis,
-                           long delayTimeInMillis,
-                           boolean ignoreExceptions,
-                           boolean canQuit) {
+    public CounterOptions(int count, long delayTimeInMillis, boolean ignoreExceptions, boolean canQuit) {
         super(delayTimeInMillis, ignoreExceptions, canQuit);
 
-        this.setMaximalDuration(maximalDurationInMillis);
+        this.setCount(count);
     }
 
     /**
      * @return
      */
-    public long getMaximalDuration() {
-        return this.maximalDurationInMillis;
+    public int getCount() {
+        return this.count;
     }
 
     /**
-     * @param maximalDurationInMillis
+     * @param count
      */
-    public void setMaximalDuration(long maximalDurationInMillis) {
-        ArgumentUtils.assertGreaterOrEqualsZero(maximalDurationInMillis, "maximal duration");
+    public void setCount(int count) {
+        ArgumentUtils.assertGreaterOrEqualsZero(count, "count");
 
-        this.maximalDurationInMillis = maximalDurationInMillis;
+        this.count = count;
     }
 
     @Override
     public String toString() {
-        return super.toString() + " maximal duration = " + this.maximalDurationInMillis + " ms";
+        return super.toString() + " count = " + this.count;
     }
 
     /**
@@ -96,7 +93,7 @@ public class RepeaterOptions extends LoopOptions {
     public int hashCode() {
         return Math.abs(new HashCodeBuilder()
                 .append(super.hashCode())
-                .append(this.maximalDurationInMillis)
+                .append(this.count)
                 .toHashCode());
     }
 
@@ -112,13 +109,13 @@ public class RepeaterOptions extends LoopOptions {
             return true;
         }
 
-        if (!(obj instanceof RepeaterOptions)) {
+        if (!(obj instanceof CounterOptions)) {
             return false;
         }
 
-        RepeaterOptions options = (RepeaterOptions) obj;
+        CounterOptions options = (CounterOptions) obj;
 
         return super.equals(obj) &&
-                this.getMaximalDuration() == options.getMaximalDuration();
+                this.getCount() == options.getCount();
     }
 }

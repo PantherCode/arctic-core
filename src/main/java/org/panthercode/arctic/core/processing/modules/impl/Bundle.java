@@ -18,7 +18,7 @@ package org.panthercode.arctic.core.processing.modules.impl;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.Context;
 

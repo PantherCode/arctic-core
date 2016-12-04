@@ -21,7 +21,7 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessStateHandler;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.Context;
 

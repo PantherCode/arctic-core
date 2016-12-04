@@ -18,10 +18,10 @@ package org.panthercode.arctic.core.processing.modules.impl;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.processing.modules.helper.Measurement;
-import org.panthercode.arctic.core.processing.modules.options.LoopOptions;
+import org.panthercode.arctic.core.processing.modules.helper.LoopOptions;
 import org.panthercode.arctic.core.settings.Context;
 
 import java.util.concurrent.TimeUnit;

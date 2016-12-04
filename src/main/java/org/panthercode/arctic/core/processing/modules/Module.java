@@ -18,7 +18,7 @@ package org.panthercode.arctic.core.processing.modules;
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.exceptions.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.settings.Context;
 
 

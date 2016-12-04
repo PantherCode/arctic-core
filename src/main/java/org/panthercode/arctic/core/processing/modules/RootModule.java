@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.processing.modules.annotation;
+package org.panthercode.arctic.core.processing.modules;
 
 /**
  * If a .jar file contains more than one module class for class loader it's not possible to detect the root element.
