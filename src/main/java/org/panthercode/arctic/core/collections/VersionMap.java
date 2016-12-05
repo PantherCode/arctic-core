@@ -22,11 +22,11 @@ import org.panthercode.arctic.core.helper.version.Versionable;
 import java.util.*;
 
 /**
- * TODO: class documentation
+ * TODO: documentation
  *
  * @author PantherCode
  */
-public class VersionMap<K, V extends Versionable> implements Map<K, V>{
+public class VersionMap<K, V extends Versionable> implements Map<K, V> {
 
     /**
      * actual map to store objects
@@ -40,158 +40,126 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V>{
         super();
     }
 
-    /**
-     * Returns the stored value associated with the given key.
-     *
-     * @param key key that is associated with stored value
-     * @return Returns the value associated to given key or <tt>null</tt> if the map doesn't contain the key.
-     * @throws NullPointerException Is thrown if the value of key is <tt>null</tt>.
-     */
-    public V get(Object key)
-            throws NullPointerException {
-        ArgumentUtils.assertNotNull(key, "key");
+    @Override
+    public int size() {
+        int size = 0;
 
-        if (this.contains(key)) {
+        TreeMap<Version, V> tmpMap = null;
+
+        for (K key : this.map.keySet()) {
+            size += this.map.get(key).size();
+        }
+
+
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.map.size() == 0;
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return this.map.containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        for (Object key : this.keySet()) {
+            if (this.map.get(key).containsValue(value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public V get(Object key) {
+        if (this.map.containsKey(key)) {
             return this.map.get(key).lastEntry().getValue();
         }
 
         return null;
     }
 
-    /**
-     * Returns the stored value associated with the given key and version.
-     *
-     * @param key     key that is associated with stored value
-     * @param version version that is associated with stored value
-     * @return Returns the value associated to given key and version or <tt>null</tt> if the map doesn't contain the element.
-     */
-    public V get(K key, Version version) {
-        ArgumentUtils.assertNotNull(key, "key");
-        ArgumentUtils.assertNotNull(version, "version");
-
-        if (this.contains(key)) {
-            this.map.get(key).get(version);
+    public V get(Object key, Version version) {
+        if (this.map.containsKey(key) && this.map.get(key).containsKey(version)) {
+            return this.map.get(key).get(version);
         }
 
         return null;
     }
 
     @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        return false;
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        return false;
-    }
-
-
-
-    /**
-     * Store an given
-     *
-     * @param key
-     * @param value
-     */
-    public void put(Object key, V value) {
-        ArgumentUtils.assertNotNull(key, "key");
+    public V put(K key, V value) {
         ArgumentUtils.assertNotNull(value, "value");
 
-        TreeMap<Version, V> treeMap = (this.map.containsKey(key)) ? this.map.get(key) : new TreeMap<Version, V>();
+        TreeMap<Version, V> tmpMap = this.containsKey(key) ? this.map.get(key) : new TreeMap<Version, V>();
 
-        treeMap.put(value.version(), value);
+        V result = tmpMap.put(value.version(), value);
 
-        this.map.put(key, treeMap);
+        this.map.put(key, tmpMap);
+
+        return result;
     }
 
     @Override
     public V remove(Object key) {
-        return null;
+        return this.map.remove(key).lastEntry().getValue();
     }
 
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
-
+        if (m != null) {
+            for (K key : m.keySet()) {
+                this.put(key, m.get(key));
+            }
+        }
     }
 
     @Override
     public void clear() {
-
+        this.map.clear();
     }
 
     @Override
     public Set<K> keySet() {
-        return null;
+        return this.map.keySet();
     }
 
     @Override
     public Collection<V> values() {
-        return null;
+        Collection<V> collection = Collections.EMPTY_LIST;
+
+        TreeMap<Version, V> tmpMap = null;
+
+        for (K key : this.map.keySet()) {
+            tmpMap = this.map.get(key);
+
+            for (Version version : tmpMap.keySet()) {
+                collection.add(tmpMap.get(version));
+            }
+        }
+
+        return collection;
     }
 
     @Override
     public Set<Entry<K, V>> entrySet() {
-        return null;
-    }
+        Set<Entry<K, V>> set = Collections.EMPTY_SET;
 
-    /**
-     * @param key
-     * @return
-     */
-    public Set<Version> versions(K key) {
-        ArgumentUtils.assertNotNull(key, "key");
+        TreeMap<Version, V> tmpMap = null;
 
-        if (this.contains(key)) {
-            return this.map.get(key).keySet();
+        for (K key : this.map.keySet()) {
+            tmpMap = this.map.get(key);
+
+            for (Version version : tmpMap.keySet()) {
+                set.add(new AbstractMap.SimpleEntry<K, V>(key, tmpMap.get(key)));
+            }
         }
 
-        return Collections.EMPTY_SET;
-    }
-
-    /**
-     * @param key
-     */
-    public void remove(K key) {
-        if (this.contains(key)) {
-            this.map.remove(key);
-        }
-    }
-
-    /**
-     * @param key
-     * @param version
-     */
-    public void remove(K key, Version version) {
-        if (this.contains(key, version)) {
-            this.map.get(key).remove(version);
-        }
-    }
-
-    /**
-     * @param key
-     * @return
-     */
-    public boolean contains(K key) {
-        return this.map.containsKey(key);
-    }
-
-    /**
-     * @param key
-     * @param version
-     * @return
-     */
-    public boolean contains(K key, Version version) {
-        return this.contains(key) && this.map.get(key).containsKey(version);
+        return set;
     }
 }
