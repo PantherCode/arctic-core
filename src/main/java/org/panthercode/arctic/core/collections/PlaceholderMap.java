@@ -43,8 +43,8 @@ public class PlaceholderMap extends HashMap<Object, String> {
      * @param placeholder value that should replaced
      * @throws NullPointerException Is thrown if one of the parameters is <tt>null</tt>.
      */
-    public PlaceholderMap(String value,
-                          String placeholder)
+    public PlaceholderMap(String placeholder,
+                          String value)
             throws NullPointerException {
         super();
 
@@ -122,7 +122,7 @@ public class PlaceholderMap extends HashMap<Object, String> {
      */
     public String get(Object key, String value)
             throws NullPointerException {
-        return this.get(key, value, this.placeholder);
+        return this.get(key, this.placeholder, value);
     }
 
     /**
@@ -135,7 +135,7 @@ public class PlaceholderMap extends HashMap<Object, String> {
      * @return Returns the corresponding value to the key or <tt>null</tt> if the key doesn't exists.
      * @throws NullPointerException Is thrown if one of the parameters is <tt>null</tt>
      */
-    public String get(Object key, String value, String placeholder)
+    public String get(Object key, String placeholder, String value)
             throws NullPointerException {
         ArgumentUtils.assertNotNull(value, "value");
         ArgumentUtils.assertNotNull(placeholder, "placeholder");
