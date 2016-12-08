@@ -4,6 +4,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
+ * Test cases for PlaceholderMap class
+ *
  * @author PantherCode
  */
 public class PlaceholderMapTest {

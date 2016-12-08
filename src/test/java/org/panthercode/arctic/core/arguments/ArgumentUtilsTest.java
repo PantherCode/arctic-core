@@ -18,7 +18,7 @@ package org.panthercode.arctic.core.arguments;
 import org.testng.annotations.Test;
 
 /**
- * Test class for ArgumentUtils
+ * Test cases for ArgumentUtils class
  *
  * @author PantherCode
  */

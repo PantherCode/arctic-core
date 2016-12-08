@@ -4,7 +4,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
- * Created by architect on 01.12.16.
+ * Test cases for Identity class
+ *
+ * @author PantherCode
  */
 public class IdentityTest {
 
