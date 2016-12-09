@@ -110,6 +110,14 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
         return this.map.remove(key).lastEntry().getValue();
     }
 
+    public V remove(Object key, Version version) {
+        if (this.map.containsKey(key) && this.map.get(key).containsKey(version)) {
+            return this.map.get(key).remove(version);
+        }
+
+        return null;
+    }
+
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
         if (m != null) {
