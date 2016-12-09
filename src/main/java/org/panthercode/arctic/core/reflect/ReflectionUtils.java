@@ -174,11 +174,11 @@ public class ReflectionUtils {
 
         final List<Class<?>> filteredList = new ArrayList<>();
 
-        filteredList.forEach(item -> {
-            if (ReflectionUtils.isAnnotated(item, filter)) {
-                filteredList.add(item);
+        for (Class<?> clazz : classList) {
+            if (clazz.isAnnotationPresent(filter)) {
+                filteredList.add(clazz);
             }
-        });
+        }
 
         return filteredList;
     }
