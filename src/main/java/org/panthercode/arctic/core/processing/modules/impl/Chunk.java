@@ -17,10 +17,14 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
-import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.Context;
+
+import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 //TODO: implement reset()
 
@@ -31,11 +35,14 @@ import org.panthercode.arctic.core.settings.Context;
 @VersionInfo(major = 1)
 public class Chunk extends Bundle {
 
+    //TODO: check parameter
+    private int threadCount = 0;
+
     /**
      * Standard Constructor
      */
-    public Chunk() {
-        super();
+    public Chunk(int threadCount) {
+        this(threadCount, null);
     }
 
     /**
@@ -43,8 +50,10 @@ public class Chunk extends Bundle {
      *
      * @param context context the module is associated with.
      */
-    public Chunk(Context context) {
+    public Chunk(int threadCount, Context context) {
         super(context);
+
+        this.threadCount = threadCount;
     }
 
     /**
@@ -64,7 +73,32 @@ public class Chunk extends Bundle {
      */
     public synchronized boolean start()
             throws ProcessException {
-        // Todo: implement
+        if (this.modules().isEmpty()) {
+            return true;
+        }
+
+        //TODO: change state
+
+        this.reset();
+
+        //ExecuterService muste be class member
+        ExecutorService executor = Executors.newFixedThreadPool(this.threadCount);
+
+        Iterator<Module> iterator = this.modules().iterator();
+
+        while (iterator.hasNext()) {
+            final Module current = iterator.next();
+
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    current.start();
+                }
+            });
+        }
+
+        //set Process state
+
         return false;
     }
 

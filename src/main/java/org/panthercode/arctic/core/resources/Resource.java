@@ -20,10 +20,23 @@ import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.settings.Configurable;
 
 /**
+ * TODO: documentation
  *
+ * @author PantherCode
  */
 public interface Resource extends Identifiable, Versionable, Configurable {
-    <T> T execute(String command, Class<T> returnType, Object... arguments) throws Exception;
 
-    boolean isClosed();
+    boolean isOpen();
+
+    boolean isBusy();
+
+    int counter();
+
+    int capacity();
+
+    void acquire() throws Exception;
+
+    void release();
+
+    <T> T execute(String functionName, Class<T> returnType, Object... arguments) throws Exception;
 }
