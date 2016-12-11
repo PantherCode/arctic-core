@@ -15,7 +15,9 @@
  */
 package org.panthercode.arctic.core.concurrent;
 
+import org.panthercode.arctic.core.concurrent.impl.PriorityQueuedSemaphore;
 import org.panthercode.arctic.core.concurrent.impl.PrioritySemaphore;
+import org.panthercode.arctic.core.concurrent.impl.QueuedSemaphore;
 import org.panthercode.arctic.core.concurrent.impl.SimpleSemaphore;
 import org.panthercode.arctic.core.helper.priority.Priority;
 
@@ -29,12 +31,12 @@ public class Semaphores {
     private Semaphores() {
     }
 
-    public static Semaphore<Void> createSimpleSemaphore() {
-        return Semaphores.createSimpleSemaphore(1);
+    public static Semaphore<Void> createQueuedSemaphore() {
+        return Semaphores.createQueuedSemaphore(1);
     }
 
-    public static Semaphore<Void> createSimpleSemaphore(int capacity) {
-        return new SimpleSemaphore(capacity);
+    public static Semaphore<Void> createQueuedSemaphore(int capacity) {
+        return new QueuedSemaphore(capacity);
     }
 
     public static Semaphore<Priority> createPrioritySemaphore() {
@@ -43,5 +45,21 @@ public class Semaphores {
 
     public static Semaphore<Priority> createPrioritySemaphore(int capacity) {
         return new PrioritySemaphore(capacity);
+    }
+
+    public static Semaphore<Priority> createPriorityQueuedSemaphore() {
+        return Semaphores.createPriorityQueuedSemaphore(1);
+    }
+
+    public static Semaphore<Priority> createPriorityQueuedSemaphore(int capacity) {
+        return new PriorityQueuedSemaphore(capacity);
+    }
+
+    public static Semaphore<Void> createSimpleSemaphore() {
+        return Semaphores.createSimpleSemaphore(1);
+    }
+
+    public static Semaphore<Void> createSimpleSemaphore(int capacity) {
+        return new SimpleSemaphore(capacity);
     }
 }

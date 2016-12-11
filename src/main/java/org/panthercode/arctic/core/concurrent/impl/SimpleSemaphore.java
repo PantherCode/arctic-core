@@ -22,6 +22,8 @@ package org.panthercode.arctic.core.concurrent.impl;
  */
 public class SimpleSemaphore extends AbstractSemaphore<Void> {
 
+    private int size = 0;
+
     public SimpleSemaphore() {
         super();
     }
@@ -39,6 +41,8 @@ public class SimpleSemaphore extends AbstractSemaphore<Void> {
     @Override
     public synchronized void acquire(Void value)
             throws InterruptedException {
+        this.size++;
+
         while (this.counter() == 0) {
             this.wait();
         }
@@ -53,5 +57,12 @@ public class SimpleSemaphore extends AbstractSemaphore<Void> {
         }
 
         this.incrementCounter();
+
+        this.size--;
+    }
+
+    @Override
+    public int size() {
+        return 0;
     }
 }

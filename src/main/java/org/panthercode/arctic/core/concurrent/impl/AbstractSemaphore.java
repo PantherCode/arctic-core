@@ -55,6 +55,9 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
         return this.counter;
     }
 
+    @Override
+    public abstract int size();
+
     protected synchronized void incrementCounter() {
         this.counter++;
     }

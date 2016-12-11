@@ -20,13 +20,13 @@ package org.panthercode.arctic.core.resources.impl;
  */
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.concurrent.Semaphore;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.priority.Priority;
-import org.panthercode.arctic.core.helper.priority.Semaphore;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
-import org.panthercode.arctic.core.resources.Resource;
 import org.panthercode.arctic.core.resources.AbstractResource;
+import org.panthercode.arctic.core.resources.Resource;
 import org.panthercode.arctic.core.settings.Configuration;
 
 /**
@@ -40,18 +40,18 @@ public class ResourceImpl implements Resource {
 
     private AbstractResource resource;
 
-    private Semaphore semaphore;
+    private Semaphore<Priority> semaphore;
 
     private Priority priority;
 
     public ResourceImpl(AbstractResource resource,
-                        Semaphore semaphore,
+                        Semaphore<Priority> semaphore,
                         Priority priority) {
         this(resource, semaphore, priority, null);
     }
 
     public ResourceImpl(AbstractResource resource,
-                        Semaphore semaphore,
+                        Semaphore<Priority> semaphore,
                         Priority priority,
                         Configuration configuration) {
         ArgumentUtils.assertNotNull(resource, "resource");

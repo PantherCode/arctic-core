@@ -31,4 +31,6 @@ public interface Semaphore<T> {
     int capacity();
 
     int counter();
+
+    int size();
 }

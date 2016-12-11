@@ -17,8 +17,6 @@ package org.panthercode.arctic.core.processing.modules.helper;
 
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
-import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.repository.impl.RepositoryImpl;
 
 //TODO: implement auto-identification via annotation
 //TODO: change CloneNotSupportedException
@@ -28,7 +26,7 @@ import org.panthercode.arctic.core.repository.impl.RepositoryImpl;
  */
 @IdentityInfo(name = "Module Repository", group = "Repository")
 @VersionInfo(major = 1)
-public class ModuleRepository extends RepositoryImpl<Module> {
+public class ModuleRepository  {
 
 //    /**
 //     * TODO: Repository constructor without identity parameter -> annotation

@@ -37,7 +37,7 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
     public PrioritySemaphore(int capacity) {
         super(capacity);
 
-        this.queue = new PriorityBlockingQueue<Priority>(10, new PriorityComparator());
+        this.queue = new PriorityBlockingQueue<>(10, new PriorityComparator());
     }
 
     @Override
@@ -47,12 +47,12 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
     }
 
     @Override
-    public synchronized void acquire(Priority priority)
+    public synchronized void acquire(Priority value)
             throws InterruptedException {
         if (this.counter() == 0) {
-            this.queue.add(priority);
+            this.queue.add(value);
 
-            while (this.counter() == 0 || priority != this.queue.peek()) {
+            while (this.counter() == 0 || value != this.queue.peek()) {
                 this.wait();
             }
 
@@ -70,4 +70,11 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
 
         this.incrementCounter();
     }
+
+    @Override
+    public int size() {
+        return this.queue.size();
+    }
+
+
 }
