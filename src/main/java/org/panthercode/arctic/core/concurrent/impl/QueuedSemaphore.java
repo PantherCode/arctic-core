@@ -4,7 +4,9 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Created by architect on 11.12.16.
+ * TODO: documentation
+ *
+ * @author PantherCode
  */
 public class QueuedSemaphore extends AbstractSemaphore<Void> {
 
