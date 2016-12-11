@@ -18,13 +18,13 @@ package org.panthercode.arctic.core.resources;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.priority.Priority;
-import org.panthercode.arctic.core.helper.priority.Semaphore;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.reflect.ClassBuilder;
-import org.panthercode.arctic.core.resources.impl.ResourceImpl;
 import org.panthercode.arctic.core.settings.Configuration;
 
 import java.lang.reflect.InvocationTargetException;
+
+//import org.panthercode.arctic.core.helper.priority.Semaphore;
 
 /**
  * TODO: documentation
@@ -68,6 +68,7 @@ public class ResourceFactory {
 
         AbstractResource abstractResource = ClassBuilder.create(AbstractResource.class).build();
 
-        return new ResourceImpl(abstractResource, new Semaphore(capacity), priority, configuration);
+        //TODO: fix
+        return null; //new ResourceImpl(abstractResource, new Semaphore(capacity), priority, configuration);
     }
 }

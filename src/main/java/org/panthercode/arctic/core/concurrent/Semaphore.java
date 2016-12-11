@@ -13,44 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.helper.priority;
+package org.panthercode.arctic.core.concurrent;
 
 /**
  * TODO: documentation
  *
  * @author PantherCode
  */
-public enum Priority {
+public interface Semaphore<T> {
 
-    VERY_HIGH(5, "Very High"),
+    void acquire() throws Exception;
 
-    HIGH(4, "High"),
+    void acquire(T value) throws Exception;
 
-    NORMAL(3, "Normal"),
+    void release();
 
-    LOW(2, "Low"),
+    int capacity();
 
-    VERY_LOW(1, "Very Low");
-
-    private final int priority;
-
-    private final String value;
-
-    Priority(int priority, String value) {
-        this.priority = priority;
-        this.value = value;
-    }
-
-    public int priority() {
-        return this.priority;
-    }
-
-    public String value() {
-        return this.value;
-    }
-
-    @Override
-    public String toString() {
-        return this.value();
-    }
+    int counter();
 }
