@@ -53,7 +53,12 @@ public class QueuedSemaphore extends AbstractSemaphore<Void> {
     }
 
     @Override
-    public int size() {
-        return this.queue.size();
+    public int getQueueLength() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasQueuedThreads() {
+        return false;
     }
 }

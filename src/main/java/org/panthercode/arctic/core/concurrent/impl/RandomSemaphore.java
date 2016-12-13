@@ -15,48 +15,51 @@
  */
 package org.panthercode.arctic.core.concurrent.impl;
 
-import org.panthercode.arctic.core.helper.priority.Priority;
-import org.panthercode.arctic.core.helper.priority.PriorityComparator;
-
-import java.util.Queue;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * TODO: documentation
  *
  * @author PantherCode
  */
-public class PrioritySemaphore extends AbstractSemaphore<Priority> {
+public class RandomSemaphore extends AbstractSemaphore<Void> {
 
-    private Queue<Priority> queue;
+    private List<Thread> queuedThreads;
 
-    public PrioritySemaphore() {
+    private Random random;
+
+    public RandomSemaphore() {
         this(1);
     }
 
-    public PrioritySemaphore(int capacity) {
+    public RandomSemaphore(int capacity) {
         super(capacity);
 
-        this.queue = new PriorityBlockingQueue<>(10, new PriorityComparator());
+        this.random = new Random(System.currentTimeMillis());
+
+        this.queuedThreads = Collections.synchronizedList(new ArrayList<>());
     }
 
     @Override
-    public synchronized void acquire()
-            throws InterruptedException {
-        this.acquire(Priority.NORMAL);
+    public synchronized void acquire() throws Exception {
+        this.acquire(null);
     }
 
     @Override
-    public synchronized void acquire(Priority value)
-            throws InterruptedException {
+    public synchronized void acquire(Void value) throws Exception {
         if (this.counter() == 0) {
-            this.queue.add(value);
+            int index = this.queuedThreads.isEmpty() ? 0 : Math.abs(this.random.nextInt()) % this.queuedThreads.size();
 
-            while (this.counter() == 0 || value != this.queue.peek()) {
+            this.queuedThreads.add(index, Thread.currentThread());
+
+            while (this.counter() == 0 || !Thread.currentThread().equals(this.queuedThreads.get(0))) {
                 this.wait();
             }
 
-            this.queue.remove();
+            this.queuedThreads.remove(Thread.currentThread());
         }
 
         this.decrementCounter();
@@ -64,7 +67,7 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
 
     @Override
     public synchronized void release() {
-        if (this.counter() == 0) {
+        if (this.counter() < this.getAllowedParalleledThreads()) {
             this.notifyAll();
         }
 
@@ -73,13 +76,11 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
 
     @Override
     public int getQueueLength() {
-        return 0;
+        return this.queuedThreads.size();
     }
 
     @Override
     public boolean hasQueuedThreads() {
-        return false;
+        return !this.queuedThreads.isEmpty();
     }
-
-
 }

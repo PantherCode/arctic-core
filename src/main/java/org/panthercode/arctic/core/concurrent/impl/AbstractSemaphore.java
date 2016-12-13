@@ -27,36 +27,27 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
 
     private int counter = 0;
 
-    private int capacity = 0;
+    private final int allowedParalleledThreads;
 
     public AbstractSemaphore() {
         this(1);
     }
 
-    public AbstractSemaphore(int capacity) {
-        ArgumentUtils.assertGreaterZero(capacity, "capacity");
+    public AbstractSemaphore(int allowedParalleledThreads) {
+        ArgumentUtils.assertGreaterZero(allowedParalleledThreads, "allowed paralleled threads");
 
-        this.capacity = this.counter = capacity;
-    }
-
-    public abstract void acquire() throws InterruptedException;
-
-    public abstract void acquire(T value) throws InterruptedException;
-
-    public abstract void release();
-
-    @Override
-    public int capacity() {
-        return this.capacity;
+        this.allowedParalleledThreads = this.counter = allowedParalleledThreads;
     }
 
     @Override
-    public int counter() {
-        return this.counter;
+    public int getActualThreadCount() {
+        return this.allowedParalleledThreads - this.counter;
     }
 
     @Override
-    public abstract int size();
+    public int getAllowedParalleledThreads() {
+        return this.allowedParalleledThreads;
+    }
 
     protected synchronized void incrementCounter() {
         this.counter++;
@@ -66,9 +57,7 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
         this.counter--;
     }
 
-    protected synchronized void setCounter(int value) {
-        ArgumentUtils.assertGreaterZero(value, "counter");
-
-        this.counter = value;
+    protected int counter() {
+        return this.counter;
     }
 }

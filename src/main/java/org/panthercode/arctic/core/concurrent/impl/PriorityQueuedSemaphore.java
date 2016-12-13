@@ -68,6 +68,16 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
     }
 
     @Override
+    public int getQueueLength() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasQueuedThreads() {
+        return false;
+    }
+
+
     public int size() {
         int size = 0;
 

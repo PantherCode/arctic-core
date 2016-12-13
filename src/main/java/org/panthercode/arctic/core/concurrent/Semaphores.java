@@ -15,10 +15,11 @@
  */
 package org.panthercode.arctic.core.concurrent;
 
+import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.concurrent.impl.PriorityQueuedSemaphore;
 import org.panthercode.arctic.core.concurrent.impl.PrioritySemaphore;
 import org.panthercode.arctic.core.concurrent.impl.QueuedSemaphore;
-import org.panthercode.arctic.core.concurrent.impl.SimpleSemaphore;
+import org.panthercode.arctic.core.concurrent.impl.RandomSemaphore;
 import org.panthercode.arctic.core.helper.priority.Priority;
 
 /**
@@ -60,6 +61,28 @@ public class Semaphores {
     }
 
     public static Semaphore<Void> createSimpleSemaphore(int capacity) {
-        return new SimpleSemaphore(capacity);
+        return new RandomSemaphore(capacity);
+    }
+
+    public static <T> Runnable addSemaphore(Runnable runnable, Semaphore<T> semaphore, T semaphoreValue) {
+
+        ArgumentUtils.assertNotNull(runnable, "runnable");
+
+        ArgumentUtils.assertNotNull(semaphore, "semaphore");
+
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    semaphore.acquire(semaphoreValue);
+
+                    runnable.run();
+
+                    semaphore.release();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
     }
 }

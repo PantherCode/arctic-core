@@ -99,12 +99,12 @@ public class ResourceImpl implements Resource {
 
     @Override
     public int counter() {
-        return this.semaphore.counter();
+        return 0;// TODO this.semaphore.counter();
     }
 
     @Override
     public int capacity() {
-        return this.semaphore.capacity();
+        return 0; //TODO this.semaphore.capacity();
     }
 
     @Override

@@ -28,9 +28,11 @@ public interface Semaphore<T> {
 
     void release();
 
-    int capacity();
+    int getActualThreadCount();
 
-    int counter();
+    int getAllowedParalleledThreads();
 
-    int size();
+    int getQueueLength();
+
+    boolean hasQueuedThreads();
 }

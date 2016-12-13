@@ -1,6 +1,7 @@
 package org.panthercode.arctic.core.concurrent;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.helper.priority.Priority;
 import org.panthercode.arctic.core.helper.priority.PriorityRunnable;
 import org.panthercode.arctic.core.helper.priority.PriorityRunnableComparator;
 
@@ -12,36 +13,46 @@ import java.util.concurrent.PriorityBlockingQueue;
  *
  * @author PantherCode
  */
-public class Worker<T> implements Runnable{
+public class Worker implements Runnable {
 
     private boolean isRunning;
 
-    private int threadCount;
+    private int currentThreadCount;
+
+    private int maximalThreadCount;
 
     private Queue<PriorityRunnable> queue;
 
-    private Semaphore<T> semaphore;
+    private Semaphore<Priority> semaphore;
 
-    public Worker(Semaphore<T> semaphore, int threadCount) {
+    public Worker(int maximalThreadCount) {
         ArgumentUtils.assertNotNull(semaphore, "semaphore");
 
-        this.setThreadCount(threadCount);
+        this.setMaximalThreadCount(maximalThreadCount);
+
+        this.semaphore = Semaphores.createPriorityQueuedSemaphore(maximalThreadCount);
 
         this.queue = new PriorityBlockingQueue<>(10, new PriorityRunnableComparator());
     }
 
-    public void setThreadCount(int count) {
-        ArgumentUtils.assertGreaterZero(threadCount, "thread count");
+    public void setMaximalThreadCount(int count) {
+        ArgumentUtils.assertGreaterZero(count, "count");
 
-        this.threadCount = count;
+        this.maximalThreadCount = count;
+
+        //TODO: set capacity of semaphores
     }
 
-    public int getThreadCount() {
-        return this.threadCount;
+    public int getMaximalThreadCount() {
+        return this.maximalThreadCount;
     }
 
     public synchronized void add(PriorityRunnable runnable) {
         this.queue.add(runnable);
+
+        if (this.queue.size() == 1) {
+            this.notify();
+        }
     }
 
     public synchronized void remove(PriorityRunnable runnable) {
@@ -61,18 +72,44 @@ public class Worker<T> implements Runnable{
         this.queue.clear();
     }
 
-    public boolean isRunning() {
+    /*public boolean isRunning() {
         return this.isRunning;
-    }
+    }*/
 
     public int size() {
-        return this.size();
+        return this.queue.size();
+    }
+
+
+    private synchronized void createThreads() {
+        while (!queue.isEmpty() && this.currentThreadCount < this.maximalThreadCount) {
+            PriorityRunnable priorityRunnable = this.queue.remove();
+
+            Runnable runnable = Semaphores.addSemaphore(priorityRunnable, this.semaphore, priorityRunnable.priority());
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    runnable.run();
+
+                    createThreads();
+                }
+            }).start();
+        }
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
+        while (true) {
+            while (this.queue.isEmpty()) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
+            this.createThreads();
+        }
     }
-
-
 }
