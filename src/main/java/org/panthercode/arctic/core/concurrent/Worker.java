@@ -2,7 +2,12 @@ package org.panthercode.arctic.core.concurrent;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.priority.Priority;
+import org.panthercode.arctic.core.helper.priority.PriorityObject;
+import org.panthercode.arctic.core.helper.priority.PriorityObjectComparator;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -11,104 +16,138 @@ import java.util.concurrent.PriorityBlockingQueue;
  *
  * @author PantherCode
  */
-public class Worker /*implements Runnable*/ {
-/*
-    private boolean isRunning;
+public class Worker implements Runnable {
 
-    private int currentThreadCount;
+    private boolean isRunning = false;
 
-    private int maximalThreadCount;
-
-    private Queue<PriorityRunnable> queue;
+    private boolean isStarted = false;
 
     private Semaphore<Priority> semaphore;
 
-    public Worker(int maximalThreadCount) {
+    private Queue<PriorityObject<Runnable>> queue;
+
+    private List<Thread> threads;
+
+    public Worker(Semaphore<Priority> semaphore) {
         ArgumentUtils.assertNotNull(semaphore, "semaphore");
 
-        this.setMaximalThreadCount(maximalThreadCount);
+        this.semaphore = semaphore;
 
-        this.semaphore = Semaphores.createPriorityQueuedSemaphore(maximalThreadCount);
+        this.queue = new PriorityBlockingQueue<>(10, new PriorityObjectComparator<>());
 
-        this.queue = new PriorityBlockingQueue<>(10, new PriorityRunnableComparator());
+        this.threads = Collections.synchronizedList(new ArrayList<>());
     }
 
-    public void setMaximalThreadCount(int count) {
-        ArgumentUtils.assertGreaterZero(count, "count");
-
-        this.maximalThreadCount = count;
-
-        //TODO: set capacity of semaphores
+    public synchronized void add(Runnable runnable) {
+        this.add(runnable, Priority.NORMAL);
     }
 
-    public int getMaximalThreadCount() {
-        return this.maximalThreadCount;
-    }
+    public synchronized void add(Runnable runnable, Priority priority) {
+        if (runnable != null && priority != null) {
+            this.queue.add(new PriorityObject<>(runnable, priority));
 
-    public synchronized void add(PriorityRunnable runnable) {
-        this.queue.add(runnable);
-
-        if (this.queue.size() == 1) {
-            this.notify();
+            if (this.isRunning && this.semaphore.getActualThreadCount() < this.getAllowedParalleledThreads()) {
+                this.notifyAll();
+            }
         }
     }
 
-    public synchronized void remove(PriorityRunnable runnable) {
-        this.queue.remove(runnable);
+    public synchronized void remove(Runnable runnable) {
+        this.remove(runnable);
     }
 
-    public synchronized void pause()
-            throws InterruptedException {
-        if (this.isRunning) {
-            this.isRunning = false;
-
-            this.wait();
-        }
+    public int getActualThreadCount() {
+        return this.semaphore.getActualThreadCount();
     }
 
-    public synchronized void clear() {
-        this.queue.clear();
+    public int getAllowedParalleledThreads() {
+        return this.semaphore.getAllowedParalleledThreads();
     }
 
-    /*public boolean isRunning() {
-        return this.isRunning;
-    }
-
-    public int size() {
+    public int getQueueLength() {
         return this.queue.size();
     }
 
+    public boolean hasQueuedElements() {
+        return !this.queue.isEmpty();
+    }
 
-    private synchronized void createThreads() {
-        while (!queue.isEmpty() && this.currentThreadCount < this.maximalThreadCount) {
-            PriorityRunnable priorityRunnable = this.queue.remove();
+    public synchronized List<Thread> threads() {
+        return new ArrayList<>(this.threads);
+    }
 
-            Runnable runnable = Semaphores.addSemaphore(priorityRunnable, this.semaphore, priorityRunnable.priority());
+    public synchronized Queue<PriorityObject<Runnable>> queue() {
+        return new PriorityBlockingQueue<>(this.queue);
+    }
 
-            new Thread(new Runnable() {
+    public boolean isRunning() {
+        return this.isRunning;
+    }
+
+    public synchronized void fillThreadPool() {
+        while (this.hasQueuedElements() && !this.semaphore.hasQueuedThreads() && this.isRunning && this.isStarted) {
+            final PriorityObject<Runnable> actualObject = this.queue.remove();
+
+            Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    runnable.run();
+                    Semaphores.add(actualObject.getContent(), semaphore, actualObject.getPriority()).run();
 
-                    createThreads();
+                    fillThreadPool();
+
+                    threads.remove(Thread.currentThread());
                 }
-            }).start();
+            };
+
+            Thread thread = new Thread(runnable);
+
+            this.threads.add(thread);
+
+            thread.start();
         }
     }
 
     @Override
     public synchronized void run() {
-        while (true) {
-            while (this.queue.isEmpty()) {
+        if (!this.isStarted) {
+            this.isStarted = true;
+            this.isRunning = true;
+
+            while (this.isStarted) {
                 try {
-                    this.wait();
+                    this.fillThreadPool();
+
+                    while (semaphore.getActualThreadCount() == semaphore.getAllowedParalleledThreads() || !this.isRunning) {
+                        this.wait();
+                    }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
+        } else {
+            if (!this.isRunning) {
+                this.isRunning = true;
 
-            this.createThreads();
+                this.notifyAll();
+            }
         }
     }
-    */
+
+    public synchronized void stop() {
+        this.isRunning = false;
+    }
+
+    public synchronized void shutdown() {
+        this.isStarted = false;
+    }
+
+    public static Worker start(Semaphore<Priority> semaphore) {
+        ArgumentUtils.assertNotNull(semaphore, "semaphore");
+
+        Worker worker = new Worker(semaphore);
+
+        new Thread(worker).start();
+
+        return worker;
+    }
 }
