@@ -5,10 +5,9 @@ import org.panthercode.arctic.core.helper.priority.Priority;
 import org.panthercode.arctic.core.helper.priority.PriorityObject;
 import org.panthercode.arctic.core.helper.priority.PriorityObjectComparator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
@@ -18,24 +17,38 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public class Worker implements Runnable {
 
-    private boolean isRunning = false;
+    private int threadCount;
 
-    private boolean isStarted = false;
-
-    private Semaphore<Priority> semaphore;
+    private List<Runnable> threads;
 
     private Queue<PriorityObject<Runnable>> queue;
 
-    private List<Thread> threads;
+    private ExecutorService threadPool;
 
-    public Worker(Semaphore<Priority> semaphore) {
-        ArgumentUtils.assertNotNull(semaphore, "semaphore");
+    public Worker(int threadCount) {
+        ArgumentUtils.assertGreaterZero(threadCount, "thread count");
 
-        this.semaphore = semaphore;
+        this.threadCount = threadCount;
 
         this.queue = new PriorityBlockingQueue<>(10, new PriorityObjectComparator<>());
 
         this.threads = Collections.synchronizedList(new ArrayList<>());
+    }
+
+    public static Worker start(int threadCount) {
+        Worker worker = new Worker(threadCount);
+
+        new Thread(worker).start();
+
+        return worker;
+    }
+
+    public int threadCount() {
+        return this.threadCount;
+    }
+
+    public int actualThreadCount() {
+        return this.threads.size();
     }
 
     public synchronized void add(Runnable runnable) {
@@ -46,22 +59,22 @@ public class Worker implements Runnable {
         if (runnable != null && priority != null) {
             this.queue.add(new PriorityObject<>(runnable, priority));
 
-            if (this.isRunning && this.semaphore.getActualThreadCount() < this.getAllowedParalleledThreads()) {
-                this.notifyAll();
+            if (this.isRunning() && this.actualThreadCount() < this.threadCount()) {
+                this.notify();
             }
         }
     }
 
     public synchronized void remove(Runnable runnable) {
-        this.remove(runnable);
-    }
-
-    public int getActualThreadCount() {
-        return this.semaphore.getActualThreadCount();
-    }
-
-    public int getAllowedParalleledThreads() {
-        return this.semaphore.getAllowedParalleledThreads();
+        if (runnable != null) {
+            for (Iterator<PriorityObject<Runnable>> iterator = this.queue.iterator();
+                 iterator.hasNext(); ) {
+                if (iterator.next().getContent().equals(runnable)) {
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
     }
 
     public int getQueueLength() {
@@ -72,7 +85,7 @@ public class Worker implements Runnable {
         return !this.queue.isEmpty();
     }
 
-    public synchronized List<Thread> threads() {
+    public synchronized List<Runnable> threadPool() {
         return new ArrayList<>(this.threads);
     }
 
@@ -81,73 +94,57 @@ public class Worker implements Runnable {
     }
 
     public boolean isRunning() {
-        return this.isRunning;
-    }
-
-    public synchronized void fillThreadPool() {
-        while (this.hasQueuedElements() && !this.semaphore.hasQueuedThreads() && this.isRunning && this.isStarted) {
-            final PriorityObject<Runnable> actualObject = this.queue.remove();
-
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    Semaphores.add(actualObject.getContent(), semaphore, actualObject.getPriority()).run();
-
-                    fillThreadPool();
-
-                    threads.remove(Thread.currentThread());
-                }
-            };
-
-            Thread thread = new Thread(runnable);
-
-            this.threads.add(thread);
-
-            thread.start();
-        }
+        return this.threadPool != null && !this.threadPool.isShutdown();
     }
 
     @Override
     public synchronized void run() {
-        if (!this.isStarted) {
-            this.isStarted = true;
-            this.isRunning = true;
+        if (!this.isRunning()) {
+            this.threadPool = Executors.newFixedThreadPool(this.threadCount);
 
-            while (this.isStarted) {
+            while (this.isRunning()) {
                 try {
                     this.fillThreadPool();
 
-                    while (semaphore.getActualThreadCount() == semaphore.getAllowedParalleledThreads() || !this.isRunning) {
+                    while (this.isRunning() &&
+                            (this.threadCount == this.actualThreadCount() || !this.hasQueuedElements())) {
                         this.wait();
                     }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
-        } else {
-            if (!this.isRunning) {
-                this.isRunning = true;
-
-                this.notifyAll();
-            }
         }
     }
 
-    public synchronized void stop() {
-        this.isRunning = false;
-    }
-
     public synchronized void shutdown() {
-        this.isStarted = false;
+        this.threadPool.shutdown();
     }
 
-    public static Worker start(Semaphore<Priority> semaphore) {
-        ArgumentUtils.assertNotNull(semaphore, "semaphore");
+    public synchronized List<Runnable> shutdownNow() {
+        return this.threadPool.shutdownNow();
+    }
 
-        Worker worker = new Worker(semaphore);
+    private synchronized void fillThreadPool() {
+        while (this.hasQueuedElements() &&
+                this.isRunning() &&
+                this.actualThreadCount() < this.threadCount()) {
+            final PriorityObject<Runnable> actualObject = this.queue.remove();
 
-        new Thread(worker).start();
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    actualObject.getContent().run();
 
-        return worker;
+                    threads.remove(this);
+
+                    fillThreadPool();
+                }
+            };
+
+            this.threads.add(runnable);
+
+            this.threadPool.execute(runnable);
+        }
     }
 }
