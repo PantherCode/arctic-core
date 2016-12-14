@@ -32,42 +32,40 @@ public class Semaphores {
     private Semaphores() {
     }
 
-    public static Semaphore<Void> createQueuedSemaphore() {
-        return Semaphores.createQueuedSemaphore(1);
+    public static Semaphore<Priority> createPriorityQueuedSemaphore() {
+        return Semaphores.createPriorityQueuedSemaphore(1);
     }
 
-    public static Semaphore<Void> createQueuedSemaphore(int capacity) {
-        return new QueuedSemaphore(capacity);
+    public static Semaphore<Priority> createPriorityQueuedSemaphore(int allowedParalleledThreads) {
+        return new PriorityQueuedSemaphore(allowedParalleledThreads);
     }
 
     public static Semaphore<Priority> createPrioritySemaphore() {
         return Semaphores.createPrioritySemaphore(1);
     }
 
-    public static Semaphore<Priority> createPrioritySemaphore(int capacity) {
-        return new PrioritySemaphore(capacity);
+    public static Semaphore<Priority> createPrioritySemaphore(int allowedParalleledThreads) {
+        return new PrioritySemaphore(allowedParalleledThreads);
     }
 
-    public static Semaphore<Priority> createPriorityQueuedSemaphore() {
-        return Semaphores.createPriorityQueuedSemaphore(1);
+    public static Semaphore<Void> createQueuedSemaphore() {
+        return Semaphores.createQueuedSemaphore(1);
     }
 
-    public static Semaphore<Priority> createPriorityQueuedSemaphore(int capacity) {
-        return new PriorityQueuedSemaphore(capacity);
+    public static Semaphore<Void> createQueuedSemaphore(int allowedParalleledThreads) {
+        return new QueuedSemaphore(allowedParalleledThreads);
     }
 
-    public static Semaphore<Void> createSimpleSemaphore() {
-        return Semaphores.createSimpleSemaphore(1);
+    public static Semaphore<Void> createRandomSemaphore() {
+        return Semaphores.createRandomSemaphore(1);
     }
 
-    public static Semaphore<Void> createSimpleSemaphore(int capacity) {
-        return new RandomSemaphore(capacity);
+    public static Semaphore<Void> createRandomSemaphore(int allowedParalleledThreads) {
+        return new RandomSemaphore(allowedParalleledThreads);
     }
 
-    public static <T> Runnable addSemaphore(Runnable runnable, Semaphore<T> semaphore, T semaphoreValue) {
-
+    public static <T> Runnable add(Runnable runnable, Semaphore<T> semaphore, T semaphoreValue) {
         ArgumentUtils.assertNotNull(runnable, "runnable");
-
         ArgumentUtils.assertNotNull(semaphore, "semaphore");
 
         return new Runnable() {
