@@ -5,7 +5,7 @@ package org.panthercode.arctic.core.helper;
  *
  * @author PantherCode
  */
-public interface Handler<T> {
+public interface Handler<E> {
 
-    void handle(T value);
+    void handle(E event);
 }
