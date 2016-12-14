@@ -27,9 +27,9 @@ import java.util.Random;
  */
 public class RandomSemaphore extends AbstractSemaphore<Void> {
 
-    private List<Thread> queuedThreads;
-
     private Random random;
+
+    private List<Thread> queuedThreads;
 
     public RandomSemaphore() {
         this(1);
@@ -51,7 +51,7 @@ public class RandomSemaphore extends AbstractSemaphore<Void> {
     @Override
     public synchronized void acquire(Void value) throws Exception {
         if (this.counter() == 0) {
-            int index = this.queuedThreads.isEmpty() ? 0 : Math.abs(this.random.nextInt()) % this.queuedThreads.size();
+            int index = this.random.nextInt(this.queuedThreads.size() + 1);
 
             this.queuedThreads.add(index, Thread.currentThread());
 
@@ -63,15 +63,6 @@ public class RandomSemaphore extends AbstractSemaphore<Void> {
         }
 
         this.decrementCounter();
-    }
-
-    @Override
-    public synchronized void release() {
-        if (this.counter() < this.getAllowedParalleledThreads()) {
-            this.notifyAll();
-        }
-
-        this.incrementCounter();
     }
 
     @Override

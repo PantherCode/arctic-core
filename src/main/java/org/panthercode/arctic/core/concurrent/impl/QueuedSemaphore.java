@@ -10,14 +10,16 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class QueuedSemaphore extends AbstractSemaphore<Void> {
 
-    Queue<Long> queue = new LinkedBlockingQueue<>();
+    private Queue<Thread> queue;
 
     public QueuedSemaphore() {
-        super();
+        this(1);
     }
 
     public QueuedSemaphore(int capacity) {
         super(capacity);
+
+        this.queue = new LinkedBlockingQueue<>();
     }
 
     @Override
@@ -28,11 +30,9 @@ public class QueuedSemaphore extends AbstractSemaphore<Void> {
     @Override
     public synchronized void acquire(Void value) throws InterruptedException {
         if (this.counter() == 0) {
-            long threadId = Thread.currentThread().getId();
+            this.queue.add(Thread.currentThread());
 
-            this.queue.add(threadId);
-
-            while (this.counter() == 0 || threadId != this.queue.peek()) {
+            while (this.counter() == 0 || !Thread.currentThread().equals(this.queue.peek())) {
                 this.wait();
             }
 
@@ -42,23 +42,13 @@ public class QueuedSemaphore extends AbstractSemaphore<Void> {
         this.decrementCounter();
     }
 
-
-    @Override
-    public synchronized void release() {
-        if (this.counter() == 0) {
-            this.notifyAll();
-        }
-
-        this.incrementCounter();
-    }
-
     @Override
     public int getQueueLength() {
-        return 0;
+        return this.queue.size();
     }
 
     @Override
     public boolean hasQueuedThreads() {
-        return false;
+        return !this.queue.isEmpty();
     }
 }

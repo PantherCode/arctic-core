@@ -22,15 +22,15 @@ package org.panthercode.arctic.core.helper.priority;
  */
 public enum Priority {
 
-    VERY_HIGH(5, "Very High"),
+    VERY_HIGH(1, "Very High"),
 
-    HIGH(4, "High"),
+    HIGH(2, "High"),
 
     NORMAL(3, "Normal"),
 
-    LOW(2, "Low"),
+    LOW(4, "Low"),
 
-    VERY_LOW(1, "Very Low");
+    VERY_LOW(5, "Very Low");
 
     private final int priority;
 

@@ -25,7 +25,7 @@ import java.util.Comparator;
 public class PriorityComparator implements Comparator<Priority> {
 
     @Override
-    public int compare(Priority firstPriority, Priority otherPriority) {
-        return otherPriority.priority() - firstPriority.priority();
+    public int compare(Priority first, Priority other) {
+        return first.priority() - other.priority();
     }
 }

@@ -40,6 +40,15 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
     }
 
     @Override
+    public synchronized void release() {
+        if (this.counter() < this.getAllowedParalleledThreads()) {
+            this.notifyAll();
+        }
+
+        this.incrementCounter();
+    }
+
+    @Override
     public int getActualThreadCount() {
         return this.allowedParalleledThreads - this.counter;
     }

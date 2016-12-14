@@ -8,13 +8,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * Created by architect on 11.12.16.
+ * TODO: documentation
+ *
+ * @author PantherCode
  */
 public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
 
-    private Queue<Long>[] threadQueues;
+    private Queue<Thread>[] queuedThreads;
 
-    private Queue<Priority> priorityQueue;
+    private Queue<Priority> queuedPriorities;
 
     public PriorityQueuedSemaphore() {
         this(1);
@@ -23,12 +25,12 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
     public PriorityQueuedSemaphore(int capacity) {
         super(capacity);
 
-        this.priorityQueue = new PriorityBlockingQueue<>(10, new PriorityComparator());
+        this.queuedPriorities = new PriorityBlockingQueue<>(10, new PriorityComparator());
 
-        this.threadQueues = new Queue[5];
+        this.queuedThreads = new Queue[5];
 
         for (int i = 0; i < 5; i++) {
-            this.threadQueues[i] = new LinkedBlockingQueue<>();
+            this.queuedThreads[i] = new LinkedBlockingQueue<>();
         }
     }
 
@@ -40,51 +42,30 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
     @Override
     public synchronized void acquire(Priority value) throws InterruptedException {
         if (this.counter() == 0) {
-            long threadId = Thread.currentThread().getId();
+            this.queuedPriorities.add(value);
 
-            this.priorityQueue.add(value);
+            this.queuedThreads[value.priority() - 1].add(Thread.currentThread());
 
-            this.threadQueues[value.priority() - 1].add(threadId);
-
-            while (this.counter() == 0 || threadId != this.threadQueues[this.priorityQueue.peek().priority() - 1].peek()) {
+            while (this.counter() == 0 ||
+                    !Thread.currentThread().equals(this.queuedThreads[this.queuedPriorities.peek().priority() - 1].peek())) {
                 this.wait();
             }
 
-            this.priorityQueue.remove();
+            this.queuedThreads[value.priority() - 1].remove();
 
-            this.threadQueues[value.priority() - 1].remove();
+            this.queuedPriorities.remove();
         }
 
         this.decrementCounter();
     }
 
     @Override
-    public synchronized void release() {
-        if (this.counter() == 0) {
-            this.notifyAll();
-        }
-
-        this.incrementCounter();
-    }
-
-    @Override
     public int getQueueLength() {
-        return 0;
+        return this.queuedPriorities.size();
     }
 
     @Override
     public boolean hasQueuedThreads() {
-        return false;
-    }
-
-
-    public int size() {
-        int size = 0;
-
-        for (Queue<Long> queue : this.threadQueues) {
-            size += queue.size();
-        }
-
-        return size;
+        return !this.queuedPriorities.isEmpty();
     }
 }

@@ -2,8 +2,6 @@ package org.panthercode.arctic.core.concurrent;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.priority.Priority;
-import org.panthercode.arctic.core.helper.priority.PriorityRunnable;
-import org.panthercode.arctic.core.helper.priority.PriorityRunnableComparator;
 
 import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -13,8 +11,8 @@ import java.util.concurrent.PriorityBlockingQueue;
  *
  * @author PantherCode
  */
-public class Worker implements Runnable {
-
+public class Worker /*implements Runnable*/ {
+/*
     private boolean isRunning;
 
     private int currentThreadCount;
@@ -74,7 +72,7 @@ public class Worker implements Runnable {
 
     /*public boolean isRunning() {
         return this.isRunning;
-    }*/
+    }
 
     public int size() {
         return this.queue.size();
@@ -112,4 +110,5 @@ public class Worker implements Runnable {
             this.createThreads();
         }
     }
+    */
 }
