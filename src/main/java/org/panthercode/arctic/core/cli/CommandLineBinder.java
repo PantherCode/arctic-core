@@ -30,38 +30,110 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * TODO: documentation
+ * The <tt>CommandLineBinder</tt> class is used to read commandline arguments automatically. For parsing the arguments
+ * a list of <tt>Option</tt>s is created from Apache's <tt>commons-cli</tt> library.
+ * <p>
+ * The following example reads the age of a person from commandline and
+ * <pre>
+ * public class Person{
+ *
+ *     ...
+ *
+ *     private int age = 0;
+ *
+ *     public Person(){
+ *         ...
+ *     }
+ *
+ *     &#064;CommandLineParameter(name="age", shortName='a', hasValue=true, defaultValue="0", description="age of a person")
+ *     public void setAge(int age){
+ *         this.age = age;
+ *     }
+ *
+ *     public int getAge(){
+ *         return this.age;
+ *     }
+ * }
+ *
+ * ...
+ *
+ * //commandline: ... --age 50 ...
+ * public static void main(String[] args){
+ *      CommandLineBinder binder =  CommandLineBinder.bind(Person.class).parse(args);
+ *
+ *      Person person = binder.from(Person.class, new Person());
+ *
+ *      System.out.println(person.getAge()) //print 50
+ * }
+ * </pre>
+ * If the commandline contains a unknown parameter the parsing process will fail with an exception. The list of allowed
+ * parameters is the sum of annotated setter functions in each class. It's possible to bind as much classes you want,
+ * but each name of each parameter must be unique.
+ * <p>
+ * The <tt>CommandLineBinder</tt> class can only convert strings to the following types: <tt>Byte, Short, Int, Long,
+ * Float, Double, Char</tt> and <tt>Boolean</tt>. If you try to convert to custom or other higher class types the
+ * converting process will throw an <tt>IllegalArgumentException</tt>, because the binder doesn't know to handle it.
  *
  * @author PantherCode
+ * @see CommandLineParameter
+ * @since 1.0
  */
-public class CommandLineBinding {
+public class CommandLineBinder {
 
+    /**
+     * actual commandline
+     */
     private CommandLine commandLine;
 
+    /**
+     * list with all classes binding at commandline
+     */
     private List<Class<?>> classList;
 
-    private CommandLineBinding(List<Class<?>> classList, CommandLine commandLine) {
+    /**
+     * Constructor
+     *
+     * @param classList   list with bounded classes
+     * @param commandLine actual commandline
+     */
+    private CommandLineBinder(List<Class<?>> classList, CommandLine commandLine) {
         this.commandLine = commandLine;
         this.classList = classList;
     }
 
+    /**
+     * Creates a new builder for <tt>CommandLineBinder</tt>.
+     *
+     * @return Returns a new instance of a builder.
+     */
     public static CommandLineBindingBuilder create() {
         return new CommandLineBindingBuilder();
     }
 
-    //TODO: better exception handling
-    public <T> T from(Class<T> c, T object)
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        ArgumentUtils.assertNotNull(c, "class");
+    /**
+     * Sets all parameter values to given object by invoking the corresponding setter function.
+     *
+     * @param clazz  class type of the object
+     * @param object used object to set values
+     * @param <T>    generic class type
+     * @return Returns the updated object.
+     * @throws NoSuchMethodException     Is thrown if searched function doesn't exist.
+     * @throws IllegalAccessException    Is thrown if the setter function has to less privileged access.
+     * @throws InvocationTargetException Is thrown if an error is occurred while invoking setter function.
+     * @throws NullPointerException      Is thrown if one the parameters is <tt>null</tt>.
+     */
+    public <T> T from(Class<T> clazz, T object)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, NullPointerException {
+        ArgumentUtils.assertNotNull(clazz, "class");
         ArgumentUtils.assertNotNull(object, "object");
 
-        if (!this.classList.contains(c)) {
+        if (!this.classList.contains(clazz)) {
             throw new IllegalArgumentException("The class is unknown.");
         }
 
         CommandLineParameter option;
 
-        for (Method method : c.getDeclaredMethods()) {
+        for (Method method : clazz.getDeclaredMethods()) {
             option = method.getAnnotation(CommandLineParameter.class);
 
             if (option != null) {
@@ -80,7 +152,15 @@ public class CommandLineBinding {
         return object;
     }
 
-    public static <T> T cast(Class<T> clazz, String value) {
+    /**
+     * Function to cast string value to corresponding value type.
+     *
+     * @param clazz class of value type
+     * @param value value as string
+     * @param <T>   generic class type
+     * @return Returns the value as needed value type.
+     */
+    private <T> T cast(Class<T> clazz, String value) {
         if (clazz.equals(String.class)) {
             return clazz.cast(value);
         }
@@ -120,22 +200,45 @@ public class CommandLineBinding {
         throw new IllegalArgumentException("Unknown class type");
     }
 
+    /**
+     * Helper class to create a <tt>CommandLineBinder</tt> class.
+     */
     public static class CommandLineBindingBuilder {
+        /**
+         * list with all class binding to commandline
+         */
         private List<Class<?>> classList = new ArrayList<>();
 
+        /**
+         * Constructor
+         */
         public CommandLineBindingBuilder() {
         }
 
-        public CommandLineBindingBuilder bind(Class<?> c) {
-            if (c != null && !this.classList.contains(c)) {
-                this.classList.add(c);
+        /**
+         * Adds a new class to commandline.
+         *
+         * @param clazz class to bind
+         * @return Returns the actual instance of builder class.
+         */
+        public CommandLineBindingBuilder bind(Class<?> clazz) {
+            if (clazz != null && !this.classList.contains(clazz)) {
+                this.classList.add(clazz);
             }
 
             return this;
         }
 
-        public CommandLineBinding parse(String[] args)
-                throws ParseException {
+        /**
+         * Parse the given commandline arguments by creating an <tt>Option</tt>s list with all <tt>CommandLineParameter</tt>
+         * from classes in the list.
+         *
+         * @param args commandline arguments
+         * @return Returns a new instance of <tt>CommandLineBuilder</tt>.
+         * @throws ParseException Is thrown if an error is occurred while parsing commandline arguments.
+         */
+        public CommandLineBinder parse(String[] args)
+                throws ParseException, IllegalArgumentException {
             DefaultParser parser = new DefaultParser();
             Options options = new Options();
 
@@ -172,7 +275,7 @@ public class CommandLineBinding {
                 }
             }
 
-            return new CommandLineBinding(this.classList, parser.parse(options, args));
+            return new CommandLineBinder(this.classList, parser.parse(options, args));
         }
     }
 }

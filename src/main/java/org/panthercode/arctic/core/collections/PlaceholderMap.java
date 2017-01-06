@@ -20,9 +20,22 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import java.util.HashMap;
 
 /**
- * TODO: class documentation
+ * The <tt>PlaceholderMap</tt> is an extension of standard <tt>HashMap</tt> from <tt>java.collections</tt> package.
+ * It's used to store strings with special patterns to decide at runtime which meaning is most fitting. Such a behavoir
+ * can be helpful to handle a set of paths or other things containing names, versions, etc. .
+ * <p>
+ * <pre>
+ * PlaceholderMap map = new PlaceholderMap("#version#", "1.0");
+ *
+ * map.put(1, "/path/to/resource/#version#/");
+ *
+ * System.out.println(map.get(1));       // prints /path/to/resource/1.0/
+ * System.out.println(map.get(1, "2.0"); // prints /path/to/resource/2.0/
+ * </pre>
  *
  * @author PantherCode
+ * @see HashMap
+ * @since 1.0
  */
 public class PlaceholderMap extends HashMap<Object, String> {
 

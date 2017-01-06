@@ -20,6 +20,7 @@ package org.panthercode.arctic.core.arguments;
  * value of (method) parameters before using those for processing.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class ArgumentUtils {
 
