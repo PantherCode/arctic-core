@@ -15,14 +15,22 @@
  */
 package org.panthercode.arctic.core.concurrent;
 
-import org.panthercode.arctic.core.factory.Options;
+import org.panthercode.arctic.core.settings.Context;
 
 /**
- * TODO: documentation
+ * Interface to mark classes as runnable in a special context.
  *
  * @author PantherCode
+ * @see Task
+ * @since 1.0
  */
 public interface Executable<T> {
 
-    T execute(Options options);
+    /**
+     * Run the <tt>Executable</tt> class.
+     *
+     * @param context context
+     * @return Returns the result of the operation.
+     */
+    T execute(Context context);
 }

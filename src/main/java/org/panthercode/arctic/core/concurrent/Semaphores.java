@@ -115,6 +115,7 @@ public class Semaphores {
     }
 
     /**
+     * TODO: rename
      * Capsule a runnable in the context of a given semaphore.
      *
      * @param runnable       runnable for capsuling

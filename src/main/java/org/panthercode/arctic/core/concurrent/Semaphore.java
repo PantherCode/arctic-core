@@ -16,23 +16,76 @@
 package org.panthercode.arctic.core.concurrent;
 
 /**
- * TODO: documentation
+ * Interface to implement a semaphore class.
+ * <p>
+ * To implement a critical section, every thread need to call semaphore's <tt>acquire()</tt> method:
+ * <pre>
+ * //Creates a new QueuedSemaphore to handle critical section
+ * Semaphore<Void> semaphore =  Semaphores.createQueuedSemaphore();
+ * ...
+ * semaphore.acquire();
+ * //critical section
+ * semaphore.release();
+ * </pre>
+ * Attention: Be sure semaphores are always initialized in a not thread-private context, but can be seen by every thread
+ * which shall controlled before enter a critical section.
+ * <p>
+ * Semaphores are used to handle critical sections created by a limited amount of resources. If instead every thread is
+ * independent, but you want to limit the number of paralleled running threads, than use the <tt>Worker</tt> class in
+ * combination with <tt>Tasks</tt>.
  *
  * @author PantherCode
+ * @see Worker
+ * @see Task
+ * @since 1.0
  */
 public interface Semaphore<T> {
 
+    /**
+     * The actual thread enters the semaphore.
+     *
+     * @throws InterruptedException Is thrown if thread is interrupted.
+     */
     void acquire() throws Exception;
 
+    /**
+     * The actual thread enters the semaphore. The thread is added with custom priority.
+     *
+     * @param value priority of thread
+     * @throws InterruptedException Is thrown if thread is interrupted.
+     */
     void acquire(T value) throws Exception;
 
+    /**
+     * The current thread will exit semaphore and increment counter by one.
+     */
     void release();
 
+    /**
+     * Returns the actual count of running threads.
+     *
+     * @return Returns the actual count of running threads.
+     */
     int getActualThreadCount();
 
+    /**
+     * Returns the maximal count of allowed running threads.
+     *
+     * @return Returns the maximal count of allowed running threads.
+     */
     int getAllowedParalleledThreads();
 
+    /**
+     * Returns the number of queued threads.
+     *
+     * @return Returns the number of queued threads.
+     */
     int getQueueLength();
 
+    /**
+     * Returns a flag that indicates whether the queue is empty or not.
+     *
+     * @return Return <tt>true</tt> if the queue contains elements; Otherwise <tt>false</tt>.
+     */
     boolean hasQueuedThreads();
 }

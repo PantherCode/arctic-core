@@ -15,36 +15,68 @@
  */
 package org.panthercode.arctic.core.concurrent;
 
-import org.panthercode.arctic.core.factory.Options;
 import org.panthercode.arctic.core.helper.Handler;
+import org.panthercode.arctic.core.settings.Context;
 
 /**
- * TODO: documentation
+ * Tasks are special runnable object with the possibility to run such objects in special context and handle results
+ * asynchronously by initializing a handler. In combination with <tt>Worker</tt> class you can create very simple and
+ * fast a powerful processing unit.
+ * <p>
+ * To run the task in a new  thread, you can call <tt>start()</tt> method. If only the task should run synchronously in
+ * same thread call <tt>run()</tt>.
  *
  * @author PantherCode
+ * @see Worker
+ * @since 1.0
  */
 public abstract class Task<T> implements Executable<T>, Runnable {
-    private Options options;
 
+    /**
+     * actual context of the object
+     */
+    private Context context;
+
+    /**
+     * object to handle the result of operation
+     */
     private Handler<T> handler;
 
+    /**
+     * Standard Constructor
+     */
     public Task() {
+        this(new Context(), null);
     }
 
-    public Task(Options options) {
-        this(options, null);
+    /**
+     * Constructor
+     *
+     * @param context actual context of the object
+     */
+    public Task(Context context) {
+        this(context, null);
     }
 
-    public Task(Options options, Handler<T> handler) {
-        this.options = options;
+    /**
+     * Constructor
+     *
+     * @param context actual context of the object
+     * @param handler object to handle the result
+     */
+    public Task(Context context, Handler<T> handler) {
+        this.context = context;
 
         this.handler = handler;
     }
 
+    /**
+     * Execute the task and call handler if anyone exists.
+     */
     @Override
     public void run() {
         try {
-            T result = this.execute(options);
+            T result = this.execute(context);
 
             if (handler != null) {
                 this.handler.handle(result);
@@ -54,16 +86,34 @@ public abstract class Task<T> implements Executable<T>, Runnable {
         }
     }
 
+    /**
+     * Call the <tt>run()</tt> in extra thread.
+     */
     public void start() {
         new Thread(this).start();
     }
 
+    /**
+     * Object to handle occurred exception while running task.
+     *
+     * @param e exception object
+     */
     public abstract void exceptionHandler(Exception e);
 
-    protected Options options() {
-        return this.options;
+    /**
+     * Returns the actual context object.
+     *
+     * @return Returns the actual context object.
+     */
+    protected Context context() {
+        return this.context;
     }
 
+    /**
+     * Returns the actual result handler.
+     *
+     * @return Returns the actual result handler.
+     */
     protected Handler<T> handler() {
         return this.handler;
     }
