@@ -22,24 +22,45 @@ import java.util.*;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * TODO: documentation
+ * This class queues threads by its priority. Threads with higher priority will be executed privileged. Threads with
+ * same priority will executed by random.
  *
  * @author PantherCode
+ * @see Priority
+ * @see PriorityQueuedSemaphore
+ * @since 1.0
  */
 public class PrioritySemaphore extends AbstractSemaphore<Priority> {
 
+    /**
+     * object to create random numbers
+     */
     private Random random;
 
+    /**
+     * collection with queued threads waiting in semaphore
+     */
     private List<Thread>[] queuedThreads;
 
+    /**
+     * collection with queued priorities corresponding to threads
+     */
     private Queue<Priority> queuedPriorities;
 
+    /**
+     * Standard Constructor
+     */
     public PrioritySemaphore() {
         this(1);
     }
 
-    public PrioritySemaphore(int capacity) {
-        super(capacity);
+    /**
+     * Constructor
+     *
+     * @param allowedParalleledThreads maximal count of allowed threads running parallel
+     */
+    public PrioritySemaphore(int allowedParalleledThreads) {
+        super(allowedParalleledThreads);
 
         this.random = new Random(System.currentTimeMillis());
 
@@ -52,12 +73,23 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
         }
     }
 
+    /**
+     * The actual thread enters the semaphore. The thread is added with <tt>Priority.NORMAL</tt>.
+     *
+     * @throws InterruptedException Is thrown if thread is interrupted.
+     */
     @Override
     public synchronized void acquire()
             throws InterruptedException {
         this.acquire(Priority.NORMAL);
     }
 
+    /**
+     * The actual thread enters the semaphore. The thread is added with custom priority.
+     *
+     * @param value priority of thread
+     * @throws InterruptedException Is thrown if thread is interrupted.
+     */
     @Override
     public synchronized void acquire(Priority value)
             throws InterruptedException {
@@ -82,11 +114,21 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
         this.decrementCounter();
     }
 
+    /**
+     * Returns the number of queued threads.
+     *
+     * @return Returns the number of queued threads.
+     */
     @Override
     public int getQueueLength() {
         return this.queuedPriorities.size();
     }
 
+    /**
+     * Returns a flag that indicates whether the queue is empty or not.
+     *
+     * @return Return <tt>true</tt> if the queue contains elements; Otherwise <tt>false</tt>.
+     */
     @Override
     public boolean hasQueuedThreads() {
         return !this.queuedPriorities.isEmpty();

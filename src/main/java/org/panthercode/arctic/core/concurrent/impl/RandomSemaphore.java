@@ -21,33 +21,57 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * TODO: documentation
+ * This class queues threads and executed it by random.
  *
  * @author PantherCode
  */
 public class RandomSemaphore extends AbstractSemaphore<Void> {
 
+    /**
+     * object to create random numbers
+     */
     private Random random;
 
+    /**
+     * collection with queued threads waiting in semaphore
+     */
     private List<Thread> queuedThreads;
 
+    /**
+     * Standard Constructor
+     */
     public RandomSemaphore() {
         this(1);
     }
 
-    public RandomSemaphore(int capacity) {
-        super(capacity);
+    /**
+     * Constructor
+     *
+     * @param allowedParalleledThreads maximal count of allowed threads running parallel
+     */
+    public RandomSemaphore(int allowedParalleledThreads) {
+        super(allowedParalleledThreads);
 
         this.random = new Random(System.currentTimeMillis());
 
         this.queuedThreads = Collections.synchronizedList(new ArrayList<>());
     }
 
+    /**
+     * The actual thread enters the semaphore.
+     *
+     * @throws InterruptedException Is thrown if thread is interrupted.
+     */
     @Override
     public synchronized void acquire() throws Exception {
         this.acquire(null);
     }
 
+    /**
+     * The actual thread enters the semaphore.
+     *
+     * @throws InterruptedException Is thrown if thread is interrupted.
+     */
     @Override
     public synchronized void acquire(Void value) throws Exception {
         if (this.counter() == 0) {
@@ -65,11 +89,21 @@ public class RandomSemaphore extends AbstractSemaphore<Void> {
         this.decrementCounter();
     }
 
+    /**
+     * Returns the number of queued threads.
+     *
+     * @return Returns the number of queued threads.
+     */
     @Override
     public int getQueueLength() {
         return this.queuedThreads.size();
     }
 
+    /**
+     * Returns a flag that indicates whether the queue is empty or not.
+     *
+     * @return Return <tt>true</tt> if the queue contains elements; Otherwise <tt>false</tt>.
+     */
     @Override
     public boolean hasQueuedThreads() {
         return !this.queuedThreads.isEmpty();

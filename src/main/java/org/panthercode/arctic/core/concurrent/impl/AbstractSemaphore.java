@@ -19,26 +19,48 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.concurrent.Semaphore;
 
 /**
- * TODO: documentation
+ * The <tt>AbstractSemaphore</tt> class contains the basic functionality to implement a semaphore.
  *
  * @author PantherCode
+ * @see PriorityQueuedSemaphore
+ * @see PrioritySemaphore
+ * @see QueuedSemaphore
+ * @see RandomSemaphore
+ * @since 1.0
  */
 public abstract class AbstractSemaphore<T> implements Semaphore<T> {
 
+    /**
+     * internal counter to control the access to critical section
+     */
     private int counter = 0;
 
+    /**
+     * maximal count of allowed threads
+     */
     private final int allowedParalleledThreads;
 
+    /**
+     * Standard Constructor
+     */
     public AbstractSemaphore() {
         this(1);
     }
 
+    /**
+     * Constructor
+     *
+     * @param allowedParalleledThreads maximal count of allowed threads running parallel
+     */
     public AbstractSemaphore(int allowedParalleledThreads) {
         ArgumentUtils.assertGreaterZero(allowedParalleledThreads, "allowed paralleled threads");
 
         this.allowedParalleledThreads = this.counter = allowedParalleledThreads;
     }
 
+    /**
+     * The current thread will exit semaphore and increment counter by one.
+     */
     @Override
     public synchronized void release() {
         if (this.counter() < this.getAllowedParalleledThreads()) {
@@ -48,24 +70,45 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
         this.incrementCounter();
     }
 
+    /**
+     * Returns the actual count of running threads.
+     *
+     * @return Returns the actual count of running threads.
+     */
     @Override
     public int getActualThreadCount() {
         return this.allowedParalleledThreads - this.counter;
     }
 
+    /**
+     * Returns the maximal count of allowed running threads.
+     *
+     * @return Returns the maximal count of allowed running threads.
+     */
     @Override
     public int getAllowedParalleledThreads() {
         return this.allowedParalleledThreads;
     }
 
+    /**
+     * Increment the counter by one.
+     */
     protected synchronized void incrementCounter() {
         this.counter++;
     }
 
+    /**
+     * Decrement the counter by one.
+     */
     protected synchronized void decrementCounter() {
         this.counter--;
     }
 
+    /**
+     * Returns the actual value of the counter.
+     *
+     * @return Returns the actual value of the counter.
+     */
     protected int counter() {
         return this.counter;
     }
