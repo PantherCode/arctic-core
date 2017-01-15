@@ -1,5 +1,7 @@
 package org.panthercode.arctic.core.helper.event;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Class to handle state changes of objects. To handle more complex states than single values, all values must capsule
  * in extra class.
@@ -83,13 +85,68 @@ public class Event<T> {
         return classType.cast(this.source);
     }
 
+    /**
+     * Sets the handle flag of event.
+     *
+     * @param handled value of flag
+     */
     public void isHandled(boolean handled) {
         this.isHandled = handled;
     }
 
+    /**
+     * Returns a flag that indicates whether the event is handled or not.
+     *
+     * @return Returns <tt>true</tt> if event is handled; Otherwise <tt>false</tt>
+     */
     public boolean isHandled() {
         return isHandled;
     }
 
-    //TODO implement toString, Hashcode, equals
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return Returns a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "before: " + this.beforeState + ", after: " + this.afterState;
+    }
+
+    /**
+     * Checks if this object is equals to another one.
+     *
+     * @param obj other object for comparison
+     * @return Returns <code>true</code> if both objects are equal; Otherwise <tt>false</tt>.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Event)) {
+            return false;
+        }
+
+        Event other = (Event) obj;
+
+        return this.source.equals(other.source) &&
+                this.beforeState == other.beforeState &&
+                this.afterState == other.afterState;
+    }
+
+    /**
+     * Returns a hash code value of this object.
+     *
+     * @return Returns a hash code value of this object.
+     */
+    @Override
+    public int hashCode() {
+        return Math.abs(new HashCodeBuilder()
+                .append(this.source.hashCode())
+                .append(this.beforeState.hashCode())
+                .append(this.afterState.hashCode())
+                .toHashCode());
+    }
 }
