@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.helper;
+package org.panthercode.arctic.core.helper.event;
+
+import org.panthercode.arctic.core.helper.event.Event;
 
 /**
- * TODO: documentation
+ * This interface is used to check or handle results of operations or processes asynchronously.
+ * <p>
+ * If you use <tt>Handler</tt> interface to control before and after state of an event, its
+ * useful to capsule this information in an event class.
  *
  * @author PantherCode
+ * @see Event
+ * @since 1.0
  */
 public interface Handler<E> {
 
-    void handle(E event);
+    /**
+     * This function is called to commit changes to handler class.
+     *
+     * @param e event data
+     */
+    void handle(E e);
 }
