@@ -26,42 +26,94 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 
 /**
- * TODO: implementation
+ * Utility class with various functions to handle Json objects.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class JsonUtils {
 
+    /**
+     * instance of <tt>Gson</tt> object to transform json string to an object and vice versa
+     */
     private static final Gson gson = JsonUtils.create();
 
+    /**
+     * Private Constructor
+     */
     private JsonUtils() {
     }
 
+    /**
+     * Creates a new instance of <tt>Gson</tt> class.
+     *
+     * @return Returns a new instance of <tt>Gson</tt> class.
+     */
     public static Gson create() {
         return new Gson();
     }
 
+    /**
+     * Converts a json string to an object.
+     *
+     * @param json string representation of the object
+     * @param type type of returned object
+     * @param <T>  generic class type
+     * @return Returns the converted object of corresponding json string.
+     */
     public static <T> T fromJson(String json, Type type) {
         return gson.fromJson(json, type);
     }
 
+    /**
+     * Converts a json string to an object.
+     *
+     * @param json  string representation of the object
+     * @param clazz class type of returned object
+     * @param <T>   generic class type
+     * @return Returns the converted object of corresponding json string.
+     */
     public static <T> T fromJson(String json, Class<T> clazz) {
         return gson.fromJson(json, clazz);
     }
 
+    /**
+     * Converts an object to its json string representation.
+     *
+     * @param object object to convert
+     * @return Returns a json string representation of the object.
+     */
     public static String toJson(Object object) {
         return gson.toJson(object);
     }
 
+    /**
+     * Creates a new <tt>JsonReader</tt> from a json string.
+     *
+     * @param json json string
+     * @return Returns a new instance of <tt>JsonReader</tt> class.
+     */
     //TODO: implement null check
     public static JsonReader toReader(String json) {
         return new JsonReader(new StringReader(json));
     }
 
+    /**
+     * Creates a new <tt>JsonReader</tt> from an <tt>InputStream</tt> object.
+     *
+     * @param stream object to read
+     * @return Returns a new instance of <tt>JsonReader</tt> class.
+     */
     public static JsonReader toReader(InputStream stream) {
         return new JsonReader(new InputStreamReader(stream));
     }
 
+    /**
+     * Creates a new <tt>JsonWriter</tt> from an <tt>Writer</tt> object.
+     *
+     * @param writer object for writing
+     * @return Returns a new instance of <tt>JsonWriter</tt>.
+     */
     public static JsonWriter toWriter(Writer writer) {
         return new JsonWriter(writer);
     }
