@@ -21,16 +21,30 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 
 /**
+ * Event class are raised by <tt>DirectoryWatcher/tt> if an registered directory changed.
+ *
  * @author PantherCode
  * @see DirectoryWatcher
  * @since 1.0
  */
 public class DirectoryWatcherEvent extends BasicEvent {
 
+    /**
+     * directory which raised the event
+     */
     private Path source;
 
+    /**
+     * cause of event
+     */
     private WatchEvent.Kind<?> kind;
 
+    /**
+     * Constructor
+     *
+     * @param source directory which raised the event
+     * @param kind   cause of event
+     */
     public DirectoryWatcherEvent(Path source, WatchEvent.Kind kind) {
         super();
 
@@ -38,10 +52,20 @@ public class DirectoryWatcherEvent extends BasicEvent {
         this.kind = kind;
     }
 
+    /**
+     * Returns the directory's path which raised the event.
+     *
+     * @return Returns the directory's path which raised the event.
+     */
     public Path source() {
         return this.source;
     }
 
+    /**
+     * Returns the cause of the event.
+     *
+     * @return Returns the cause of the event.
+     */
     public WatchEvent.Kind<?> kind() {
         return this.kind;
     }

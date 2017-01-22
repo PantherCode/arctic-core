@@ -43,6 +43,7 @@ import java.util.concurrent.TimeUnit;
  * For process the uri parameter of http method functions the <tt>resolve()</tt> method of <tt>URI</tt> class is used.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class HttpClientOptions {
 

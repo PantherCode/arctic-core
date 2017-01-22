@@ -19,6 +19,10 @@ package org.panthercode.arctic.core.helper.version;
  * Enumeration to represent the parts of the version number.
  *
  * @author PantherCode
+ * @see Version
+ * @see Versionable
+ * @see VersionInfo
+ * @since 1.0
  */
 public enum VersionField {
     /**

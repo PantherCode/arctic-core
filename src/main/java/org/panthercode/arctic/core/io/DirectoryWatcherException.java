@@ -16,6 +16,9 @@
 package org.panthercode.arctic.core.io;
 
 /**
+ * This class is used if an error is occurred while the watcher is running.
+ * TODO: documentation
+ *
  * @author PantherCode
  * @since 1.0
  */

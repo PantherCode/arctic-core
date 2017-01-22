@@ -18,10 +18,22 @@ package org.panthercode.arctic.core.helper.priority;
 import java.util.Comparator;
 
 /**
+ * Comparator for <tt>PriorityObject</tt> class
+ *
  * @author PantherCode
+ * @see Priority
+ * @see PriorityObject
+ * @since 1.0
  */
 public class PriorityObjectComparator<T extends PriorityObject> implements Comparator<T> {
 
+    /**
+     * Compares two <tt>PriorityObject</tt> instances
+     *
+     * @param first first <tt>PriorityObject</tt>
+     * @param other second <tt>PriorityObject</tt>
+     * @return TODO: documentation
+     */
     @Override
     public int compare(T first, T other) {
         return other.getPriority().toInteger() - first.getPriority().toInteger();

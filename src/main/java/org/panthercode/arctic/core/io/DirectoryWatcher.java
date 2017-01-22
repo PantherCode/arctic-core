@@ -79,28 +79,74 @@ public class DirectoryWatcher {
         this.service = FileSystems.getDefault().newWatchService();
     }
 
+    /**
+     * Creates a new instance of <tt>DirectoryWatcher</tt> class.
+     *
+     * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
+     * @throws IOException Is thrown if an error occurred while creating new filesystem service.
+     */
     public static DirectoryWatcher create() throws IOException {
         return new DirectoryWatcher();
     }
 
+    /**
+     * Creates a new instance of <tt>DirectoryWatcher</tt> class.
+     *
+     * @param delayTimeInMillis delay time after each look up the event loop
+     * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
+     * @throws IOException Is thrown if an error occurred while creating new filesystem service.
+     */
     public static DirectoryWatcher create(long delayTimeInMillis) throws IOException {
         return new DirectoryWatcher(delayTimeInMillis);
     }
 
+    /**
+     * Creates a new instance of <tt>DirectoryWatcher</tt> class.
+     *
+     * @param duration duration of delay time after each look up the event loop
+     * @param unit     time unit of duration
+     * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
+     * @throws IOException Is thrown if an error is occurred while creating new filesystem service.
+     */
     public static DirectoryWatcher create(long duration, TimeUnit unit) throws IOException {
         ArgumentUtils.assertNotNull(unit, "time unit");
 
         return new DirectoryWatcher(unit.toMillis(duration));
     }
 
+    /**
+     * Register a new directory for observing.
+     *
+     * @param directory directory to observe
+     * @param handler   event handler
+     * @return Returns the corresponding <tt>WatchKey</tt> of registered directory.
+     * @throws IOException Is thrown if an error is occurred while directory's path is registered.
+     */
     public WatchKey register(Directory directory, Handler<DirectoryWatcherEvent> handler) throws IOException {
         return this.register(directory, handler, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
     }
 
+    /**
+     * Register a new directory for observing.
+     *
+     * @param directory directory to observe
+     * @param handler   event handler
+     * @param kinds     triggers for raising events
+     * @return Returns the corresponding <tt>WatchKey</tt> of registered directory.
+     * @throws IOException Is thrown if an error is occurred while directory's path is registered.
+     */
     public WatchKey register(Directory directory, Handler<DirectoryWatcherEvent> handler, WatchEvent.Kind<?>... kinds) throws IOException {
         return this.register(directory.toPath(), handler, false, kinds);
     }
 
+    /**
+     * Register a directory and its subdirectories for observing.
+     *
+     * @param directory directory to observe
+     * @param handler   event handler
+     * @return Returns the corresponding <tt>WatchKey</tt>s of directory and its subdirectories.
+     * @throws IOException Is thrown if an error is occurred while a directory's path is registered.
+     */
     public List<WatchKey> registerTree(Directory directory, Handler<DirectoryWatcherEvent> handler) throws IOException {
         WatchService service = FileSystems.getDefault().newWatchService();
 
@@ -119,6 +165,9 @@ public class DirectoryWatcher {
         return watchKeyList;
     }
 
+    /**
+     * Starts the observation of all registered directories. This function is <tt>synchronized</tt>.
+     */
     public synchronized void start() {
         if (!isRunning) {
             this.isRunning = true;
@@ -165,22 +214,51 @@ public class DirectoryWatcher {
         }
     }
 
+    /**
+     * Stops the observation of registered directories. This function is <tt>synchronized</tt>.
+     */
     public synchronized void stop() {
         this.isRunning = false;
     }
 
+    /**
+     * Returns a flag that indicates whether the watch is observing registered directories or not.
+     *
+     * @return Returns <tt>true</tt> if the watcher is observing registered directories; Otherwise <tt>false</tt>.
+     */
     public boolean isRunning() {
         return this.isRunning;
     }
 
+    /**
+     * Returns the actual delay time of the watcher.
+     *
+     * @return Returns the actual delay time of the watcher.
+     */
     public long delayTime() {
         return this.delayTimeInMillis;
     }
 
+    /**
+     * Returns the actual delay time of the watcher.
+     *
+     * @param other transform delay time to given time units
+     * @return Returns the actual delay time of the watcher.
+     */
     public long delayTime(TimeUnit other) {
         return other.convert(this.delayTimeInMillis, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Register a directory for observation.
+     *
+     * @param path    path of directory
+     * @param handler event handler
+     * @param observe also observe  subdirectories
+     * @param kinds   triggers for raising events
+     * @return Returns the corresponding <tt>WatchKey</tt> of registered path.
+     * @throws IOException Is thrown if an error is occurred while path is registered.
+     */
     private synchronized WatchKey register(Path path, Handler<DirectoryWatcherEvent> handler, boolean observe, WatchEvent.Kind<?>... kinds) throws IOException {
         WatchKey watchKey = path.register(this.service, kinds);
 
@@ -191,28 +269,62 @@ public class DirectoryWatcher {
         return watchKey;
     }
 
+    /**
+     * Inner class to store information about registered directories.
+     */
     private class DirectoryWatcherEntry {
 
+        /**
+         * path of directory
+         */
         private Path source;
 
+        /**
+         * actual event handler
+         */
         private Handler<DirectoryWatcherEvent> handler;
 
+        /**
+         * flag to observe also subdirectories
+         */
         private boolean observeSubdirectories;
 
+        /**
+         * Constructor
+         *
+         * @param source                path of directory
+         * @param handler               event handler
+         * @param observeSubdirectories flag to observe subdirectories
+         */
         DirectoryWatcherEntry(Path source, Handler<DirectoryWatcherEvent> handler, boolean observeSubdirectories) {
             this.source = source;
             this.handler = handler;
             this.observeSubdirectories = observeSubdirectories;
         }
 
+        /**
+         * Returns the path of registered directory.
+         *
+         * @return Returns the path of registered directory.
+         */
         Path source() {
             return this.source;
         }
 
+        /**
+         * Returns the event handler of registered directory.
+         *
+         * @return Returns the event handler of registered directory.
+         */
         Handler<DirectoryWatcherEvent> handler() {
             return this.handler;
         }
 
+        /**
+         * Returns a flag that indicates whether the directory's sub elements are observed or not.
+         *
+         * @return Returns <tt>true</tt> if the sub elements are observed; Otherwise <tt>false</tt>.
+         */
         boolean observeSubdirectories() {
             return this.observeSubdirectories;
         }

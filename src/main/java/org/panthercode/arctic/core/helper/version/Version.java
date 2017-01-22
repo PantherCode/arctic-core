@@ -25,6 +25,10 @@ import org.panthercode.arctic.core.reflect.ReflectionUtils;
  * pattern.
  *
  * @author PantherCode
+ * @see Versionable
+ * @see VersionField
+ * @see VersionInfo
+ * @since 1.0
  */
 public class Version implements Freezable, Comparable<Version> {
 

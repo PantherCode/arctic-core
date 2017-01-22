@@ -29,6 +29,7 @@ import java.nio.file.attribute.FileAttribute;
  * Represents a directory entry in filesystem
  *
  * @author PantherCode
+ * @see DirectoryWatcher
  * @since 1.0
  */
 public class Directory {

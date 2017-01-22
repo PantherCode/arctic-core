@@ -31,7 +31,7 @@ public class PriorityComparator implements Comparator<Priority> {
      *
      * @param first first priority object
      * @param other second priority object
-     * @return Returns a positive integer if fir
+     * @return TODO: documentation
      */
     @Override
     public int compare(Priority first, Priority other) {
