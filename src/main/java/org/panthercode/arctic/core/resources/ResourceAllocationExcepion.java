@@ -17,6 +17,7 @@ package org.panthercode.arctic.core.resources;
 
 /**
  * @author PantherCode
+ * @since 1.0
  */
 public class ResourceAllocationExcepion extends RuntimeException {
 

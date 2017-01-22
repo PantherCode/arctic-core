@@ -21,6 +21,8 @@ import org.panthercode.arctic.core.helper.version.Version;
 
 /**
  * @author PantherCode
+ * @see VersionMap
+ * @since 1.0
  */
 public class ResourceAllocator extends VersionMapAllocator<Object, Resource> {
 

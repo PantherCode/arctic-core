@@ -66,21 +66,21 @@ public interface Semaphore<T> {
      *
      * @return Returns the actual count of running threads.
      */
-    int getActualThreadCount();
+    int actualThreadCount();
 
     /**
      * Returns the maximal count of allowed running threads.
      *
      * @return Returns the maximal count of allowed running threads.
      */
-    int getAllowedParalleledThreads();
+    int allowedParalleledThreads();
 
     /**
      * Returns the number of queued threads.
      *
      * @return Returns the number of queued threads.
      */
-    int getQueueLength();
+    int queueLength();
 
     /**
      * Returns a flag that indicates whether the queue is empty or not.

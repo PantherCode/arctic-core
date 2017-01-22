@@ -24,6 +24,7 @@ import org.panthercode.arctic.core.settings.Configurable;
  * TODO: documentation
  *
  * @author PantherCode
+ * @since 1.0
  */
 public interface Resource extends Identifiable, Versionable, Configurable {
 
@@ -31,9 +32,9 @@ public interface Resource extends Identifiable, Versionable, Configurable {
 
     boolean isBusy();
 
-    int counter();
+    int actualThreadCount();
 
-    int capacity();
+    int allowedParalleledThreads();
 
     void acquire() throws Exception;
 

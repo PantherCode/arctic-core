@@ -22,9 +22,10 @@ import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.settings.Configuration;
 
 /**
- * TODO: documentation
+ * Abstract class to
  *
  * @author PantherCode
+ * @since 1.0
  */
 @IdentityInfo(name = "Abstract Critical Resource", group = "Resources")
 @VersionInfo(major = 1, minor = 0, build = 0, revision = 0)
@@ -49,13 +50,13 @@ public abstract class AbstractCriticalResource extends AbstractResource {
     }
 
     @Override
-    public int counter() {
-        return this.semaphore.getActualThreadCount();
+    public int actualThreadCount() {
+        return this.semaphore.actualThreadCount();
     }
 
     @Override
-    public int capacity() {
-        return this.semaphore.getAllowedParalleledThreads();
+    public int allowedParalleledThreads() {
+        return this.semaphore.allowedParalleledThreads();
     }
 
     @Override

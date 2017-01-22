@@ -109,7 +109,7 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
      * @return Returns the number of queued threads.
      */
     @Override
-    public int getQueueLength() {
+    public int queueLength() {
         return this.queuedPriorities.size();
     }
 

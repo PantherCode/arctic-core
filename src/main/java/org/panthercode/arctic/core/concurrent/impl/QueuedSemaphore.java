@@ -85,7 +85,7 @@ public class QueuedSemaphore extends AbstractSemaphore<Void> {
      * @return Returns the number of queued threads.
      */
     @Override
-    public int getQueueLength() {
+    public int queueLength() {
         return this.queue.size();
     }
 

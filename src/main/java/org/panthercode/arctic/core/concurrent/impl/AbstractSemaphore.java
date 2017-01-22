@@ -63,7 +63,7 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
      */
     @Override
     public synchronized void release() {
-        if (this.counter() < this.getAllowedParalleledThreads()) {
+        if (this.counter() < this.allowedParalleledThreads()) {
             this.notifyAll();
         }
 
@@ -76,7 +76,7 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
      * @return Returns the actual count of running threads.
      */
     @Override
-    public int getActualThreadCount() {
+    public int actualThreadCount() {
         return this.allowedParalleledThreads - this.counter;
     }
 
@@ -86,7 +86,7 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
      * @return Returns the maximal count of allowed running threads.
      */
     @Override
-    public int getAllowedParalleledThreads() {
+    public int allowedParalleledThreads() {
         return this.allowedParalleledThreads;
     }
 

@@ -31,11 +31,12 @@ import java.util.List;
  * TODO: documentation
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class ResourceFactory {
 
     /**
-     *
+     * Private Constructor
      */
     private ResourceFactory() {
     }

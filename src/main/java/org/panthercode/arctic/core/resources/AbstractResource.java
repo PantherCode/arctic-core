@@ -31,6 +31,7 @@ import org.panthercode.arctic.core.settings.Configuration;
  * TODO: documentation
  *
  * @author PantherCode
+ * @since 1.0
  */
 @IdentityInfo(name = "Abstract Resource", group = "Resources")
 @VersionInfo(major = 1, minor = 0, build = 0, revision = 0)
@@ -87,12 +88,12 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     @Override
-    public int counter() {
+    public int actualThreadCount() {
         return 1;
     }
 
     @Override
-    public int capacity() {
+    public int allowedParalleledThreads() {
         return Integer.MAX_VALUE;
     }
 
