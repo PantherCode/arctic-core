@@ -19,6 +19,8 @@ package org.panthercode.arctic.core.runtime;
  * Class to close the application in a controlled way.
  *
  * @author PantherCode
+ * @see Application
+ * @since 1.0
  */
 public class ShutdownException extends RuntimeException {
 

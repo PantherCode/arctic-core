@@ -21,6 +21,7 @@ package org.panthercode.arctic.core.settings;
  * <tt>ConfigurationManager</tt> class.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class Settings extends Configuration {
 

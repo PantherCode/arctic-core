@@ -28,6 +28,7 @@ import java.util.Properties;
  * than <tt>Properties</tt> class do.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class Configuration extends Properties {
 

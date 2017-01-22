@@ -26,9 +26,11 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * TODO: class documentation
+ * Abstraction of an application to offer basic functionality.
  *
  * @author PantherCode
+ * @see ShutdownException
+ * @since 1.0
  */
 @IdentityInfo(name = "Application")
 @VersionInfo(major = 1)

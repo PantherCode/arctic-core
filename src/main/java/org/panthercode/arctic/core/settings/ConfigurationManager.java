@@ -23,6 +23,7 @@ import java.util.*;
  * It's a Multiton design pattern implementation.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class ConfigurationManager {
 

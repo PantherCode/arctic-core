@@ -34,6 +34,7 @@ import java.util.jar.JarFile;
  * Utility class that contains methods to load classes from jar archives and filter lists.
  *
  * @author PantherCode
+ * @sinec 1.0
  */
 public class ReflectionUtils {
     /**
