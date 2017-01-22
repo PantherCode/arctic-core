@@ -23,6 +23,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -87,11 +88,11 @@ public class ReflectionUtils {
      * @throws IOException              Is thrown if an error occurs while reading the .jar file.
      * @throws IllegalArgumentException Is thrown if path is null.
      */
-    public static List<String> extractClassNamesFromJar(String path)
+    public static List<String> extractClassNamesFromJar(Path path)
             throws NullPointerException, IOException {
         ArgumentUtils.assertNotNull(path, "path");
 
-        JarFile jarFile = new JarFile(path);
+        JarFile jarFile = new JarFile(path.toString());
 
         List<String> classNameList = new ArrayList<>();
 
@@ -118,7 +119,7 @@ public class ReflectionUtils {
      * @throws ClassNotFoundException   Is thrown if the class is not found.
      * @throws IllegalArgumentException Is thrown if path is null.
      */
-    public static List<Class<?>> extractClassesFromJar(String path)
+    public static List<Class<?>> extractClassesFromJar(Path path)
             throws IOException, ClassNotFoundException, IllegalArgumentException {
         ArgumentUtils.assertNotNull(path, "path");
 

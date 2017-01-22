@@ -22,8 +22,8 @@ import java.util.*;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * This class queues threads by its priority. Threads with higher priority will be executed privileged. Threads with
- * same priority will executed by random.
+ * This class queues threads by its toInteger. Threads with higher toInteger will be executed privileged. Threads with
+ * same toInteger will executed by random.
  *
  * @author PantherCode
  * @see Priority
@@ -85,16 +85,16 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
     }
 
     /**
-     * The actual thread enters the semaphore. The thread is added with custom priority.
+     * The actual thread enters the semaphore. The thread is added with custom toInteger.
      *
-     * @param value priority of thread
+     * @param value toInteger of thread
      * @throws InterruptedException Is thrown if thread is interrupted.
      */
     @Override
     public synchronized void acquire(Priority value)
             throws InterruptedException {
         if (this.counter() == 0) {
-            int priority = value.priority() - 1;
+            int priority = value.toInteger() - 1;
 
             int index = this.random.nextInt(this.queuedThreads[priority].size() + 1);
 
@@ -102,7 +102,7 @@ public class PrioritySemaphore extends AbstractSemaphore<Priority> {
 
             this.queuedPriorities.add(value);
 
-            while (this.counter() == 0 || !Thread.currentThread().equals(this.queuedThreads[this.queuedPriorities.peek().priority() - 1].get(0))) {
+            while (this.counter() == 0 || !Thread.currentThread().equals(this.queuedThreads[this.queuedPriorities.peek().toInteger() - 1].get(0))) {
                 this.wait();
             }
 

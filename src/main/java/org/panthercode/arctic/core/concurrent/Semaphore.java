@@ -49,9 +49,9 @@ public interface Semaphore<T> {
     void acquire() throws Exception;
 
     /**
-     * The actual thread enters the semaphore. The thread is added with custom priority.
+     * The actual thread enters the semaphore. The thread is added with custom toInteger.
      *
-     * @param value priority of thread
+     * @param value toInteger of thread
      * @throws InterruptedException Is thrown if thread is interrupted.
      */
     void acquire(T value) throws Exception;

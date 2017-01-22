@@ -17,11 +17,12 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.helper.event.Event;
+import org.panthercode.arctic.core.helper.event.Handler;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.version.Version;
-import org.panthercode.arctic.core.processing.ProcessState;
-import org.panthercode.arctic.core.processing.ProcessStateHandler;
 import org.panthercode.arctic.core.processing.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.Context;
 
@@ -101,7 +102,7 @@ public abstract class ModuleImpl implements Module {
     /**
      * Actual PrcessStateHandler to handle state transitions
      */
-    private List<ProcessStateHandler> processStateHandlers = new ArrayList<>();
+    private List<Handler<Event<ProcessState>>> processStateHandlers = new ArrayList<>();
 
     /**
      * Contains all allowed process state changes.
@@ -214,7 +215,7 @@ public abstract class ModuleImpl implements Module {
      *
      * @return Returns the actual <tt>ProcessStateHandler</tt> the object is associated with.
      */
-    public synchronized boolean addProcessStateHandler(ProcessStateHandler handler) {
+    public synchronized boolean addProcessStateHandler(Handler<Event<ProcessState>> handler) {
         return this.processStateHandlers.add(handler);
     }
 
@@ -223,11 +224,12 @@ public abstract class ModuleImpl implements Module {
      *
      * @param handler new handler
      */
-    public synchronized boolean removeProcessStateHandler(ProcessStateHandler handler) {
+    public synchronized boolean removeProcessStateHandler(Handler<Event<ProcessState>> handler) {
         return this.processStateHandlers.remove(handler);
     }
 
-    public List<ProcessStateHandler> processStateHandler() {
+    public List<Handler<Event<ProcessState>>> processStateHandlers() {
+
         return new ArrayList<>(this.processStateHandlers);
     }
 
@@ -407,6 +409,7 @@ public abstract class ModuleImpl implements Module {
 
     /**
      * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
+     * TODO: each handler gets a new instance, it's synchronized -> fast handling
      *
      * @param newState new state of object
      */
@@ -416,13 +419,10 @@ public abstract class ModuleImpl implements Module {
 
             this.actualState = newState;
 
-            for (ProcessStateHandler handler : this.processStateHandlers) {
-                try {
-                    handler.handle(this, oldState);
-                } catch (Exception e) {
-                    // TODO: explanation why ignoring handler
-                    // ignoring exceptions of handler
-                }
+            for (Handler<Event<ProcessState>> handler : this.processStateHandlers) {
+                Event<ProcessState> event = new Event<>(this, oldState, this.actualState);
+
+                handler.handle(event);
             }
 
             return true;

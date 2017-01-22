@@ -35,6 +35,9 @@ import java.util.Random;
  * <tt>Identity identity = Identity.generate(...);</tt>
  *
  * @author PantherCode
+ * @see Identifiable
+ * @see IdentityInfo
+ * @since 1.0
  */
 public final class Identity implements Freezable {
 
@@ -199,7 +202,7 @@ public final class Identity implements Freezable {
     /**
      * Checks if an object offers an IdentityInfo annotation.
      *
-     * @param object object to check
+     * @param clazz object to check
      * @return Returns <tt>true</tt> if the object offers an IdentityInfo annotation; Otherwise <tt>false</tt>.
      */
     public static <T> boolean isAnnotated(final Class<T> clazz) {

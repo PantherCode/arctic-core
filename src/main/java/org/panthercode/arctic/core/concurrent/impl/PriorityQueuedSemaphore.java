@@ -23,8 +23,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- * This class queues threads by its priority. Threads with higher priority will be executed privileged. Threads with
- * same priority will executed by FIFO principle.
+ * This class queues threads by its toInteger. Threads with higher toInteger will be executed privileged. Threads with
+ * same toInteger will executed by FIFO principle.
  *
  * @author PantherCode
  * @see Priority
@@ -78,9 +78,9 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
     }
 
     /**
-     * The actual thread enters the semaphore. The thread is added with custom priority.
+     * The actual thread enters the semaphore. The thread is added with custom toInteger.
      *
-     * @param value priority of thread
+     * @param value toInteger of thread
      * @throws InterruptedException Is thrown if thread is interrupted.
      */
     @Override
@@ -88,14 +88,14 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
         if (this.counter() == 0) {
             this.queuedPriorities.add(value);
 
-            this.queuedThreads[value.priority() - 1].add(Thread.currentThread());
+            this.queuedThreads[value.toInteger() - 1].add(Thread.currentThread());
 
             while (this.counter() == 0 ||
-                    !Thread.currentThread().equals(this.queuedThreads[this.queuedPriorities.peek().priority() - 1].peek())) {
+                    !Thread.currentThread().equals(this.queuedThreads[this.queuedPriorities.peek().toInteger() - 1].peek())) {
                 this.wait();
             }
 
-            this.queuedThreads[value.priority() - 1].remove();
+            this.queuedThreads[value.toInteger() - 1].remove();
 
             this.queuedPriorities.remove();
         }

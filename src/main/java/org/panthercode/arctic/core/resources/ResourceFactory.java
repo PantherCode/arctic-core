@@ -15,16 +15,17 @@
  */
 package org.panthercode.arctic.core.resources;
 
+
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.identity.IdentityInfo;
+import org.panthercode.arctic.core.concurrent.Semaphore;
 import org.panthercode.arctic.core.helper.priority.Priority;
-import org.panthercode.arctic.core.helper.version.VersionInfo;
-import org.panthercode.arctic.core.reflect.ClassBuilder;
+import org.panthercode.arctic.core.reflect.ReflectionUtils;
 import org.panthercode.arctic.core.settings.Configuration;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-
-//import org.panthercode.arctic.core.helper.priority.Semaphore;
+import java.nio.file.Path;
+import java.util.List;
 
 /**
  * TODO: documentation
@@ -33,42 +34,41 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class ResourceFactory {
 
-    public static String CAPACITY_KEY = "capacity";
-
-    public static String PRIORITY_KEY = "priority";
-
     /**
      *
      */
     private ResourceFactory() {
     }
 
-    public static <T extends AbstractResource> Resource create(Class<T> clazz)
-            throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        return ResourceFactory.create(clazz, null);
+    @SuppressWarnings("unchecked")
+    public List<Class<?>> load(Path path)
+            throws IOException, ClassNotFoundException {
+        List<Class<?>> classes = ReflectionUtils.extractClassesFromJar(path);
+
+        return ReflectionUtils.filterClassList(classes, AbstractResource.class);
     }
 
-    public static <T extends AbstractResource> Resource create(Class<T> clazz, Configuration configuration)
-            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, ClassCastException {
-        ArgumentUtils.assertNotNull(clazz, "class");
+    public static Resource create(Class<? extends AbstractResource> resourceClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        return ResourceFactory.create(resourceClass, null);
+    }
 
-        if (!clazz.isAnnotationPresent(IdentityInfo.class)) {
-            throw new IllegalArgumentException("The resource class has no IdentityInfo annotation");
+    public static Resource create(Class<? extends AbstractResource> resourceClass, Configuration configuration) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
+        return ResourceFactory.create(resourceClass, configuration, null);
+    }
+
+    public static Resource create(Class<? extends AbstractResource> resourceClass, Configuration configuration, Semaphore<Priority> semaphore) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        ArgumentUtils.assertNotNull(resourceClass, "resource class");
+
+        Resource resource = null;
+
+        if (semaphore != null && resourceClass.isInstance(AbstractCriticalResource.class)) {
+            resource = resourceClass.getConstructor(Semaphore.class).newInstance(semaphore);
+        } else {
+            resource = resourceClass.getConstructor().newInstance();
         }
 
-        if (!clazz.isAnnotationPresent(VersionInfo.class)) {
-            throw new IllegalArgumentException("The resource class has no VersionInfo annotation");
-        }
+        resource.configure(configuration);
 
-        configuration = configuration == null ? new Configuration() : configuration;
-
-        Priority priority = configuration.containsKey(PRIORITY_KEY) ? (Priority) configuration.get(PRIORITY_KEY) : Priority.NORMAL;
-
-        int capacity = configuration.containsKey(CAPACITY_KEY) ? (int) configuration.get(CAPACITY_KEY) : 1;
-
-        AbstractResource abstractResource = ClassBuilder.create(AbstractResource.class).build();
-
-        //TODO: fix
-        return null; //new ResourceImpl(abstractResource, new Semaphore(capacity), priority, configuration);
+        return resource;
     }
 }

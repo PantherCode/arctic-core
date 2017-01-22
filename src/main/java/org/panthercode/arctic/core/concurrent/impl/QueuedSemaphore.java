@@ -22,6 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * This class queues threads and executed it by FIFO principle.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class QueuedSemaphore extends AbstractSemaphore<Void> {
 

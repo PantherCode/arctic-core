@@ -118,7 +118,7 @@ public abstract class Bundle extends ModuleImpl {
     /**
      * Adds a new module to bundle.
      *
-     * @param module new module to add
+     * @param module new module to addTo
      */
     public synchronized boolean deploy(final Module module) {
         if (module != null) {
@@ -155,7 +155,7 @@ public abstract class Bundle extends ModuleImpl {
      * Adds a nwe module to bundle at a given position.
      *
      * @param index  new index added module
-     * @param module new module to add
+     * @param module new module to addTo
      */
     public synchronized void deploy(final int index, final Module module) {
         if (module != null) {

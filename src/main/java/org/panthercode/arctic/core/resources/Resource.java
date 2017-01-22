@@ -16,6 +16,7 @@
 package org.panthercode.arctic.core.resources;
 
 import org.panthercode.arctic.core.helper.identity.Identifiable;
+import org.panthercode.arctic.core.helper.priority.Priority;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.settings.Configurable;
 
@@ -36,7 +37,11 @@ public interface Resource extends Identifiable, Versionable, Configurable {
 
     void acquire() throws Exception;
 
+    void acquire(Priority priority) throws Exception;
+
     void release();
+
+    Resource copy();
 
     <T> T execute(String functionName, Class<T> returnType, Object... arguments) throws Exception;
 }

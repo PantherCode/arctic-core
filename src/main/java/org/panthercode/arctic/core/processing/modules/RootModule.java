@@ -15,11 +15,15 @@
  */
 package org.panthercode.arctic.core.processing.modules;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * If a .jar file contains more than one module class for class loader it's not possible to detect the root element.
  * Therefore it's always necessary to annotate the root element to indicate the right one. Every .jar file must contains
  * one and only one root element, also if the library contains only one module. Otherwise class loader will react with
  * an error, that the library doesn't contain any executable code and reject the .jar file.
  */
+@Retention(RetentionPolicy.RUNTIME)
 public @interface RootModule {
 }

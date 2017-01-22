@@ -28,6 +28,7 @@ import java.util.*;
  *
  * @author PantherCode
  * @see Map
+ * @see org.panthercode.arctic.core.collections.helper.VersionMapAllocator
  * @since 1.0
  */
 public class VersionMap<K, V extends Versionable> implements Map<K, V> {
@@ -98,6 +99,18 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
             }
         }
 
+        return false;
+    }
+
+    //Todo: implement
+    /**
+     * Returns a flag that indicates whether the map contains a given object with specific version or not.
+     *
+     * @param key key of object
+     * @param version version of object
+     * @return Returns <tt>true</tt> if the map contain the given key; Otherwise <tt>false</tt>.
+     */
+    public boolean contains(Object key, Version version) {
         return false;
     }
 

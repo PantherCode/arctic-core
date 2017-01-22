@@ -24,6 +24,7 @@ import java.util.Random;
  * This class queues threads and executed it by random.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class RandomSemaphore extends AbstractSemaphore<Void> {
 

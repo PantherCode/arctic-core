@@ -16,41 +16,75 @@
 package org.panthercode.arctic.core.helper.priority;
 
 /**
- * TODO: documentation
+ * Enumeration to represent a set of priorities.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public enum Priority {
 
-    VERY_HIGH(1, "Very High"),
+    /**
+     * Very High
+     */
+    VERY_HIGH(5, "Very High"),
 
-    HIGH(2, "High"),
+    /**
+     * High
+     */
+    HIGH(4, "High"),
 
+    /**
+     * Normal
+     */
     NORMAL(3, "Normal"),
 
-    LOW(4, "Low"),
+    /**
+     * Low
+     */
+    LOW(2, "Low"),
 
-    VERY_LOW(5, "Very Low");
+    /**
+     * Very Low
+     */
+    VERY_LOW(1, "Very Low");
 
-    private final int priority;
+    /**
+     * actual value of toInteger as integer
+     */
+    private final int priorityAsInteger;
 
-    private final String value;
+    /**
+     * actual value of toInteger as string
+     */
+    private final String priorityAsString;
 
-    Priority(int priority, String value) {
-        this.priority = priority;
-        this.value = value;
+    /**
+     * Constructor
+     *
+     * @param priorityAsInteger value of priority as integer
+     * @param priorityAsString  value of priority as string
+     */
+    Priority(int priorityAsInteger, String priorityAsString) {
+        this.priorityAsInteger = priorityAsInteger;
+        this.priorityAsString = priorityAsString;
     }
 
-    public int priority() {
-        return this.priority;
+    /**
+     * Returns an integer representation of the object.
+     *
+     * @return Returns an integer representation of the object.
+     */
+    public int toInteger() {
+        return this.priorityAsInteger;
     }
 
-    public String value() {
-        return this.value;
-    }
-
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return Returns a string representation of the object.
+     */
     @Override
     public String toString() {
-        return this.value();
+        return this.priorityAsString;
     }
 }

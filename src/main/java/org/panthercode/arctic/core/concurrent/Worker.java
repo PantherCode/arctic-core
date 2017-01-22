@@ -128,10 +128,10 @@ public class Worker implements Runnable {
     }
 
     /**
-     * Adds a new runnable object to queue with custom priority. This function is <tt>synchronized</tt>.
+     * Adds a new runnable object to queue with custom toInteger. This function is <tt>synchronized</tt>.
      *
      * @param runnable runnable object for execution
-     * @param priority priority to run the object
+     * @param priority toInteger to run the object
      */
     public synchronized void add(Runnable runnable, Priority priority) {
         if (runnable != null && priority != null) {

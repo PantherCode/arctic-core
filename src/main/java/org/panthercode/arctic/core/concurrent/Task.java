@@ -15,7 +15,7 @@
  */
 package org.panthercode.arctic.core.concurrent;
 
-import org.panthercode.arctic.core.helper.Handler;
+import org.panthercode.arctic.core.helper.event.Handler;
 import org.panthercode.arctic.core.settings.Context;
 
 /**
