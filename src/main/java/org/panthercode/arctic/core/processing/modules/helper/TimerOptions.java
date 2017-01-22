@@ -22,6 +22,8 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
  * Builder class to configure parameters for controlling the loop process of the <tt>Timer</tt> class.
  *
  * @author PantherCode
+ * @see org.panthercode.arctic.core.processing.modules.impl.Timer
+ * @since 1.0
  */
 public class TimerOptions extends RepeaterOptions {
 

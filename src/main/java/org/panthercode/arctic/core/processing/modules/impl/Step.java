@@ -15,8 +15,8 @@
  */
 package org.panthercode.arctic.core.processing.modules.impl;
 
-import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.settings.Context;
 
 //TODO: update documentation
@@ -31,6 +31,10 @@ import org.panthercode.arctic.core.settings.Context;
  * It's on your own responsibility to change process state at runtime! E. g. if process waits, change process state to
  * "Waiting". When process goes on, change state to "Running". Otherwise maybe you will provoke bad behavior of the
  * system.
+ *
+ * @author PantherCode
+ * @see org.panthercode.arctic.core.processing.modules.Module
+ * @since 1.0
  */
 public abstract class Step extends ModuleImpl {
 

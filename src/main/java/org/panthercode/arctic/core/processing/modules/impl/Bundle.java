@@ -30,6 +30,10 @@ import java.util.List;
 
 /**
  * The bundle class is used to hold and proceed a list of modules. Every module is stored in an internal list.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @IdentityInfo(name = "Standard Bundle", group = "Bundle Module")
 @VersionInfo(major = 1)

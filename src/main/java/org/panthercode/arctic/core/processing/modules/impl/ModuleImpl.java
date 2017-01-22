@@ -76,6 +76,10 @@ import java.util.List;
  * <p>
  * Please read the documentation of child modules. If you inherit from any class, inherit always from the most
  * specialist one to your needs. Always prefer to use available classes.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 public abstract class ModuleImpl implements Module {
 

@@ -31,6 +31,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * The Repeater repeats the module's functionality until the time limit is reached or until the module finished
  * successfully.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @IdentityInfo(name = "Timer", group = "Repeater Module")
 @VersionInfo(major = 1)

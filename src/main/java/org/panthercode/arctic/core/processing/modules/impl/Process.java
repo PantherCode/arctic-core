@@ -26,6 +26,10 @@ import java.util.Iterator;
 
 /**
  * The Process class runs one element after another.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @IdentityInfo(name = "Standard Process", group = "Process Module")
 @VersionInfo(major = 1)

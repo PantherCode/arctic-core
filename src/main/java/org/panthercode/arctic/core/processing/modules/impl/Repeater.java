@@ -30,6 +30,10 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Class to repeat module's functionality. The Loop class provides some basic functions to control the loop process.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 public abstract class Repeater extends ModuleImpl {
 

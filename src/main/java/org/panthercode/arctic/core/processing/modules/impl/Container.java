@@ -25,6 +25,10 @@ import org.panthercode.arctic.core.settings.Context;
 
 /**
  * Container are used as root elements for processing.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @IdentityInfo(name = "Standard Container", group = "Container")
 @VersionInfo(major = 1)
