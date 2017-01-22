@@ -17,6 +17,9 @@ package org.panthercode.arctic.core.processing;
 
 /**
  * Enumeration of possible processing states. It's used indicate the inner state of an object.
+ *
+ * @author PantherCode
+ * @since 1.0
  */
 public enum ProcessState {
     /**

@@ -17,6 +17,9 @@ package org.panthercode.arctic.core.processing;
 
 /**
  * Enumeration with instructions to do next step in a defined way.
+ *
+ * @author PantherCode
+ * @since 1.0
  */
 public enum ProcessAction {
     /**

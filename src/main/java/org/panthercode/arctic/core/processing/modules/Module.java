@@ -86,6 +86,9 @@ import org.panthercode.arctic.core.settings.Context;
  * <p>
  * If you implement this interface or inherit from a module class, you should always override the following methods:
  * equals(), hashCode() and copy(). If you are not sure about that, you can look at existing implementations.
+ *
+ * @author PantherCode
+ * @since 1.0
  */
 public interface Module extends Identifiable, Versionable {
 

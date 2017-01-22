@@ -16,7 +16,11 @@
 package org.panthercode.arctic.core.processing.modules;
 
 /**
+ * This class is used to handel exceptions in <tt>ModuleAllocator</tt> class
+ *
  * @author PantherCode
+ * @see ModuleAllocator
+ * @since 1.0
  */
 public class ModuleAllocationException extends RuntimeException {
     /**

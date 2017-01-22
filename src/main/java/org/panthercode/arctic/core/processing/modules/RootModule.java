@@ -23,6 +23,10 @@ import java.lang.annotation.RetentionPolicy;
  * Therefore it's always necessary to annotate the root element to indicate the right one. Every .jar file must contains
  * one and only one root element, also if the library contains only one module. Otherwise class loader will react with
  * an error, that the library doesn't contain any executable code and reject the .jar file.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RootModule {
