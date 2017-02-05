@@ -75,7 +75,7 @@ import java.util.TreeSet;
  * converting process will throw an <tt>IllegalArgumentException</tt>, because the binder doesn't know to handle it.
  *
  * @author PantherCode
- * @see Parameter
+ * @see CliParameter
  * @since 1.0
  */
 public class CliBinder {
@@ -131,10 +131,10 @@ public class CliBinder {
             throw new IllegalArgumentException("The class is unknown.");
         }
 
-        Parameter option;
+        CliParameter option;
 
         for (Method method : clazz.getDeclaredMethods()) {
-            option = method.getAnnotation(Parameter.class);
+            option = method.getAnnotation(CliParameter.class);
 
             if (option != null) {
                 if (!option.hasValue() && option.type().equals(Boolean.class)) {
@@ -245,11 +245,11 @@ public class CliBinder {
             Set<String> nameList = new TreeSet<String>();
             Set<Character> shortNameList = new TreeSet<>();
 
-            Parameter option;
+            CliParameter option;
 
             for (Class<?> c : this.classList) {
                 for (Method method : c.getDeclaredMethods()) {
-                    option = method.getAnnotation(Parameter.class);
+                    option = method.getAnnotation(CliParameter.class);
 
                     if (option != null) {
                         if (option.name().trim().isEmpty()) {

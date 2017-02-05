@@ -47,7 +47,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Parameter {
+public @interface CliParameter {
     /**
      * Returns the long name of commandline parameter. Usually it's introduced by <tt>--name</tt>.
      *
