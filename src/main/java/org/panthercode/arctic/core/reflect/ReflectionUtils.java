@@ -91,7 +91,7 @@ public class ReflectionUtils {
      */
     public static List<String> extractClassNamesFromJar(Path path)
             throws NullPointerException, IOException {
-        ArgumentUtils.assertNotNull(path, "path");
+        ArgumentUtils.checkNotNull(path, "path");
 
         JarFile jarFile = new JarFile(path.toString());
 
@@ -122,7 +122,7 @@ public class ReflectionUtils {
      */
     public static List<Class<?>> extractClassesFromJar(Path path)
             throws IOException, ClassNotFoundException, IllegalArgumentException {
-        ArgumentUtils.assertNotNull(path, "path");
+        ArgumentUtils.checkNotNull(path, "path");
 
         List<Class<?>> classList = new ArrayList<>();
 
@@ -146,8 +146,8 @@ public class ReflectionUtils {
      */
     public static List<Class<?>> filterClassList(final List<Class<?>> classList, final Class<?> filter)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(classList, "list");
-        ArgumentUtils.assertNotNull(filter, "filter");
+        ArgumentUtils.checkNotNull(classList, "list");
+        ArgumentUtils.checkNotNull(filter, "filter");
 
         final List<Class<?>> filteredList = new ArrayList<>();
 
@@ -171,8 +171,8 @@ public class ReflectionUtils {
     public static List<Class<?>> filterClassListByAnnotation(final List<Class<?>> classList,
                                                              final Class<? extends Annotation> filter)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(classList, "list");
-        ArgumentUtils.assertNotNull(filter, "filter");
+        ArgumentUtils.checkNotNull(classList, "list");
+        ArgumentUtils.checkNotNull(filter, "filter");
 
         final List<Class<?>> filteredList = new ArrayList<>();
 

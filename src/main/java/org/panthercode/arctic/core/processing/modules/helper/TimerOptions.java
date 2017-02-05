@@ -90,7 +90,7 @@ public class TimerOptions extends RepeaterOptions {
      * @param maximalDurationInMillis maximal duration of loop process
      */
     public void setMaximalDuration(long maximalDurationInMillis) {
-        ArgumentUtils.assertGreaterOrEqualsZero(maximalDurationInMillis, "maximal duration");
+        ArgumentUtils.checkGreaterOrEqualsZero(maximalDurationInMillis, "maximal duration");
 
         this.maximalDurationInMillis = maximalDurationInMillis;
     }

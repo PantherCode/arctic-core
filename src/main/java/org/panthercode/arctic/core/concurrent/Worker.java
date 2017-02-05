@@ -76,7 +76,7 @@ public class Worker implements Runnable {
      * @param threadCount number of working threads
      */
     public Worker(int threadCount) {
-        ArgumentUtils.assertGreaterZero(threadCount, "thread count");
+        ArgumentUtils.checkGreaterZero(threadCount, "thread count");
 
         this.threadCount = threadCount;
 

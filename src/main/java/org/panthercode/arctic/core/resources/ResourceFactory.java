@@ -58,7 +58,7 @@ public class ResourceFactory {
     }
 
     public static Resource create(Class<? extends AbstractResource> resourceClass, Configuration configuration, Semaphore<Priority> semaphore) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        ArgumentUtils.assertNotNull(resourceClass, "resource class");
+        ArgumentUtils.checkNotNull(resourceClass, "resource class");
 
         Resource resource = null;
 

@@ -40,7 +40,7 @@ public class VersionMapAllocator<K, V extends Versionable> {
      * @param map actual <tt>VersionMap</tt> object
      */
     public VersionMapAllocator(VersionMap<K, V> map) {
-        ArgumentUtils.assertNotNull(map, "map");
+        ArgumentUtils.checkNotNull(map, "map");
 
         this.versionMap = map;
     }
@@ -52,7 +52,7 @@ public class VersionMapAllocator<K, V extends Versionable> {
      * @return Returns <tt>true</tt> if the map contains the key; Otherwise <tt>false</tt>.
      */
     public boolean contains(Object key) {
-        ArgumentUtils.assertNotNull(key, "key");
+        ArgumentUtils.checkNotNull(key, "key");
 
         return this.versionMap.containsKey(key);
     }
@@ -65,8 +65,8 @@ public class VersionMapAllocator<K, V extends Versionable> {
      * @return Returns <tt>true</tt> if the map contains the object; Otherwise <tt>false</tt>.
      */
     public boolean contains(Object key, Version version) {
-        ArgumentUtils.assertNotNull(key, "key");
-        ArgumentUtils.assertNotNull(version, "version");
+        ArgumentUtils.checkNotNull(key, "key");
+        ArgumentUtils.checkNotNull(version, "version");
 
         return this.versionMap.contains(key, version);
     }
@@ -78,7 +78,7 @@ public class VersionMapAllocator<K, V extends Versionable> {
      * @return Returns the object if the map contains it; Otherwise <tt>null</tt>.
      */
     public V allocate(Object key) {
-        ArgumentUtils.assertNotNull(key, "key");
+        ArgumentUtils.checkNotNull(key, "key");
 
         return this.versionMap.get(key);
     }
@@ -91,8 +91,8 @@ public class VersionMapAllocator<K, V extends Versionable> {
      * @return Returns the object if the map contains it; Otherwise <tt>false</tt>.
      */
     public V allocate(Object key, Version version) {
-        ArgumentUtils.assertNotNull(key, "key");
-        ArgumentUtils.assertNotNull(version, "version");
+        ArgumentUtils.checkNotNull(key, "key");
+        ArgumentUtils.checkNotNull(version, "version");
 
         return this.versionMap.get(key, version);
     }

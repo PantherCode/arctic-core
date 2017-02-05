@@ -21,13 +21,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The <tt>CommandLineParameter</tt> annotation is used to read parameter from the command line automatically and call
- * the annotted setter function.
+ * The <tt>Parameter</tt> annotation is used to read parameter from the command line automatically and call
+ * the annotated setter function.
  * </p>
  * The following example combine the parameter <tt>--port</tt> or <tt>-p</tt> with the corresponding setter function:
  * <p>
  * <pre>
- * &#064;CommandLineParameter(name="port", shortName='p', hasValue=true, defaultValue="1234", type = Integer.class, description="used server port")
+ * &#064;Parameter(name="port", shortName='p', hasValue=true, defaultValue="1234", type = Integer.class, description="used server port")
  * public void setPort(int port){
  *     this.port = port;
  * }
@@ -35,19 +35,19 @@ import java.lang.annotation.Target;
  * Or to set flags:
  * * <p>
  * <pre>
- * &#064;CommandLineParameter(name="ssh", shortName='s', defaultValue="false", type = Boolean.class, description="use ssh for communication")
+ * &#064;Parameter(name="ssh", shortName='s', defaultValue="false", type = Boolean.class, description="use ssh for communication")
  * public void useSsh(boolean flag){
  *     this.useSsh = flag;
  * }
  * </pre>
  *
  * @author PantherCode
- * @see CommandLineBinder
+ * @see CliBinder
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface CommandLineParameter {
+public @interface Parameter {
     /**
      * Returns the long name of commandline parameter. Usually it's introduced by <tt>--name</tt>.
      *

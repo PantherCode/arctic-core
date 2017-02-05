@@ -71,15 +71,6 @@ public enum ProcessAction {
      *
      * @return Returns a string representing the process action.
      */
-    public String value() {
-        return this.value;
-    }
-
-    /**
-     * Returns a string representing the process action.
-     *
-     * @return Returns a string representing the process action.
-     */
     @Override
     public String toString() {
         return this.value;

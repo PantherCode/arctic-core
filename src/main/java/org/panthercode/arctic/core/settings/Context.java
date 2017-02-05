@@ -15,6 +15,8 @@
  */
 package org.panthercode.arctic.core.settings;
 
+import org.panthercode.arctic.core.arguments.ArgumentUtils;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -59,5 +61,11 @@ public class Context extends Hashtable<Object, Object> {
      */
     public Context(Map<? extends String, ? extends Object> map) {
         super(map);
+    }
+
+    public <T> T get(Object key, Class<T> returnType) {
+        ArgumentUtils.checkNotNull(returnType, "return type");
+
+        return returnType.cast(this.get(key));
     }
 }

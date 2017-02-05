@@ -127,8 +127,8 @@ public class Semaphores {
      */
     public static <T> Runnable addTo(Runnable runnable, Semaphore<T> semaphore, T semaphoreValue)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(runnable, "runnable");
-        ArgumentUtils.assertNotNull(semaphore, "semaphore");
+        ArgumentUtils.checkNotNull(runnable, "runnable");
+        ArgumentUtils.checkNotNull(semaphore, "semaphore");
 
         return new Runnable() {
             @Override

@@ -92,7 +92,7 @@ public class Version implements Freezable, Comparable<Version> {
      * @param info version class annotation
      */
     public Version(VersionInfo info) {
-        ArgumentUtils.assertNotNull(info, "version information");
+        ArgumentUtils.checkNotNull(info, "version information");
 
         this.set(info.major(), info.minor(), info.revision(), info.build());
     }
@@ -103,7 +103,7 @@ public class Version implements Freezable, Comparable<Version> {
      * @param version version object to copy
      */
     public Version(Version version) {
-        ArgumentUtils.assertNotNull(version, "version");
+        ArgumentUtils.checkNotNull(version, "version");
 
         this.set(version.majorNumber(), version.minorNumber(), version.revisionNumber(), version.buildNumber());
     }
@@ -200,7 +200,7 @@ public class Version implements Freezable, Comparable<Version> {
     public synchronized void set(final VersionField field, final int value)
             throws IllegalArgumentException {
         if (this.canModify) {
-            ArgumentUtils.assertGreaterOrEqualsZero(value, field.toString());
+            ArgumentUtils.checkGreaterOrEqualsZero(value, field.toString());
 
             switch (field) {
                 case MAJOR:
@@ -231,10 +231,10 @@ public class Version implements Freezable, Comparable<Version> {
     public synchronized void set(final int major, final int minor, final int build, final int revision)
             throws IllegalArgumentException {
         if (this.canModify) {
-            ArgumentUtils.assertGreaterOrEqualsZero(major, "major");
-            ArgumentUtils.assertGreaterOrEqualsZero(minor, "minor");
-            ArgumentUtils.assertGreaterOrEqualsZero(build, "build");
-            ArgumentUtils.assertGreaterOrEqualsZero(revision, "revision");
+            ArgumentUtils.checkGreaterOrEqualsZero(major, "major");
+            ArgumentUtils.checkGreaterOrEqualsZero(minor, "minor");
+            ArgumentUtils.checkGreaterOrEqualsZero(build, "build");
+            ArgumentUtils.checkGreaterOrEqualsZero(revision, "revision");
 
             this.major = major;
             this.minor = minor;

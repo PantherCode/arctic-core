@@ -22,16 +22,16 @@ import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
 /**
- * <tt>HttpClientOptions</tt> holds a set of http parameters to establish easily connections to a host machine (also via
+ * <tt>HttpClient</tt> holds a set of http parameters to establish easily connections to a host machine (also via
  * proxy if it's needed). The class also offers a set functions to create http packages.
  * <p>
  * Often you would like to connect with different paths or resource at same host. For this case you can set a default
  * host and call desired method with the specific path the resource is stored at the host machine
  * <pre>
  * {@code
- * HttpClientOptions options = ...
- *                              .setHost("http://www.example.org")
- *                              .build();
+ * HttpClient client = ...
+ *                     .setHost("http://www.example.org")
+ *                     .build();
  *
  * Response response1 = options.get().execute(); //GET request to http://www.example.org
  *
@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  * @author PantherCode
  * @since 1.0
  */
-public class HttpClientOptions {
+public class HttpClient {
 
     /**
      * default address of host machine
@@ -80,10 +80,10 @@ public class HttpClientOptions {
      * @param socketTimeoutInMillis     timeout for responding
      * @param connectionTimeoutInMillis timeout to connect
      */
-    private HttpClientOptions(URI host,
-                              URI proxy,
-                              int socketTimeoutInMillis,
-                              int connectionTimeoutInMillis) {
+    private HttpClient(URI host,
+                       URI proxy,
+                       int socketTimeoutInMillis,
+                       int connectionTimeoutInMillis) {
         this.setSocketTimeout(socketTimeoutInMillis);
         this.setConnectionTimeout(connectionTimeoutInMillis);
         this.setProxy(proxy);
@@ -95,8 +95,15 @@ public class HttpClientOptions {
      *
      * @return Returns a new instance of builder class.
      */
-    public static HttpClientOptionsBuilder create() {
-        return new HttpClientOptionsBuilder();
+    public static HttpClientBuilder create() {
+        return new HttpClientBuilder();
+    }
+
+    public HttpClient copy() {
+        return new HttpClient(this.host,
+                this.proxy,
+                this.socketTimeoutInMillis,
+                this.connectionTimeoutInMillis);
     }
 
     /**
@@ -116,7 +123,7 @@ public class HttpClientOptions {
      */
     public void setHost(URI host)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(host, "host");
+        ArgumentUtils.checkNotNull(host, "host");
 
         this.host = host;
     }
@@ -179,7 +186,7 @@ public class HttpClientOptions {
      */
     public void setSocketTimeout(int timeoutInMillis)
             throws IllegalArgumentException {
-        ArgumentUtils.assertGreaterOrEqualsZero(timeoutInMillis, "timeout");
+        ArgumentUtils.checkGreaterOrEqualsZero(timeoutInMillis, "timeout");
 
         this.socketTimeoutInMillis = timeoutInMillis;
     }
@@ -215,7 +222,7 @@ public class HttpClientOptions {
      */
     public void setConnectionTimeout(int timeoutInMillis)
             throws IllegalArgumentException {
-        ArgumentUtils.assertGreaterOrEqualsZero(timeoutInMillis, "timeout");
+        ArgumentUtils.checkGreaterOrEqualsZero(timeoutInMillis, "timeout");
 
         this.socketTimeoutInMillis = timeoutInMillis;
     }
@@ -230,10 +237,6 @@ public class HttpClientOptions {
     public void setConnectionTimeoutInMillis(int duration, TimeUnit unit) {
         this.setSocketTimeout((int) this.timeUnit.convert(duration, unit));
     }
-
-    //TODO: implement method to return client as HttpClient
-
-    //TODO: implement method to return proxy as HttpHost
 
     /**
      * Returns a new http post request.
@@ -251,7 +254,7 @@ public class HttpClientOptions {
      * @return Returns a new http post request.
      */
     public Request post(String uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.post(URI.create(uri));
     }
@@ -263,7 +266,7 @@ public class HttpClientOptions {
      * @return Returns a new http post request.
      */
     public Request post(URI uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.request(Request.Post(this.host.resolve(uri)));
     }
@@ -284,7 +287,7 @@ public class HttpClientOptions {
      * @return Returns a new http get request.
      */
     public Request get(String uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.get(URI.create(uri));
     }
@@ -296,7 +299,7 @@ public class HttpClientOptions {
      * @return Returns a new http get request.
      */
     public Request get(URI uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.request(Request.Get(this.host.resolve(uri)));
     }
@@ -317,7 +320,7 @@ public class HttpClientOptions {
      * @return Returns a new http options request.
      */
     public Request options(String uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.options(URI.create(uri));
     }
@@ -329,7 +332,7 @@ public class HttpClientOptions {
      * @return Returns a new http options request.
      */
     public Request options(URI uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.request(Request.Options(this.host.resolve(uri)));
     }
@@ -350,7 +353,7 @@ public class HttpClientOptions {
      * @return Returns a new http trace request.
      */
     public Request trace(String uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.trace(URI.create(uri));
     }
@@ -362,7 +365,7 @@ public class HttpClientOptions {
      * @return Returns a new http trace request.
      */
     public Request trace(URI uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.request(Request.Trace(this.host.resolve(uri)));
     }
@@ -383,7 +386,7 @@ public class HttpClientOptions {
      * @return Returns a new http put request.
      */
     public Request put(String uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.put(URI.create(uri));
     }
@@ -395,7 +398,7 @@ public class HttpClientOptions {
      * @return Returns a new http put request.
      */
     public Request put(URI uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.request(Request.Put(this.host.resolve(uri)));
     }
@@ -416,7 +419,7 @@ public class HttpClientOptions {
      * @return Returns a new http head request.
      */
     public Request head(String uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.head(URI.create(uri));
     }
@@ -428,7 +431,7 @@ public class HttpClientOptions {
      * @return Returns a new http head request.
      */
     public Request head(URI uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.request(Request.Head(this.host.resolve(uri)));
     }
@@ -449,7 +452,7 @@ public class HttpClientOptions {
      * @return Returns a new http patch request.
      */
     public Request patch(String uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.patch(URI.create(uri));
     }
@@ -461,7 +464,7 @@ public class HttpClientOptions {
      * @return Returns a new http patch request.
      */
     public Request patch(URI uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.request(Request.Patch(this.host.resolve(uri)));
     }
@@ -482,7 +485,7 @@ public class HttpClientOptions {
      * @return Returns a new http delete request.
      */
     public Request delete(String uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.delete(URI.create(uri));
     }
@@ -494,7 +497,7 @@ public class HttpClientOptions {
      * @return Returns a new http delete request.
      */
     public Request delete(URI uri) {
-        ArgumentUtils.assertNotNull(uri, "uri");
+        ArgumentUtils.checkNotNull(uri, "uri");
 
         return this.request(Request.Delete(this.host.resolve(uri)));
     }
@@ -518,7 +521,7 @@ public class HttpClientOptions {
     /**
      * Builder class to create instances of <tt>HttpClientOptions</tt> class.
      */
-    public static class HttpClientOptionsBuilder {
+    public static class HttpClientBuilder {
 
         /**
          * default address of host machine
@@ -548,7 +551,7 @@ public class HttpClientOptions {
         /**
          * Standard Constructor
          */
-        public HttpClientOptionsBuilder() {
+        public HttpClientBuilder() {
         }
 
         /**
@@ -557,7 +560,7 @@ public class HttpClientOptions {
          * @param host address of host machine
          * @return Returns the instance of builder with changed host.
          */
-        public HttpClientOptionsBuilder setHost(String host) {
+        public HttpClientBuilder setHost(String host) {
             return this.setHost(URI.create(host));
         }
 
@@ -567,7 +570,7 @@ public class HttpClientOptions {
          * @param host address of host machine
          * @return Returns the instance of builder with changed host.
          */
-        public HttpClientOptionsBuilder setHost(URI host) {
+        public HttpClientBuilder setHost(URI host) {
             this.host = host;
 
             return this;
@@ -579,7 +582,7 @@ public class HttpClientOptions {
          * @param proxy address  of proxy
          * @return RReturns the instance of builder with changed proxy.
          */
-        public HttpClientOptionsBuilder setProxy(String proxy) {
+        public HttpClientBuilder setProxy(String proxy) {
             return this.setProxy(URI.create(proxy));
         }
 
@@ -589,7 +592,7 @@ public class HttpClientOptions {
          * @param proxy address of proxy
          * @return Returns the instance of builder with changed proxy.
          */
-        public HttpClientOptionsBuilder setProxy(URI proxy) {
+        public HttpClientBuilder setProxy(URI proxy) {
             this.proxy = proxy;
 
             return this;
@@ -601,7 +604,7 @@ public class HttpClientOptions {
          * @param timeoutInMillis duration of timeout in millis
          * @return Returns the instance of builder with changed connection timeout.
          */
-        public HttpClientOptionsBuilder setConnectionTimeout(int timeoutInMillis) {
+        public HttpClientBuilder setConnectionTimeout(int timeoutInMillis) {
             this.connectionTimeoutInMillis = timeoutInMillis;
 
             return this;
@@ -614,7 +617,7 @@ public class HttpClientOptions {
          * @param unit     time unit of duration
          * @return Returns the instance of builder with change connection timeout.
          */
-        public HttpClientOptionsBuilder setConnectionTimeout(int duration, TimeUnit unit) {
+        public HttpClientBuilder setConnectionTimeout(int duration, TimeUnit unit) {
             this.connectionTimeoutInMillis = (int) this.timeUnit.convert((long) duration, unit);
 
             return this;
@@ -626,7 +629,7 @@ public class HttpClientOptions {
          * @param timeoutInMillis duration of timeout in millis
          * @return Returns the instance of builder with changed socket timeout.
          */
-        public HttpClientOptionsBuilder setSocketTimeout(int timeoutInMillis) {
+        public HttpClientBuilder setSocketTimeout(int timeoutInMillis) {
             this.socketTimeoutInMillis = timeoutInMillis;
 
             return this;
@@ -639,7 +642,7 @@ public class HttpClientOptions {
          * @param unit     time unit of duration
          * @return Returns the instance of builder with changed socket timeout.
          */
-        public HttpClientOptionsBuilder setSocketTimeout(int duration, TimeUnit unit) {
+        public HttpClientBuilder setSocketTimeout(int duration, TimeUnit unit) {
             this.socketTimeoutInMillis = (int) timeUnit.convert((long) duration, unit);
 
             return this;
@@ -690,8 +693,8 @@ public class HttpClientOptions {
          *
          * @return Returns a new instance of <tt>HttpClientOptions</tt> class.
          */
-        public HttpClientOptions build() {
-            return new HttpClientOptions(this.host,
+        public HttpClient build() {
+            return new HttpClient(this.host,
                     this.proxy,
                     this.socketTimeoutInMillis,
                     this.connectionTimeoutInMillis);

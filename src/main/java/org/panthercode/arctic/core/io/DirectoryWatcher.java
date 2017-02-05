@@ -70,7 +70,7 @@ public class DirectoryWatcher {
      * @throws IOException Is thrown if an error is occurred while creating <tt>DirectoryWatcher</tt> instance.
      */
     private DirectoryWatcher(long delayTimeInMillis) throws IOException {
-        ArgumentUtils.assertGreaterOrEqualsZero(delayTimeInMillis, "delay time");
+        ArgumentUtils.checkGreaterOrEqualsZero(delayTimeInMillis, "delay time");
 
         this.delayTimeInMillis = delayTimeInMillis;
 
@@ -109,9 +109,21 @@ public class DirectoryWatcher {
      * @throws IOException Is thrown if an error is occurred while creating new filesystem service.
      */
     public static DirectoryWatcher create(long duration, TimeUnit unit) throws IOException {
-        ArgumentUtils.assertNotNull(unit, "time unit");
+        ArgumentUtils.checkNotNull(unit, "time unit");
 
         return new DirectoryWatcher(unit.toMillis(duration));
+    }
+
+    public WatchKey register(Path path, Handler<DirectoryWatcherEvent> handler) throws IOException {
+        return this.register(Directory.open(path), handler, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+    }
+
+    public WatchKey register(Path path, Handler<DirectoryWatcherEvent> handler, WatchEvent.Kind<?>... kinds) throws IOException {
+        return this.register(Directory.open(path), handler, kinds);
+    }
+
+    public WatchKey[] registerTree(Path path, Handler<DirectoryWatcherEvent> handler) throws IOException {
+        return this.registerTree(Directory.open(path), handler);
     }
 
     /**
@@ -147,7 +159,7 @@ public class DirectoryWatcher {
      * @return Returns the corresponding <tt>WatchKey</tt>s of directory and its subdirectories.
      * @throws IOException Is thrown if an error is occurred while a directory's path is registered.
      */
-    public List<WatchKey> registerTree(Directory directory, Handler<DirectoryWatcherEvent> handler) throws IOException {
+    public WatchKey[] registerTree(Directory directory, Handler<DirectoryWatcherEvent> handler) throws IOException {
         WatchService service = FileSystems.getDefault().newWatchService();
 
         Iterator<Path> iterator = Files.walk(directory.toPath()).iterator();
@@ -162,7 +174,10 @@ public class DirectoryWatcher {
             }
         }
 
-        return watchKeyList;
+
+        WatchKey[] array = new WatchKey[watchKeyList.size()];
+
+        return watchKeyList.toArray(array);
     }
 
     /**
@@ -207,7 +222,7 @@ public class DirectoryWatcher {
 
                         Thread.sleep(delayTimeInMillis);
                     } catch (InterruptedException | IOException e) {
-                        throw new RuntimeException(e);
+                        throw new DirectoryWatcherException(e);
                     }
                 }
             }).start();

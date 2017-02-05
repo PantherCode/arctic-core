@@ -83,7 +83,7 @@ public class PlaceholderMap extends HashMap<Object, String> {
      */
     public void setPlaceholder(String placeholder)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(placeholder, "placeholder");
+        ArgumentUtils.checkNotNull(placeholder, "placeholder");
 
         this.placeholder = placeholder;
     }
@@ -105,7 +105,7 @@ public class PlaceholderMap extends HashMap<Object, String> {
      */
     public void setValue(String value)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(this.value, "value");
+        ArgumentUtils.checkNotNull(this.value, "value");
 
         this.value = value;
     }
@@ -150,8 +150,8 @@ public class PlaceholderMap extends HashMap<Object, String> {
      */
     public String get(Object key, String placeholder, String value)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(value, "value");
-        ArgumentUtils.assertNotNull(placeholder, "placeholder");
+        ArgumentUtils.checkNotNull(value, "value");
+        ArgumentUtils.checkNotNull(placeholder, "placeholder");
 
         String result = super.get(key);
 

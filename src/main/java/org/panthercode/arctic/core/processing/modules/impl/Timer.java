@@ -114,7 +114,7 @@ public class Timer extends Repeater {
      * @throws NullPointerException Is thrown if the value of unit is null.
      */
     public long getMaximalDuration(TimeUnit unit) {
-        ArgumentUtils.assertNotNull(unit, "time unit");
+        ArgumentUtils.checkNotNull(unit, "time unit");
 
         return unit.convert(this.getMaximalDuration(), this.timeUnit);
     }

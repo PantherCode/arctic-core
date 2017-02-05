@@ -85,7 +85,7 @@ public class RepeaterOptions {
      * @param delayTimeInMillis delay time after each loop step
      */
     public void setDelayTime(long delayTimeInMillis) {
-        ArgumentUtils.assertGreaterOrEqualsZero(delayTimeInMillis, "delay time");
+        ArgumentUtils.checkGreaterOrEqualsZero(delayTimeInMillis, "delay time");
 
         this.delayTimeInMillis = delayTimeInMillis;
     }

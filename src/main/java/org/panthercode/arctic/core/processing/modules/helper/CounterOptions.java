@@ -87,7 +87,7 @@ public class CounterOptions extends RepeaterOptions {
      * @param count maximal count of loop steps
      */
     public void setCount(int count) {
-        ArgumentUtils.assertGreaterOrEqualsZero(count, "count");
+        ArgumentUtils.checkGreaterOrEqualsZero(count, "count");
 
         this.count = count;
     }

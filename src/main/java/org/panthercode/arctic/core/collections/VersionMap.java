@@ -154,7 +154,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      */
     @Override
     public V put(K key, V value) {
-        ArgumentUtils.assertNotNull(value, "value");
+        ArgumentUtils.checkNotNull(value, "value");
 
         TreeMap<Version, V> tmpMap = this.containsKey(key) ? this.map.get(key) : new TreeMap<Version, V>();
 

@@ -159,7 +159,7 @@ public abstract class ModuleImpl implements Module {
      */
     public ModuleImpl(ModuleImpl module)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(module, "module");
+        ArgumentUtils.checkNotNull(module, "module");
 
         this.identity = Identity.generate(module.identity().getName(), module.identity().getGroup());
 

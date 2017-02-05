@@ -113,8 +113,8 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     public synchronized <T> T execute(String functionName, Class<T> returnType, Object... arguments) throws Exception {
-        ArgumentUtils.assertNotNull(functionName, "function name");
-        ArgumentUtils.assertNotNull(returnType, "return type");
+        ArgumentUtils.checkNotNull(functionName, "function name");
+        ArgumentUtils.checkNotNull(returnType, "return type");
 
         if (this.isOpen) {
             return ReflectionUtils.invokeMethod(this, functionName, returnType, arguments);

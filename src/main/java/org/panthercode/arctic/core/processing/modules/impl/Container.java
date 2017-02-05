@@ -120,7 +120,7 @@ public class Container extends ModuleImpl {
      * @param worker new worker the object is associated with
      */
     public synchronized void setWorker(final Module worker) {
-        ArgumentUtils.assertNotNull(worker, "worker");
+        ArgumentUtils.checkNotNull(worker, "worker");
 
         if (this.isReady()) {
             this.worker = worker;

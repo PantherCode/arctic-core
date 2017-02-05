@@ -83,7 +83,7 @@ public class ModuleFactory {
      * @throws InstantiationException    Is thrown if an error occurred while invoking constructor.
      */
     public static Module create(Class<? extends Module> moduleClass, Context context) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
-        ArgumentUtils.assertNotNull(moduleClass, "module class");
+        ArgumentUtils.checkNotNull(moduleClass, "module class");
 
         Module module = moduleClass.getConstructor().newInstance();
 

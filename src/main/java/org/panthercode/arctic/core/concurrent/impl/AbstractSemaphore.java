@@ -53,7 +53,7 @@ public abstract class AbstractSemaphore<T> implements Semaphore<T> {
      * @param allowedParalleledThreads maximal count of allowed threads running parallel
      */
     public AbstractSemaphore(int allowedParalleledThreads) {
-        ArgumentUtils.assertGreaterZero(allowedParalleledThreads, "allowed paralleled threads");
+        ArgumentUtils.checkGreaterZero(allowedParalleledThreads, "allowed paralleled threads");
 
         this.allowedParalleledThreads = this.counter = allowedParalleledThreads;
     }
