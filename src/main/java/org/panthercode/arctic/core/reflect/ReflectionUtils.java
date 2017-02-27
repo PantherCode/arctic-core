@@ -93,18 +93,18 @@ public class ReflectionUtils {
             throws NullPointerException, IOException {
         ArgumentUtils.checkNotNull(path, "path");
 
-        JarFile jarFile = new JarFile(path.toString());
-
         List<String> classNameList = new ArrayList<>();
 
-        Enumeration<JarEntry> entries = jarFile.entries();
+        try (JarFile jarFile = new JarFile(path.toString())) {
+            Enumeration<JarEntry> entries = jarFile.entries();
 
-        for (JarEntry currentEntry = entries.nextElement();
-             entries.hasMoreElements();
-             currentEntry = entries.nextElement()) {
-            if (currentEntry != null &&
-                    currentEntry.getName().endsWith(".class")) {
-                classNameList.add(currentEntry.getName().replace("/", ".").split("\\.class", 2)[0]);
+            for (JarEntry currentEntry = entries.nextElement();
+                 entries.hasMoreElements();
+                 currentEntry = entries.nextElement()) {
+                if (currentEntry != null &&
+                        currentEntry.getName().endsWith(".class")) {
+                    classNameList.add(currentEntry.getName().replace("/", ".").split("\\.class", 2)[0]);
+                }
             }
         }
 
@@ -127,10 +127,11 @@ public class ReflectionUtils {
         List<Class<?>> classList = new ArrayList<>();
 
         URL[] urlArray = {new URL("jar:file:" + path + "!/")};
-        URLClassLoader classLoader = new URLClassLoader(urlArray);
 
-        for (String className : ReflectionUtils.extractClassNamesFromJar(path)) {
-            classList.add(classLoader.loadClass(className));
+        try (URLClassLoader classLoader = new URLClassLoader(urlArray)) {
+            for (String className : ReflectionUtils.extractClassNamesFromJar(path)) {
+                classList.add(classLoader.loadClass(className));
+            }
         }
 
         return classList;
