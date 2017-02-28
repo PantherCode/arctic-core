@@ -16,6 +16,8 @@
 package org.panthercode.arctic.core.collections;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.collections.helper.Allocator;
+import org.panthercode.arctic.core.collections.helper.VersionMapAllocator;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.Versionable;
 
@@ -53,8 +55,6 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
     @Override
     public int size() {
         int size = 0;
-
-        TreeMap<Version, V> tmpMap = null;
 
         for (K key : this.map.keySet()) {
             size += this.map.get(key).size();
@@ -103,10 +103,11 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
     }
 
     //Todo: implement
+
     /**
      * Returns a flag that indicates whether the map contains a given object with specific version or not.
      *
-     * @param key key of object
+     * @param key     key of object
      * @param version version of object
      * @return Returns <tt>true</tt> if the map contain the given key; Otherwise <tt>false</tt>.
      */
@@ -153,7 +154,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      * @return Returns the old value or <tt>null</tt> if the map doesn't contain the object at given position.
      */
     @Override
-    public V put(K key, V value) {
+    public synchronized V put(K key, V value) {
         ArgumentUtils.checkNotNull(value, "value");
 
         TreeMap<Version, V> tmpMap = this.containsKey(key) ? this.map.get(key) : new TreeMap<Version, V>();
@@ -172,11 +173,11 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      * @return Returns the removed object or <tt>null</tt> if the map doesn't contains the object.
      */
     @Override
-    public V remove(Object key) {
+    public synchronized V remove(Object key) {
         return this.map.remove(key).lastEntry().getValue();
     }
 
-    public V remove(Object key, Version version) {
+    public synchronized V remove(Object key, Version version) {
         if (this.map.containsKey(key) && this.map.get(key).containsKey(version)) {
             return this.map.get(key).remove(version);
         }
@@ -190,7 +191,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      * @param m collection with objects
      */
     @Override
-    public void putAll(Map<? extends K, ? extends V> m) {
+    public synchronized void putAll(Map<? extends K, ? extends V> m) {
         if (m != null) {
             for (K key : m.keySet()) {
                 this.put(key, m.get(key));
@@ -202,7 +203,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      * Removes all elements from the map.
      */
     @Override
-    public void clear() {
+    public synchronized void clear() {
         this.map.clear();
     }
 
