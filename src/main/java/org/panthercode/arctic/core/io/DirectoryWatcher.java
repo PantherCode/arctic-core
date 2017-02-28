@@ -205,7 +205,7 @@ public class DirectoryWatcher {
                                 newEntryMap.put(Paths.get(source.toUri()), actualDirectoryWatchEntry.handler);
                             }
 
-                            actualDirectoryWatchEntry.handler().handle(new DirectoryWatcherEvent(source, event.kind()));
+                            actualDirectoryWatchEntry.handler().handle(new DirectoryWatcherEvent(source, WatchEventKind.valueOf(event.kind())));
                         }
 
                         key.reset();

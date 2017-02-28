@@ -18,7 +18,6 @@ package org.panthercode.arctic.core.io;
 import org.panthercode.arctic.core.helper.event.BasicEvent;
 
 import java.nio.file.Path;
-import java.nio.file.WatchEvent;
 
 /**
  * Event class are raised by <tt>DirectoryWatcher/tt> if an registered directory changed.
@@ -37,7 +36,7 @@ public class DirectoryWatcherEvent extends BasicEvent {
     /**
      * cause of event
      */
-    private WatchEvent.Kind<?> kind;
+    private WatchEventKind kind;
 
     /**
      * Constructor
@@ -45,7 +44,7 @@ public class DirectoryWatcherEvent extends BasicEvent {
      * @param source directory which raised the event
      * @param kind   cause of event
      */
-    public DirectoryWatcherEvent(Path source, WatchEvent.Kind kind) {
+    public DirectoryWatcherEvent(Path source, WatchEventKind kind) {
         super();
 
         this.source = source;
@@ -66,7 +65,7 @@ public class DirectoryWatcherEvent extends BasicEvent {
      *
      * @return Returns the cause of the event.
      */
-    public WatchEvent.Kind<?> kind() {
+    public WatchEventKind kind() {
         return this.kind;
     }
 }
