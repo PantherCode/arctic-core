@@ -27,7 +27,7 @@ import org.panthercode.arctic.core.helper.version.Versionable;
  * @see VersionMap
  * @since 1.0
  */
-public class VersionMapAllocator<K, V extends Versionable> {
+public class VersionMapAllocator<K, V extends Versionable> implements Allocator<K, V> {
 
     /**
      * actual instance of VersionMap
@@ -51,6 +51,7 @@ public class VersionMapAllocator<K, V extends Versionable> {
      * @param key key to check
      * @return Returns <tt>true</tt> if the map contains the key; Otherwise <tt>false</tt>.
      */
+    @Override
     public boolean contains(Object key) {
         ArgumentUtils.checkNotNull(key, "key");
 
@@ -58,12 +59,13 @@ public class VersionMapAllocator<K, V extends Versionable> {
     }
 
     /**
-     * Returns a flaf that indicates whether the map contains a given object with a specific version or not.
+     * Returns a flag that indicates whether the map contains a given object with a specific version or not.
      *
      * @param key     key to check
      * @param version version of searched object
      * @return Returns <tt>true</tt> if the map contains the object; Otherwise <tt>false</tt>.
      */
+    @Override
     public boolean contains(Object key, Version version) {
         ArgumentUtils.checkNotNull(key, "key");
         ArgumentUtils.checkNotNull(version, "version");
@@ -71,12 +73,14 @@ public class VersionMapAllocator<K, V extends Versionable> {
         return this.versionMap.contains(key, version);
     }
 
+
     /**
      * Returns the object which is represented by given key.
      *
      * @param key key of object
      * @return Returns the object if the map contains it; Otherwise <tt>null</tt>.
      */
+    @Override
     public V allocate(Object key) {
         ArgumentUtils.checkNotNull(key, "key");
 
@@ -90,6 +94,7 @@ public class VersionMapAllocator<K, V extends Versionable> {
      * @param version version of object
      * @return Returns the object if the map contains it; Otherwise <tt>false</tt>.
      */
+    @Override
     public V allocate(Object key, Version version) {
         ArgumentUtils.checkNotNull(key, "key");
         ArgumentUtils.checkNotNull(version, "version");
