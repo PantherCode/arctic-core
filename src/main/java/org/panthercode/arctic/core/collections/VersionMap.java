@@ -23,7 +23,7 @@ import org.panthercode.arctic.core.helper.version.Versionable;
 
 import java.util.*;
 
-//TODO: add mehtod to get all versions of an object
+//TODO: process mehtod to get all versions of an object
 
 /**
  * The <tt>VersionMap</tt> stores a set of objects with its version.

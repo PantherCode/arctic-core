@@ -17,8 +17,6 @@ package org.panthercode.arctic.core.processing.modules.impl;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.event.Event;
-import org.panthercode.arctic.core.helper.event.Handler;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.processing.ProcessException;
@@ -26,15 +24,13 @@ import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.Context;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 
 //TODO: update documentation
 
 /**
- * The Abstract Module class is the root element in inheritance hierarchy. This module contains basic functionality all
+ * The Abstract Module class is the root element in inheritance hierarchy. This module containsHandler basic functionality all
  * further child modules have together like getter functions to indicate inner state, identity, version, and some more.
  * <p>
  * All modules, which inherit directly or indirectly from this class, share the same state automate for phase
@@ -71,7 +67,7 @@ import java.util.List;
  * down.
  * <p>
  * Modules are designed for usage in multi-threaded environments. Therefore all setter or inner member manipulating
- * functions signatures use <tt>synchronized</tt> keyword. If you override an method or add your own code, you should
+ * functions signatures use <tt>synchronized</tt> keyword. If you override an method or process your own code, you should
  * do same to avoid incorrect behavior of object at runtime.
  * <p>
  * Please read the documentation of child modules. If you inherit from any class, inherit always from the most
@@ -106,7 +102,7 @@ public abstract class ModuleImpl implements Module {
     /**
      * Actual PrcessStateHandler to handle state transitions
      */
-    private List<Handler<Event<ProcessState>>> processStateHandlers = new ArrayList<>();
+    //private List<Handler<EventOld<ProcessState>>> processStateHandlers = new ArrayList<>();
 
     /**
      * Contains all allowed process state changes.
@@ -219,23 +215,23 @@ public abstract class ModuleImpl implements Module {
      *
      * @return Returns the actual <tt>ProcessStateHandler</tt> the object is associated with.
      */
-    public synchronized boolean addProcessStateHandler(Handler<Event<ProcessState>> handler) {
-        return this.processStateHandlers.add(handler);
-    }
+    //public synchronized boolean addProcessStateHandler(Handler<EventOld<ProcessState>> handler) {
+    //    return this.processStateHandlers.add(handler);
+    //}
 
     /**
      * Set a new <tt>ProcessStatusHandler</tt> the object is associated with.
      *
      * @param handler new handler
      */
-    public synchronized boolean removeProcessStateHandler(Handler<Event<ProcessState>> handler) {
-        return this.processStateHandlers.remove(handler);
-    }
+    //public synchronized boolean removeProcessStateHandler(Handler<EventOld<ProcessState>> handler) {
+    //    return this.processStateHandlers.remove(handler);
+    //}
 
-    public List<Handler<Event<ProcessState>>> processStateHandlers() {
+    //public List<Handler<EventOld<ProcessState>>> processStateHandlers() {
 
-        return new ArrayList<>(this.processStateHandlers);
-    }
+    //    return new ArrayList<>(this.processStateHandlers);
+    //}
 
     /**
      * Returns the inner state the object is associated with.
@@ -369,7 +365,7 @@ public abstract class ModuleImpl implements Module {
     public abstract ModuleImpl copy() throws UnsupportedOperationException;
 
     /**
-     * Returns a string representation of the object. The representation contains the id, name and group name.
+     * Returns a string representation of the object. The representation containsHandler the id, name and group name.
      *
      * @return Returns a string representation of the object.
      */
@@ -379,7 +375,7 @@ public abstract class ModuleImpl implements Module {
     }
 
     /**
-     * Helper function to fill a map with all allowed state changes. The map contains all state-pairs from table above,
+     * Helper function to fill a map with all allowed state changes. The map containsHandler all state-pairs from table above,
      * which transition reutrns <tt>true</tt>.
      * <p>
      * If you override this method, also override canChangeState() method to avoid wrong behavior of object at runtime!
@@ -423,11 +419,11 @@ public abstract class ModuleImpl implements Module {
 
             this.actualState = newState;
 
-            for (Handler<Event<ProcessState>> handler : this.processStateHandlers) {
-                Event<ProcessState> event = new Event<>(this, oldState, this.actualState);
+            //for (Handler<EventOld<ProcessState>> handler : this.processStateHandlers) {
+            //    EventOld<ProcessState> event = new EventOld<>(this, oldState, this.actualState);
 
-                handler.handle(event);
-            }
+            //    handler.handle(event);
+            //          }
 
             return true;
         }

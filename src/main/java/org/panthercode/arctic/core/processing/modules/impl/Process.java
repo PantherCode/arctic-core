@@ -25,7 +25,7 @@ import org.panthercode.arctic.core.settings.Context;
 import java.util.Iterator;
 
 /**
- * The Process class runs one element after another.
+ * The Process class runs one element afterRun another.
  *
  * @author PantherCode
  * @see Module
@@ -119,7 +119,7 @@ public class Process extends Bundle {
     }
 
     /**
-     * Stops the actual process. It's not guaranteed that process stops immediately, but after finishing actual module.
+     * Stops the actual process. It's not guaranteed that process stops immediately, but afterRun finishing actual module.
      * Calls actual module's <tt>stop()</tt> method.
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while stopping process.

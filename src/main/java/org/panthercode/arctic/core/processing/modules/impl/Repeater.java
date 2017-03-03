@@ -251,14 +251,14 @@ public abstract class Repeater extends ModuleImpl {
     }
 
     /**
-     * This method will be called before loop process starts.
+     * This method will be called beforeRun loop process starts.
      */
     public synchronized void before()
             throws ProcessException {
     }
 
     /**
-     * This method will be called after loop process finished.
+     * This method will be called afterRun loop process finished.
      */
     public synchronized void after()
             throws ProcessException {

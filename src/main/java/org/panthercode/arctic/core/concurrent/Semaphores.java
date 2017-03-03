@@ -17,7 +17,7 @@ package org.panthercode.arctic.core.concurrent;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.concurrent.impl.*;
-import org.panthercode.arctic.core.helper.priority.Priority;
+import org.panthercode.arctic.core.processing.priority.Priority;
 
 /**
  * Utility class to create <tt>Semaphore</tt> classes.

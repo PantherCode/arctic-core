@@ -31,11 +31,11 @@ package org.panthercode.arctic.core.concurrent;
  * which shall controlled before enter a critical section.
  * <p>
  * Semaphores are used to handle critical sections created by a limited amount of resources. If instead every thread is
- * independent, but you want to limit the number of paralleled running threads, than use the <tt>Worker</tt> class in
+ * independent, but you want to limit the number of paralleled running threads, than use the <tt>WorkerOld</tt> class in
  * combination with <tt>Tasks</tt>.
  *
  * @author PantherCode
- * @see Worker
+ * @see WorkerOld
  * @see Task
  * @since 1.0
  */

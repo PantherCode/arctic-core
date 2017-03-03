@@ -21,6 +21,7 @@ import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.io.Directory;
+import org.panthercode.arctic.core.runtime.plugins.PluginManager;
 import org.panthercode.arctic.core.settings.Settings;
 
 import java.io.FileNotFoundException;
@@ -55,12 +56,19 @@ public abstract class Application {
     private final Version version;
 
     /**
+     *
+     */
+    private final PluginManager pluginManager;
+
+    /**
      * Default Constructor
      */
     protected Application() {
         this.identity = Identity.fromAnnotation(this.getClass());
 
         this.version = Version.fromAnnotation(this.getClass());
+
+        this.pluginManager = new PluginManager();
     }
 
     /**
@@ -180,22 +188,26 @@ public abstract class Application {
     /**
      * Method to start the application.
      *
-     * @param app  actual instance of an application class
-     * @param args (commandline) arguments
+     * @param application actual instance of an application class
+     * @param args        (commandline) arguments
      */
-    public static void startUp(Application app, String[] args) {
-        ArgumentUtils.checkNotNull(app, "application");
+    public static void start(Application application, String[] args) {
+        ArgumentUtils.checkNotNull(application, "application");
 
-        instance = app;
+        instance = application;
 
         args = args == null ? new String[0] : args;
 
         try {
-            app.run(args);
+            application.beforeRun(args);
+
+            application.run(args);
+
+            application.afterRun();
         } catch (ShutdownException e) {
-            app.shutdownHandler(e);
+            application.shutdownHandler(e);
         } catch (Exception e) {
-            app.exceptionHandler(e);
+            application.exceptionHandler(e);
         }
     }
 
@@ -223,8 +235,14 @@ public abstract class Application {
         return clazz.cast(current());
     }
 
+    public void beforeRun(String[] args) throws Exception {
+    }
+
+    public void afterRun() throws Exception {
+    }
+
     /**
-     * Method with functionality, that will executed after starting the application.
+     * Method with functionality, that will executed afterRun starting the application.
      *
      * @param args (commandline) arguments
      * @throws Exception Is thrown if an error is occurred at runtime.

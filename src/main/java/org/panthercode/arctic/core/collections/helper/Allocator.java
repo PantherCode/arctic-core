@@ -4,6 +4,8 @@ import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.Versionable;
 
 /**
+ * TODO: implement AllocationException
+ *
  * Created by architect on 27.02.17.
  */
 public interface Allocator<V, K extends Versionable> {

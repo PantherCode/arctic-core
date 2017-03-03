@@ -80,6 +80,42 @@ public class Configuration extends Properties {
         return returnType.cast(this.get(key));
     }
 
+    public int getInteger(Object key) {
+        return this.get(key, Integer.class);
+    }
+
+    public String getString(Object key) {
+        return this.get(key, String.class);
+    }
+
+    public boolean getBoolean(Object key) {
+        return this.get(key, Boolean.class);
+    }
+
+    public double getDouble(Object key) {
+        return this.get(key, Double.class);
+    }
+
+    public byte getByte(Object key) {
+        return this.get(key, Byte.class);
+    }
+
+    public float getFloat(Object key) {
+        return this.get(key, Float.class);
+    }
+
+    public long getLong(Object key) {
+        return this.get(key, Long.class);
+    }
+
+    public short getShort(Object key) {
+        return this.get(key, Short.class);
+    }
+
+    public Character getCharater(Object key) {
+        return this.get(key, Character.class);
+    }
+
     /**
      * Returns the comment for this configuration.
      *

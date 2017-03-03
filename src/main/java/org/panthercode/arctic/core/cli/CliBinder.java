@@ -66,7 +66,7 @@ import java.util.TreeSet;
  *      System.out.println(person.getAge()) //print 50
  * }
  * </pre>
- * If the commandline contains a unknown parameter the parsing process will fail with an exception. The list of allowed
+ * If the commandline containsHandler a unknown parameter the parsing process will fail with an exception. The list of allowed
  * parameters is the sum of annotated setter functions in each class. It's possible to bind as much classes you want,
  * but each name of each parameter must be unique.
  * <p>

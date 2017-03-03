@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.helper.event;
+package org.panthercode.arctic.core.processing.priority;
 
-import org.panthercode.arctic.core.helper.event.Event;
+import java.util.Comparator;
 
 /**
- * This interface is used to check or handle results of operations or processes asynchronously.
- * <p>
- * If you use <tt>Handler</tt> interface to control before and after state of an event, its
- * useful to capsule this information in an event class.
+ * Comparator class for priorities.
  *
  * @author PantherCode
- * @see Event
- * @since 1.0
+ * @see Priority
+ * @since  1.0
  */
-public interface Handler<E> {
+public class PriorityComparator implements Comparator<Priority> {
 
     /**
-     * This function is called to commit changes to handler class.
+     * Compares two <tt>Priority</tt> objects
      *
-     * @param e event data
+     * @param first first priority object
+     * @param other second priority object
+     * @return TODO: documentation
      */
-    void handle(E e);
+    @Override
+    public int compare(Priority first, Priority other) {
+        return other.toInteger() - first.toInteger();
+    }
 }

@@ -27,7 +27,7 @@ import org.panthercode.arctic.core.settings.Context;
 
 /**
  * A module is the basic unit for execution. It provides a little set of functionality for controlling and handling the
- * object at runtime. The concrete implementation should always contains a coherent inner state model, that
+ * object at runtime. The concrete implementation should always containsHandler a coherent inner state model, that
  * change the state corresponding to the actual phase of the object.
  * <p>
  * For better safety there is no setter function to change the inner process state directly. Instead changes should
@@ -41,7 +41,7 @@ import org.panthercode.arctic.core.settings.Context;
  * Although the <tt>ProcessState</tt> enumeration provides some more possible states, the module provides only a
  * meaningful subset to maintain processing by default.
  * <p>
- * To handle all kind of exceptions an implementation can bring with, important functions contains the general <tt>
+ * To handle all kind of exceptions an implementation can bring with, important functions containsHandler the general <tt>
  * Exception</tt> class type. It's a little bit ugly to handle with and in some cases it's annoying to extract the right
  * one. But on the hand this way still grantees a consistent handling of all kinds of exceptions and prevent annoying
  * compiler errors while overriding methods.
@@ -81,7 +81,7 @@ import org.panthercode.arctic.core.settings.Context;
  * }
  * }
  * </pre>
- * By default a module is not thread safe programmed. If this requirement is necessary you should add <tt>synchronized
+ * By default a module is not thread safe programmed. If this requirement is necessary you should process <tt>synchronized
  * </tt> to function signature of all inner field manipulating methods and <tt>copy()</tt>.
  * <p>
  * If you implement this interface or inherit from a module class, you should always override the following methods:

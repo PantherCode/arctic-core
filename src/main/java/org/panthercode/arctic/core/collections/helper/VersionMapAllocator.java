@@ -46,10 +46,10 @@ public class VersionMapAllocator<K, V extends Versionable> implements Allocator<
     }
 
     /**
-     * Returns a flag that indicates whether the map contains the given key or not.
+     * Returns a flag that indicates whether the map containsHandler the given key or not.
      *
      * @param key key to check
-     * @return Returns <tt>true</tt> if the map contains the key; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if the map containsHandler the key; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean contains(Object key) {
@@ -59,11 +59,11 @@ public class VersionMapAllocator<K, V extends Versionable> implements Allocator<
     }
 
     /**
-     * Returns a flag that indicates whether the map contains a given object with a specific version or not.
+     * Returns a flag that indicates whether the map containsHandler a given object with a specific version or not.
      *
      * @param key     key to check
      * @param version version of searched object
-     * @return Returns <tt>true</tt> if the map contains the object; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if the map containsHandler the object; Otherwise <tt>false</tt>.
      */
     @Override
     public boolean contains(Object key, Version version) {
@@ -78,7 +78,7 @@ public class VersionMapAllocator<K, V extends Versionable> implements Allocator<
      * Returns the object which is represented by given key.
      *
      * @param key key of object
-     * @return Returns the object if the map contains it; Otherwise <tt>null</tt>.
+     * @return Returns the object if the map containsHandler it; Otherwise <tt>null</tt>.
      */
     @Override
     public V allocate(Object key) {
@@ -92,7 +92,7 @@ public class VersionMapAllocator<K, V extends Versionable> implements Allocator<
      *
      * @param key     key of object
      * @param version version of object
-     * @return Returns the object if the map contains it; Otherwise <tt>false</tt>.
+     * @return Returns the object if the map containsHandler it; Otherwise <tt>false</tt>.
      */
     @Override
     public V allocate(Object key, Version version) {

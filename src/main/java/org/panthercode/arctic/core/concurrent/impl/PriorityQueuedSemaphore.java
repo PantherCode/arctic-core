@@ -15,8 +15,8 @@
  */
 package org.panthercode.arctic.core.concurrent.impl;
 
-import org.panthercode.arctic.core.helper.priority.Priority;
-import org.panthercode.arctic.core.helper.priority.PriorityComparator;
+import org.panthercode.arctic.core.processing.priority.Priority;
+import org.panthercode.arctic.core.processing.priority.PriorityComparator;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;

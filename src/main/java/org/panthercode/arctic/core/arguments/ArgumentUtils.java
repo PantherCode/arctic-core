@@ -21,8 +21,8 @@ import com.google.common.base.Strings;
 import java.util.Collection;
 
 /**
- * This class contains functions to check arguments, whether they have a valid value. It's useful to asserting valid
- * value of (method) parameters before using those for processing.
+ * This class containsHandler functions to check arguments, whether they have a valid value. It's useful to asserting valid
+ * value of (method) parameters beforeRun using those for processing.
  * <p>
  * Based on Google's Guava <tt>Preconditions</tt> class
  *

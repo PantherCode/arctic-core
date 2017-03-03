@@ -81,7 +81,7 @@ public abstract class Bundle extends ModuleImpl {
      *
      * @param bundle object to copy
      * @throws UnsupportedOperationException Is thrown if a module in bundle doesn't support cloning.
-     * @throws NullPointerException          Is thrown if the bundle contains a null element or parameter is null.
+     * @throws NullPointerException          Is thrown if the bundle containsHandler a null element or parameter is null.
      */
     public Bundle(final Bundle bundle)
             throws UnsupportedOperationException, NullPointerException {
@@ -210,7 +210,7 @@ public abstract class Bundle extends ModuleImpl {
      * Returns a module by its identity id.
      *
      * @param moduleId identity id of module
-     * @return Returns the corresponding module to the given id if bundle contains the element; Otherwise <tt>null</tt>.
+     * @return Returns the corresponding module to the given id if bundle containsHandler the element; Otherwise <tt>null</tt>.
      */
     public Module module(final long moduleId) {
         for (Module module : this.modules) {
@@ -230,20 +230,20 @@ public abstract class Bundle extends ModuleImpl {
     }
 
     /**
-     * Checks whether the bundle contains the given module or not.
+     * Checks whether the bundle containsHandler the given module or not.
      *
      * @param module module to check
-     * @return Returns <tt>true</tt> if bundle contains the module; Otherwies <tt>false</tt>.
+     * @return Returns <tt>true</tt> if bundle containsHandler the module; Otherwies <tt>false</tt>.
      */
     public boolean contains(final Module module) {
         return this.modules.contains(module);
     }
 
     /**
-     * Checks by identity id if the bundle contains the searched module or not.
+     * Checks by identity id if the bundle containsHandler the searched module or not.
      *
      * @param moduleId identity id of module
-     * @return Returns <tt>true</tt> if bundle contains the module; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if bundle containsHandler the module; Otherwise <tt>false</tt>.
      */
     public boolean contains(final long moduleId) {
         return this.module(moduleId) != null;

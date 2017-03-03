@@ -16,7 +16,7 @@
 package org.panthercode.arctic.core.resources;
 
 import org.panthercode.arctic.core.helper.identity.Identifiable;
-import org.panthercode.arctic.core.helper.priority.Priority;
+import org.panthercode.arctic.core.processing.priority.Priority;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.settings.Configurable;
 

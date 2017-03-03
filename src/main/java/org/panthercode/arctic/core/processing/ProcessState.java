@@ -68,6 +68,11 @@ public enum ProcessState {
     SUCCEEDED("Succeeded"),
 
     /**
+     * The actual state is unknown.
+     */
+    UNKNOWN("Unknown"),
+
+    /**
      * The object's execution is interrupted for short time by some reason.
      */
     WAITING("Waiting");

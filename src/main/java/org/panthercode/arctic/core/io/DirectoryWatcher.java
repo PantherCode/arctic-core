@@ -16,23 +16,27 @@
 package org.panthercode.arctic.core.io;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.event.Handler;
+import org.panthercode.arctic.core.event.Event;
+import org.panthercode.arctic.core.event.EventHandler;
+import org.quartz.*;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static java.nio.file.StandardWatchEventKinds.*;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 /**
  * Class to observe activities of directories in the filesystem.
  *
  * @author PantherCode
- * @see DirectoryWatcherEvent
  * @since 1.0
  */
-public class DirectoryWatcher {
+public class DirectoryWatcher implements Runnable {
 
     /**
      * flag to indicate whether the watcher is running or not
@@ -40,19 +44,31 @@ public class DirectoryWatcher {
     private boolean isRunning = false;
 
     /**
-     * delay time  after each loop run
+     * delay time  afterRun each loop run
      */
     private long delayTimeInMillis = 1000L;
 
     /**
      * map to store all observed directories
      */
-    private Map<WatchKey, DirectoryWatcherEntry> entries;
+    private Map<Path, WatcherEntry> registeredPathsMap;
 
     /**
      * watch service of filesystem
      */
     private WatchService service = null;
+
+    private Event<WatcherEventArgs> entryEvent = null;
+
+    private Event<WatcherEventArgs> entryCreateEvent = null;
+
+    private Event<WatcherEventArgs> entryModifyEvent = null;
+
+    private Event<WatcherEventArgs> entryDeleteEvent = null;
+
+    private Event<WatcherRegistryEventArgs> entryRegistryEvent = null;
+
+    private Event<WatcherRegistryEventArgs> entryRemoveEvent = null;
 
     /**
      * Standard Constructor
@@ -74,7 +90,7 @@ public class DirectoryWatcher {
 
         this.delayTimeInMillis = delayTimeInMillis;
 
-        this.entries = new HashMap<>();
+        this.registeredPathsMap = new HashMap<>();
 
         this.service = FileSystems.getDefault().newWatchService();
     }
@@ -92,7 +108,7 @@ public class DirectoryWatcher {
     /**
      * Creates a new instance of <tt>DirectoryWatcher</tt> class.
      *
-     * @param delayTimeInMillis delay time after each look up the event loop
+     * @param delayTimeInMillis delay time afterRun each look up the event loop
      * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
      * @throws IOException Is thrown if an error occurred while creating new filesystem service.
      */
@@ -103,7 +119,7 @@ public class DirectoryWatcher {
     /**
      * Creates a new instance of <tt>DirectoryWatcher</tt> class.
      *
-     * @param duration duration of delay time after each look up the event loop
+     * @param duration duration of delay time afterRun each look up the event loop
      * @param unit     time unit of duration
      * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
      * @throws IOException Is thrown if an error is occurred while creating new filesystem service.
@@ -114,70 +130,126 @@ public class DirectoryWatcher {
         return new DirectoryWatcher(unit.toMillis(duration));
     }
 
-    public WatchKey register(Path path, Handler<DirectoryWatcherEvent> handler) throws IOException {
-        return this.register(Directory.open(path), handler, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+    public synchronized boolean register(Directory directory)
+            throws IOException {
+        return directory != null && this.register(directory.toPath());
     }
 
-    public WatchKey register(Path path, Handler<DirectoryWatcherEvent> handler, WatchEvent.Kind<?>... kinds) throws IOException {
-        return this.register(Directory.open(path), handler, kinds);
+    public synchronized boolean register(Directory directory, boolean recursive)
+            throws IOException {
+        return directory != null && this.register(directory.toPath(), recursive);
     }
 
-    public WatchKey[] registerTree(Path path, Handler<DirectoryWatcherEvent> handler) throws IOException {
-        return this.registerTree(Directory.open(path), handler);
+    public synchronized boolean register(Directory directory, boolean recursive, EventHandler<WatcherEventArgs> eventHandler)
+            throws IOException {
+        return directory != null && this.register(directory.toPath(), recursive, eventHandler);
     }
 
-    /**
-     * Register a new directory for observing.
-     *
-     * @param directory directory to observe
-     * @param handler   event handler
-     * @return Returns the corresponding <tt>WatchKey</tt> of registered directory.
-     * @throws IOException Is thrown if an error is occurred while directory's path is registered.
-     */
-    public WatchKey register(Directory directory, Handler<DirectoryWatcherEvent> handler) throws IOException {
-        return this.register(directory, handler, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+    public synchronized boolean register(Path path) throws IOException {
+        return this.register(path, false);
     }
 
-    /**
-     * Register a new directory for observing.
-     *
-     * @param directory directory to observe
-     * @param handler   event handler
-     * @param kinds     triggers for raising events
-     * @return Returns the corresponding <tt>WatchKey</tt> of registered directory.
-     * @throws IOException Is thrown if an error is occurred while directory's path is registered.
-     */
-    public WatchKey register(Directory directory, Handler<DirectoryWatcherEvent> handler, WatchEvent.Kind<?>... kinds) throws IOException {
-        return this.register(directory.toPath(), handler, false, kinds);
+    public synchronized boolean register(Path path, boolean recursive) throws IOException {
+        return this.register(path, recursive, null);
     }
 
-    /**
-     * Register a directory and its subdirectories for observing.
-     *
-     * @param directory directory to observe
-     * @param handler   event handler
-     * @return Returns the corresponding <tt>WatchKey</tt>s of directory and its subdirectories.
-     * @throws IOException Is thrown if an error is occurred while a directory's path is registered.
-     */
-    public WatchKey[] registerTree(Directory directory, Handler<DirectoryWatcherEvent> handler) throws IOException {
-        WatchService service = FileSystems.getDefault().newWatchService();
-
-        Iterator<Path> iterator = Files.walk(directory.toPath()).iterator();
-
-        List<WatchKey> watchKeyList = new ArrayList<>();
-
-        if (iterator.hasNext()) {
-            for (Path p = iterator.next(); iterator.hasNext(); p = iterator.next()) {
-                if (Files.isDirectory(p)) {
-                    watchKeyList.add(this.register(directory.toPath(), handler, true, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY));
-                }
-            }
+    public synchronized boolean register(Path path, boolean recursive, EventHandler<WatcherEventArgs> eventHandler) throws IOException {
+        if (path == null) {
+            return false;
         }
 
+        if (recursive) {
+            Iterator<Path> iterator = Files.walk(path).iterator();
 
-        WatchKey[] array = new WatchKey[watchKeyList.size()];
+            if (iterator.hasNext()) {
+                for (Path p = iterator.next(); iterator.hasNext(); p = iterator.next()) {
+                    if (Files.isDirectory(p)) {
+                        this.createWatcherEntry(path, recursive, eventHandler);
+                    }
+                }
+            }
+        } else {
+            this.createWatcherEntry(path, recursive, eventHandler);
+        }
 
-        return watchKeyList.toArray(array);
+        return true;
+    }
+
+    public boolean isRegistered(Path path) {
+        return this.registeredPathsMap.containsKey(path);
+    }
+
+    public synchronized boolean remove(Path path) {
+        if (this.registeredPathsMap.containsKey(path)) {
+            WatcherEntry oldEntry = this.registeredPathsMap.remove(path);
+
+            this.entryRemoveEvent.raise(this, new WatcherRegistryEventArgs(oldEntry.watchKey, oldEntry.path(), oldEntry.isRecursive(), oldEntry.hasEventHandler()));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public Path[] registeredPaths() {
+        Path[] paths = new Path[this.registeredPathsMap.size()];
+
+        return this.registeredPathsMap.keySet().toArray(paths);
+    }
+
+    public synchronized void run() {
+        Map<Path, EventHandler<WatcherEventArgs>> newEntries = new HashMap<>();
+        Path path;
+        WatchEventKind kind;
+
+        for (WatcherEntry entry : registeredPathsMap.values()) {
+            for (WatchEvent event : entry.watchKey().pollEvents()) {
+                kind = WatchEventKind.valueOf(event.kind());
+
+                path = entry.path().resolve(event.context().toString());
+
+                if (kind == WatchEventKind.CREATE && Files.isDirectory(path) && entry.isRecursive()) {
+                    newEntries.put(path, entry.eventHandler());
+                }
+
+                WatcherEventArgs e = new WatcherEventArgs(path, kind, entry.eventHandler != null, entry.isRecursive());
+
+                if (entry.hasEventHandler()) {
+                    entry.eventHandler().handle(this, e);
+                } else {
+                    switch (kind) {
+                        case CREATE:
+                            entryCreateEvent.raise(this, e);
+                            break;
+                        case DELETE:
+                            entryDeleteEvent.raise(this, e);
+                            break;
+                        case MODIFY:
+                            entryModifyEvent.raise(this, e);
+                            break;
+                        default:
+                            break;
+                    }
+
+                    entryEvent.raise(this, e);
+                }
+            }
+
+            entry.watchKey.reset();
+        }
+
+        try {
+            if (!newEntries.isEmpty()) {
+                for (Path newPath : newEntries.keySet()) {
+                    createWatcherEntry(newPath, true, newEntries.get(newPath));
+                }
+
+                newEntries.clear();
+            }
+
+        } catch (IOException e) {
+            throw new DirectoryWatcherException(e);
+        }
     }
 
     /**
@@ -187,53 +259,37 @@ public class DirectoryWatcher {
         if (!isRunning) {
             this.isRunning = true;
 
-            new Thread(() -> {
-                Path source;
-                DirectoryWatcherEntry actualDirectoryWatchEntry;
-                Map<Path, Handler<DirectoryWatcherEvent>> newEntryMap = new HashMap<>();
+            try {
+                SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
 
-                while (isRunning) {
-                    for (WatchKey key : entries.keySet()) {
-                        for (WatchEvent event : key.pollEvents()) {
-                            actualDirectoryWatchEntry = entries.get(key);
+                Scheduler sched = schedFact.getScheduler();
 
-                            source = actualDirectoryWatchEntry.source().resolve(event.context().toString());
+                sched.start();
 
-                            if (event.kind() == ENTRY_CREATE &&
-                                    Files.isDirectory(source) &&
-                                    actualDirectoryWatchEntry.observeSubdirectories()) {
-                                newEntryMap.put(Paths.get(source.toUri()), actualDirectoryWatchEntry.handler);
-                            }
+                //JobDataMap map = RunnableJob.addToJobDataMap(this);
 
-                            actualDirectoryWatchEntry.handler().handle(new DirectoryWatcherEvent(source, WatchEventKind.valueOf(event.kind())));
-                        }
+                //JobDetail job = JobBuilder.newJob(RunnableJob.class).setJobData(map).build();
 
-                        key.reset();
-                    }
+                //Trigger trigger = TriggerBuilder.newTrigger().startNow().forJob(job).withSchedule(simpleSchedule()
+                //        .withIntervalInSeconds(10)
+                //        .repeatForever()).build();
 
-                    try {
-                        if (!newEntryMap.isEmpty()) {
-                            for (Path path : newEntryMap.keySet()) {
-                                register(path, newEntryMap.get(path), true, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-                            }
+                //sched.scheduleJob(job, trigger);
 
-                            newEntryMap.clear();
-                        }
-
-                        Thread.sleep(delayTimeInMillis);
-                    } catch (InterruptedException | IOException e) {
-                        throw new DirectoryWatcherException(e);
-                    }
-                }
-            }).start();
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
     /**
      * Stops the observation of registered directories. This function is <tt>synchronized</tt>.
      */
     public synchronized void stop() {
-        this.isRunning = false;
+        if (this.isRunning) {
+            this.isRunning = false;
+        }
     }
 
     /**
@@ -264,84 +320,90 @@ public class DirectoryWatcher {
         return other.convert(this.delayTimeInMillis, TimeUnit.MILLISECONDS);
     }
 
-    /**
-     * Register a directory for observation.
-     *
-     * @param path    path of directory
-     * @param handler event handler
-     * @param observe also observe  subdirectories
-     * @param kinds   triggers for raising events
-     * @return Returns the corresponding <tt>WatchKey</tt> of registered path.
-     * @throws IOException Is thrown if an error is occurred while path is registered.
-     */
-    private synchronized WatchKey register(Path path, Handler<DirectoryWatcherEvent> handler, boolean observe, WatchEvent.Kind<?>... kinds) throws IOException {
-        WatchKey watchKey = path.register(this.service, kinds);
+    public Event<WatcherEventArgs> entryEvent() {
+        return this.entryEvent;
+    }
 
-        DirectoryWatcherEntry entry = new DirectoryWatcherEntry(path, handler, observe);
+    public Event<WatcherEventArgs> entryCreateEvent() {
+        return this.entryCreateEvent;
+    }
 
-        this.entries.put(watchKey, entry);
+    public Event<WatcherEventArgs> entryDeleteEvent() {
+        return this.entryDeleteEvent;
+    }
 
-        return watchKey;
+    public Event<WatcherEventArgs> getEntryModifyEvent() {
+        return this.entryModifyEvent;
+    }
+
+    public Event<WatcherRegistryEventArgs> entryRegistryEvent() {
+        return this.entryRegistryEvent;
+    }
+
+    public Event<WatcherRegistryEventArgs> entryRemoveEvent() {
+        return this.entryRemoveEvent;
+    }
+
+    private synchronized void createWatcherEntry(Path path, boolean recursive, EventHandler<WatcherEventArgs> eventHandler)
+            throws IOException {
+        if (path != null) {
+            WatchKey watchKey = path.register(this.service, ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE);
+
+            WatcherEntry entry = new WatcherEntry(watchKey, path, recursive, eventHandler);
+
+            this.registeredPathsMap.put(path, entry);
+
+            this.entryRegistryEvent.raise(this, new WatcherRegistryEventArgs(watchKey, path, recursive, entry.hasEventHandler()));
+        }
     }
 
     /**
      * Inner class to store information about registered directories.
      */
-    private class DirectoryWatcherEntry {
+    private class WatcherEntry {
+
+        private WatchKey watchKey;
 
         /**
          * path of directory
          */
-        private Path source;
+        private Path path;
 
         /**
          * actual event handler
          */
-        private Handler<DirectoryWatcherEvent> handler;
+        private EventHandler<WatcherEventArgs> eventHandler;
 
         /**
          * flag to observe also subdirectories
          */
-        private boolean observeSubdirectories;
+        private boolean recursive;
 
-        /**
-         * Constructor
-         *
-         * @param source                path of directory
-         * @param handler               event handler
-         * @param observeSubdirectories flag to observe subdirectories
-         */
-        DirectoryWatcherEntry(Path source, Handler<DirectoryWatcherEvent> handler, boolean observeSubdirectories) {
-            this.source = source;
-            this.handler = handler;
-            this.observeSubdirectories = observeSubdirectories;
+        WatcherEntry(WatchKey watchKey, Path path, boolean recursive, EventHandler<WatcherEventArgs> eventHandler) {
+            this.watchKey = watchKey;
+            this.path = path;
+            this.eventHandler = eventHandler;
+            this.recursive = recursive;
         }
 
-        /**
-         * Returns the path of registered directory.
-         *
-         * @return Returns the path of registered directory.
-         */
-        Path source() {
-            return this.source;
+        WatchKey watchKey() {
+            return this.watchKey;
         }
 
-        /**
-         * Returns the event handler of registered directory.
-         *
-         * @return Returns the event handler of registered directory.
-         */
-        Handler<DirectoryWatcherEvent> handler() {
-            return this.handler;
+        Path path() {
+            return this.path;
         }
 
-        /**
-         * Returns a flag that indicates whether the directory's sub elements are observed or not.
-         *
-         * @return Returns <tt>true</tt> if the sub elements are observed; Otherwise <tt>false</tt>.
-         */
-        boolean observeSubdirectories() {
-            return this.observeSubdirectories;
+        EventHandler<WatcherEventArgs> eventHandler() {
+            return this.eventHandler;
+        }
+
+        boolean hasEventHandler() {
+            return this.eventHandler != null;
+        }
+
+        boolean isRecursive() {
+            return this.recursive;
         }
     }
 }

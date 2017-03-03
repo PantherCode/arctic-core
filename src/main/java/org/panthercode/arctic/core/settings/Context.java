@@ -59,7 +59,7 @@ public class Context extends Hashtable<Object, Object> {
      *
      * @param map other map whose content is mapped in this hashtable
      */
-    public Context(Map<? extends String, ? extends Object> map) {
+    public Context(Map<Object, Object> map) {
         super(map);
     }
 
@@ -67,5 +67,61 @@ public class Context extends Hashtable<Object, Object> {
         ArgumentUtils.checkNotNull(returnType, "return type");
 
         return returnType.cast(this.get(key));
+    }
+
+    public int getInteger(Object key) {
+        return this.get(key, Integer.class);
+    }
+
+    public String getString(Object key) {
+        return this.get(key, String.class);
+    }
+
+    public boolean getBoolean(Object key) {
+        return this.get(key, Boolean.class);
+    }
+
+    public double getDouble(Object key) {
+        return this.get(key, Double.class);
+    }
+
+    public byte getByte(Object key) {
+        return this.get(key, Byte.class);
+    }
+
+    public float getFloat(Object key) {
+        return this.get(key, Float.class);
+    }
+
+    public long getLong(Object key) {
+        return this.get(key, Long.class);
+    }
+
+    public short getShort(Object key) {
+        return this.get(key, Short.class);
+    }
+
+    public Character getCharater(Object key) {
+        return this.get(key, Character.class);
+    }
+
+    public static ContextBuilder create() {
+        return new ContextBuilder();
+    }
+
+    public static class ContextBuilder {
+        private Hashtable<Object, Object> table = new Hashtable<>();
+
+        public ContextBuilder add(Object key, Object value) {
+            ArgumentUtils.checkNotNull(key, "key");
+
+            this.table.put(key, value);
+
+            return this;
+        }
+
+        public Context build() {
+            return new Context(this.table);
+        }
     }
 }

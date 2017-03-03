@@ -15,19 +15,19 @@
  */
 package org.panthercode.arctic.core.concurrent;
 
-import org.panthercode.arctic.core.helper.event.Handler;
+import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.event.Handler;
 import org.panthercode.arctic.core.settings.Context;
 
 /**
  * Tasks are special runnable object with the possibility to run such objects in special context and handle results
- * asynchronously by initializing a handler. In combination with <tt>Worker</tt> class you can create very simple and
+ * asynchronously by initializing a handler. In combination with <tt>WorkerOld</tt> class you can create very simple and
  * fast a powerful processing unit.
  * <p>
  * To run the task in a new  thread, you can call <tt>start()</tt> method. If only the task should run synchronously in
  * same thread call <tt>run()</tt>.
  *
  * @author PantherCode
- * @see Worker
  * @since 1.0
  */
 public abstract class Task<T> implements Executable<T>, Runnable {
@@ -65,9 +65,9 @@ public abstract class Task<T> implements Executable<T>, Runnable {
      * @param handler object to handle the result
      */
     public Task(Context context, Handler<T> handler) {
-        this.context = context;
+        this.context = ArgumentUtils.checkNotNull(context, "context");
 
-        this.handler = handler;
+        this.handler = ArgumentUtils.checkNotNull(handler, "handler");
     }
 
     /**
@@ -76,21 +76,14 @@ public abstract class Task<T> implements Executable<T>, Runnable {
     @Override
     public void run() {
         try {
-            T result = this.execute(context);
+            T result = this.execute(this.context);
 
-            if (handler != null) {
+            if (this.handler != null) {
                 this.handler.handle(result);
             }
         } catch (Exception e) {
             this.exceptionHandler(e);
         }
-    }
-
-    /**
-     * Call the <tt>run()</tt> in extra thread.
-     */
-    public void start() {
-        new Thread(this).start();
     }
 
     /**
