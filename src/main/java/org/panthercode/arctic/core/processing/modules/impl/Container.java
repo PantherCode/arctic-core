@@ -25,6 +25,10 @@ import org.panthercode.arctic.core.settings.Context;
 
 /**
  * Container are used as root elements for processing.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @IdentityInfo(name = "Standard Container", group = "Container")
 @VersionInfo(major = 1)
@@ -116,7 +120,7 @@ public class Container extends ModuleImpl {
      * @param worker new worker the object is associated with
      */
     public synchronized void setWorker(final Module worker) {
-        ArgumentUtils.assertNotNull(worker, "worker");
+        ArgumentUtils.checkNotNull(worker, "worker");
 
         if (this.isReady()) {
             this.worker = worker;

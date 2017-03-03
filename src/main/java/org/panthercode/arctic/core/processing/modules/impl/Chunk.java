@@ -29,17 +29,26 @@ import java.util.concurrent.Executors;
 //TODO: implement reset()
 
 /**
- * The Chunk class runs all elements parallelised.
+ * The Chunk class runs all elements paralleled.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @IdentityInfo(name = "Standard Chunk", group = "Chunk Module")
 @VersionInfo(major = 1)
 public class Chunk extends Bundle {
 
     //TODO: check parameter
+    /**
+     * maximal allowed paralleled running threads
+     */
     private int threadCount = 0;
 
     /**
-     * Standard Constructor
+     * Constructor
+     *
+     * @param threadCount maximal allowed paralleled running threads
      */
     public Chunk(int threadCount) {
         this(threadCount, null);
@@ -48,7 +57,8 @@ public class Chunk extends Bundle {
     /**
      * Constructor
      *
-     * @param context context the module is associated with.
+     * @param threadCount maximal allowed paralleled running threads
+     * @param context     context the module is associated with.
      */
     public Chunk(int threadCount, Context context) {
         super(context);

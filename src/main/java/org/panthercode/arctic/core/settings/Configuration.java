@@ -16,6 +16,7 @@
 package org.panthercode.arctic.core.settings;
 
 import org.apache.commons.io.FileUtils;
+import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +29,7 @@ import java.util.Properties;
  * than <tt>Properties</tt> class do.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class Configuration extends Properties {
 
@@ -70,6 +72,48 @@ public class Configuration extends Properties {
         super(defaults);
 
         this.setComment(comment);
+    }
+
+    public <T> T get(Object key, Class<T> returnType){
+        ArgumentUtils.checkNotNull(returnType, "return type");
+
+        return returnType.cast(this.get(key));
+    }
+
+    public int getInteger(Object key) {
+        return this.get(key, Integer.class);
+    }
+
+    public String getString(Object key) {
+        return this.get(key, String.class);
+    }
+
+    public boolean getBoolean(Object key) {
+        return this.get(key, Boolean.class);
+    }
+
+    public double getDouble(Object key) {
+        return this.get(key, Double.class);
+    }
+
+    public byte getByte(Object key) {
+        return this.get(key, Byte.class);
+    }
+
+    public float getFloat(Object key) {
+        return this.get(key, Float.class);
+    }
+
+    public long getLong(Object key) {
+        return this.get(key, Long.class);
+    }
+
+    public short getShort(Object key) {
+        return this.get(key, Short.class);
+    }
+
+    public Character getCharater(Object key) {
+        return this.get(key, Character.class);
     }
 
     /**

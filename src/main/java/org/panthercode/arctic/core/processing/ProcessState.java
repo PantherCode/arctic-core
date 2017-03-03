@@ -17,6 +17,9 @@ package org.panthercode.arctic.core.processing;
 
 /**
  * Enumeration of possible processing states. It's used indicate the inner state of an object.
+ *
+ * @author PantherCode
+ * @since 1.0
  */
 public enum ProcessState {
     /**
@@ -63,6 +66,11 @@ public enum ProcessState {
      * The run finished successful.
      */
     SUCCEEDED("Succeeded"),
+
+    /**
+     * The actual state is unknown.
+     */
+    UNKNOWN("Unknown"),
 
     /**
      * The object's execution is interrupted for short time by some reason.

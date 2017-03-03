@@ -16,6 +16,7 @@
 package org.panthercode.arctic.core.resources;
 
 import org.panthercode.arctic.core.helper.identity.Identifiable;
+import org.panthercode.arctic.core.processing.priority.Priority;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.settings.Configurable;
 
@@ -23,6 +24,7 @@ import org.panthercode.arctic.core.settings.Configurable;
  * TODO: documentation
  *
  * @author PantherCode
+ * @since 1.0
  */
 public interface Resource extends Identifiable, Versionable, Configurable {
 
@@ -30,13 +32,17 @@ public interface Resource extends Identifiable, Versionable, Configurable {
 
     boolean isBusy();
 
-    int counter();
+    int actualThreadCount();
 
-    int capacity();
+    int allowedParalleledThreads();
 
     void acquire() throws Exception;
 
+    void acquire(Priority priority) throws Exception;
+
     void release();
+
+    Resource copy();
 
     <T> T execute(String functionName, Class<T> returnType, Object... arguments) throws Exception;
 }

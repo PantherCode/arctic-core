@@ -27,6 +27,10 @@ import java.lang.annotation.Target;
  * Example: <tt>@VersionInfo(major = 1, minor = 2, build = 3, build = 4)</tt> stands for 1.2.3.4
  *
  * @author PantherCode
+ * @see Version
+ * @see Versionable
+ * @see VersionField
+ * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

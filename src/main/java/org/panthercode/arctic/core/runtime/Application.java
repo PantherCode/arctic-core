@@ -20,15 +20,21 @@ import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
+import org.panthercode.arctic.core.io.Directory;
+import org.panthercode.arctic.core.runtime.plugins.PluginManager;
 import org.panthercode.arctic.core.settings.Settings;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Paths;
 
 /**
- * TODO: class documentation
+ * Abstraction of an application to offer basic functionality.
  *
  * @author PantherCode
+ * @see ShutdownException
+ * @since 1.0
  */
 @IdentityInfo(name = "Application")
 @VersionInfo(major = 1)
@@ -50,20 +56,19 @@ public abstract class Application {
     private final Version version;
 
     /**
+     *
+     */
+    private final PluginManager pluginManager;
+
+    /**
      * Default Constructor
      */
     protected Application() {
-        if (Identity.isAnnotated(this.getClass())) {
-            this.identity = Identity.fromAnnotation(this.getClass());
-        } else {
-            this.identity = Identity.generate();
-        }
+        this.identity = Identity.fromAnnotation(this.getClass());
 
-        if (Version.isAnnotated(this.getClass())) {
-            this.version = Version.fromAnnotation(this.getClass());
-        } else {
-            this.version = new Version();
-        }
+        this.version = Version.fromAnnotation(this.getClass());
+
+        this.pluginManager = new PluginManager();
     }
 
     /**
@@ -93,6 +98,15 @@ public abstract class Application {
         return Settings.instance();
     }
 
+
+    public Directory startDirectory() {
+        try {
+            return Directory.open(Paths.get(System.getProperty("user.dir")));
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+    }
+
     /**
      * Checks if the a given resource exists or not.
      *
@@ -110,7 +124,7 @@ public abstract class Application {
      * @return Returns the address to a given resource.
      */
     public URL resource(String name) {
-        ArgumentUtils.assertNotNull(name, "resource name");
+        ArgumentUtils.checkNotNull(name, "resource name");
 
         return Thread.currentThread().getContextClassLoader().getResource(name);
     }
@@ -122,7 +136,7 @@ public abstract class Application {
      * @return Returns a stream to a given resource.
      */
     public InputStream resourceAsInputStream(String name) {
-        ArgumentUtils.assertNotNull(name, "resource name");
+        ArgumentUtils.checkNotNull(name, "resource name");
 
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
     }
@@ -174,22 +188,26 @@ public abstract class Application {
     /**
      * Method to start the application.
      *
-     * @param app  actual instance of an application class
-     * @param args (commandline) arguments
+     * @param application actual instance of an application class
+     * @param args        (commandline) arguments
      */
-    public static void startUp(Application app, String[] args) {
-        ArgumentUtils.assertNotNull(app, "application");
+    public static void start(Application application, String[] args) {
+        ArgumentUtils.checkNotNull(application, "application");
 
-        instance = app;
+        instance = application;
 
         args = args == null ? new String[0] : args;
 
         try {
-            app.run(args);
+            application.beforeRun(args);
+
+            application.run(args);
+
+            application.afterRun();
         } catch (ShutdownException e) {
-            app.shutdownHandler(e);
+            application.shutdownHandler(e);
         } catch (Exception e) {
-            app.exceptionHandler(e);
+            application.exceptionHandler(e);
         }
     }
 
@@ -200,7 +218,7 @@ public abstract class Application {
      */
     public static Application current() {
         if (instance == null) {
-            throw new RuntimeException("The appliction is not running.");
+            throw new RuntimeException("The application is not running.");
         }
 
         return instance;
@@ -214,11 +232,17 @@ public abstract class Application {
      * @return
      */
     public static <T extends Application> T current(Class<T> clazz) {
-        return (T) current();
+        return clazz.cast(current());
+    }
+
+    public void beforeRun(String[] args) throws Exception {
+    }
+
+    public void afterRun() throws Exception {
     }
 
     /**
-     * Method with functionality, that will executed after starting the application.
+     * Method with functionality, that will executed afterRun starting the application.
      *
      * @param args (commandline) arguments
      * @throws Exception Is thrown if an error is occurred at runtime.

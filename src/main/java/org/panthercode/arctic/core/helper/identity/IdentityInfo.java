@@ -26,6 +26,9 @@ import java.lang.annotation.Target;
  * Example: <tt>@IdentityInfo(name = "exampleName", group= "exampleGroup)</tt>
  *
  * @author PantherCode
+ * @see Identifiable
+ * @see Identity
+ * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

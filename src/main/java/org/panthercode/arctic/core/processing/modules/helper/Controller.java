@@ -19,6 +19,8 @@ package org.panthercode.arctic.core.processing.modules.helper;
  * Helper class to control the repeat process of <tt>Repeater</tt> class and there children.
  *
  * @author PantherCode
+ * @see org.panthercode.arctic.core.processing.modules.impl.Repeater
+ * @since 1.0
  */
 public abstract class Controller<T> {
 

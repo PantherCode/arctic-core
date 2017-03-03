@@ -22,6 +22,8 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
  * Builder class to configure parameters for controlling the loop process of the <tt>Repeater</tt> class.
  *
  * @author PantherCode
+ * @see org.panthercode.arctic.core.processing.modules.impl.Repeater
+ * @since Repeater
  */
 public class RepeaterOptions {
 
@@ -83,7 +85,7 @@ public class RepeaterOptions {
      * @param delayTimeInMillis delay time after each loop step
      */
     public void setDelayTime(long delayTimeInMillis) {
-        ArgumentUtils.assertGreaterOrEqualsZero(delayTimeInMillis, "delay time");
+        ArgumentUtils.checkGreaterOrEqualsZero(delayTimeInMillis, "delay time");
 
         this.delayTimeInMillis = delayTimeInMillis;
     }

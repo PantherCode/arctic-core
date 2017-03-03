@@ -30,6 +30,10 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Class to repeat module's functionality. The Loop class provides some basic functions to control the loop process.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 public abstract class Repeater extends ModuleImpl {
 
@@ -90,7 +94,7 @@ public abstract class Repeater extends ModuleImpl {
             throws NullPointerException {
         super(context);
 
-        ArgumentUtils.assertNotNull(options, "options");
+        ArgumentUtils.checkNotNull(options, "options");
 
         this.setModule(module);
 
@@ -118,7 +122,7 @@ public abstract class Repeater extends ModuleImpl {
     }
 
     private void setController(Controller<? extends Object> controller) {
-        ArgumentUtils.assertNotNull(controller, "controller");
+        ArgumentUtils.checkNotNull(controller, "controller");
 
         this.controller = controller;
     }
@@ -145,7 +149,7 @@ public abstract class Repeater extends ModuleImpl {
     public synchronized boolean setModule(final Module module)
             throws NullPointerException {
         if (this.isReady()) {
-            ArgumentUtils.assertNotNull(module, "module");
+            ArgumentUtils.checkNotNull(module, "module");
 
             this.module = module;
 
@@ -187,7 +191,7 @@ public abstract class Repeater extends ModuleImpl {
      */
     public synchronized void setDelayTime(TimeUnit unit, long duration)
             throws NullPointerException, IllegalArgumentException {
-        ArgumentUtils.assertNotNull(unit, "time unit");
+        ArgumentUtils.checkNotNull(unit, "time unit");
 
         this.setDelayTime(unit.toMillis(duration));
     }
@@ -209,7 +213,7 @@ public abstract class Repeater extends ModuleImpl {
      * @throws NullPointerException
      */
     public long getDelayTime(final TimeUnit unit) {
-        ArgumentUtils.assertNotNull(timeUnit, "timeUnit");
+        ArgumentUtils.checkNotNull(timeUnit, "timeUnit");
 
         return unit.convert(this.options.getDelayTime(), this.timeUnit);
     }
@@ -247,14 +251,14 @@ public abstract class Repeater extends ModuleImpl {
     }
 
     /**
-     * This method will be called before loop process starts.
+     * This method will be called beforeRun loop process starts.
      */
     public synchronized void before()
             throws ProcessException {
     }
 
     /**
-     * This method will be called after loop process finished.
+     * This method will be called afterRun loop process finished.
      */
     public synchronized void after()
             throws ProcessException {

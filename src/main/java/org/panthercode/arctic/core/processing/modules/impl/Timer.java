@@ -31,6 +31,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * The Repeater repeats the module's functionality until the time limit is reached or until the module finished
  * successfully.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @IdentityInfo(name = "Timer", group = "Repeater Module")
 @VersionInfo(major = 1)
@@ -110,7 +114,7 @@ public class Timer extends Repeater {
      * @throws NullPointerException Is thrown if the value of unit is null.
      */
     public long getMaximalDuration(TimeUnit unit) {
-        ArgumentUtils.assertNotNull(unit, "time unit");
+        ArgumentUtils.checkNotNull(unit, "time unit");
 
         return unit.convert(this.getMaximalDuration(), this.timeUnit);
     }

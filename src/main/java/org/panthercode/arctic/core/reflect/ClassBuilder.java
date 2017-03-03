@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
  * Utility class to create new instances of objects.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public class ClassBuilder<T> {
 

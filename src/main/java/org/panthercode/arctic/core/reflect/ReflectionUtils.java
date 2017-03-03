@@ -23,6 +23,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.jar.JarFile;
  * Utility class that contains methods to load classes from jar archives and filter lists.
  *
  * @author PantherCode
+ * @sinec 1.0
  */
 public class ReflectionUtils {
     /**
@@ -87,22 +89,22 @@ public class ReflectionUtils {
      * @throws IOException              Is thrown if an error occurs while reading the .jar file.
      * @throws IllegalArgumentException Is thrown if path is null.
      */
-    public static List<String> extractClassNamesFromJar(String path)
+    public static List<String> extractClassNamesFromJar(Path path)
             throws NullPointerException, IOException {
-        ArgumentUtils.assertNotNull(path, "path");
-
-        JarFile jarFile = new JarFile(path);
+        ArgumentUtils.checkNotNull(path, "path");
 
         List<String> classNameList = new ArrayList<>();
 
-        Enumeration<JarEntry> entries = jarFile.entries();
+        try (JarFile jarFile = new JarFile(path.toString())) {
+            Enumeration<JarEntry> entries = jarFile.entries();
 
-        for (JarEntry currentEntry = entries.nextElement();
-             entries.hasMoreElements();
-             currentEntry = entries.nextElement()) {
-            if (currentEntry != null &&
-                    currentEntry.getName().endsWith(".class")) {
-                classNameList.add(currentEntry.getName().replace("/", ".").split("\\.class", 2)[0]);
+            for (JarEntry currentEntry = entries.nextElement();
+                 entries.hasMoreElements();
+                 currentEntry = entries.nextElement()) {
+                if (currentEntry != null &&
+                        currentEntry.getName().endsWith(".class")) {
+                    classNameList.add(currentEntry.getName().replace("/", ".").split("\\.class", 2)[0]);
+                }
             }
         }
 
@@ -118,17 +120,18 @@ public class ReflectionUtils {
      * @throws ClassNotFoundException   Is thrown if the class is not found.
      * @throws IllegalArgumentException Is thrown if path is null.
      */
-    public static List<Class<?>> extractClassesFromJar(String path)
+    public static List<Class<?>> extractClassesFromJar(Path path)
             throws IOException, ClassNotFoundException, IllegalArgumentException {
-        ArgumentUtils.assertNotNull(path, "path");
+        ArgumentUtils.checkNotNull(path, "path");
 
         List<Class<?>> classList = new ArrayList<>();
 
         URL[] urlArray = {new URL("jar:file:" + path + "!/")};
-        URLClassLoader classLoader = new URLClassLoader(urlArray);
 
-        for (String className : ReflectionUtils.extractClassNamesFromJar(path)) {
-            classList.add(classLoader.loadClass(className));
+        try (URLClassLoader classLoader = new URLClassLoader(urlArray)) {
+            for (String className : ReflectionUtils.extractClassNamesFromJar(path)) {
+                classList.add(classLoader.loadClass(className));
+            }
         }
 
         return classList;
@@ -144,8 +147,8 @@ public class ReflectionUtils {
      */
     public static List<Class<?>> filterClassList(final List<Class<?>> classList, final Class<?> filter)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(classList, "list");
-        ArgumentUtils.assertNotNull(filter, "filter");
+        ArgumentUtils.checkNotNull(classList, "list");
+        ArgumentUtils.checkNotNull(filter, "filter");
 
         final List<Class<?>> filteredList = new ArrayList<>();
 
@@ -169,8 +172,8 @@ public class ReflectionUtils {
     public static List<Class<?>> filterClassListByAnnotation(final List<Class<?>> classList,
                                                              final Class<? extends Annotation> filter)
             throws NullPointerException {
-        ArgumentUtils.assertNotNull(classList, "list");
-        ArgumentUtils.assertNotNull(filter, "filter");
+        ArgumentUtils.checkNotNull(classList, "list");
+        ArgumentUtils.checkNotNull(filter, "filter");
 
         final List<Class<?>> filteredList = new ArrayList<>();
 

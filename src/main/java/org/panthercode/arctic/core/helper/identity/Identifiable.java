@@ -19,6 +19,9 @@ package org.panthercode.arctic.core.helper.identity;
  * Interface to make classes better identifiable.
  *
  * @author PantherCode
+ * @see Identity
+ * @see IdentityInfo
+ * @since 1.0
  */
 public interface Identifiable {
 

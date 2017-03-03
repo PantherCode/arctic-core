@@ -22,6 +22,8 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
  * Builder class to configure parameters for controlling the loop process of the <tt>Counter</tt> class.
  *
  * @author PantherCode
+ * @see org.panthercode.arctic.core.processing.modules.impl.Counter
+ * @since 1.0
  */
 public class CounterOptions extends RepeaterOptions {
 
@@ -85,7 +87,7 @@ public class CounterOptions extends RepeaterOptions {
      * @param count maximal count of loop steps
      */
     public void setCount(int count) {
-        ArgumentUtils.assertGreaterOrEqualsZero(count, "count");
+        ArgumentUtils.checkGreaterOrEqualsZero(count, "count");
 
         this.count = count;
     }

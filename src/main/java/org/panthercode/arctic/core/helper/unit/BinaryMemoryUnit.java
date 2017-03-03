@@ -19,6 +19,8 @@ package org.panthercode.arctic.core.helper.unit;
  * Enumeration of units to handle memory capacity or the size of a binary object.
  *
  * @author PantherCode
+ * @see MemoryUnit
+ * @since 1.0
  */
 public enum BinaryMemoryUnit {
     /**

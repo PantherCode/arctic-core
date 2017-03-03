@@ -26,6 +26,7 @@ package org.panthercode.arctic.core.helper;
  * unfreeze the object by implementing an empty function body, better throwing a UnsupportedOperationException.
  *
  * @author PantherCode
+ * @since 1.0
  */
 public interface Freezable {
 

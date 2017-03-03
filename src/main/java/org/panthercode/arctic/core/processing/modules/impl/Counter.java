@@ -28,6 +28,10 @@ import org.panthercode.arctic.core.settings.Context;
 /**
  * The Counter class repeats the module's functionality until a numeric limit is reached or (if canAbort flag is set)
  * until the module finished successfully.
+ *
+ * @author PantherCode
+ * @see Module
+ * @since 1.0
  */
 @IdentityInfo(name = "Standard Counter", group = "Counter Module")
 @VersionInfo(major = 1)
