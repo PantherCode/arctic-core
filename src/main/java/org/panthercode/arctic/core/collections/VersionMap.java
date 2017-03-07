@@ -16,8 +16,7 @@
 package org.panthercode.arctic.core.collections;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.collections.helper.Allocator;
-import org.panthercode.arctic.core.collections.helper.VersionMapAllocator;
+import org.panthercode.arctic.core.collections.helper.DefaultAllocator;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.Versionable;
 
@@ -30,7 +29,7 @@ import java.util.*;
  *
  * @author PantherCode
  * @see Map
- * @see org.panthercode.arctic.core.collections.helper.VersionMapAllocator
+ * @see DefaultAllocator
  * @since 1.0
  */
 public class VersionMap<K, V extends Versionable> implements Map<K, V> {
@@ -38,7 +37,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
     /**
      * actual map to store objects
      */
-    private HashMap<K, TreeMap<Version, V>> map = new HashMap<K, TreeMap<Version, V>>();
+    private final HashMap<K, TreeMap<Version, V>> map = new HashMap<K, TreeMap<Version, V>>();
 
     /**
      * Default Constructor
@@ -71,7 +70,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      */
     @Override
     public boolean isEmpty() {
-        return this.map.size() == 0;
+        return this.map.isEmpty();
     }
 
     /**
@@ -102,8 +101,6 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
         return false;
     }
 
-    //Todo: implement
-
     /**
      * Returns a flag that indicates whether the map contains a given object with specific version or not.
      *
@@ -112,7 +109,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      * @return Returns <tt>true</tt> if the map contain the given key; Otherwise <tt>false</tt>.
      */
     public boolean contains(Object key, Version version) {
-        return false;
+        return this.map.containsKey(key) && this.map.get(key).containsKey(version);
     }
 
     /**
@@ -155,9 +152,10 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      */
     @Override
     public synchronized V put(K key, V value) {
+        ArgumentUtils.checkNotNull(key, "key");
         ArgumentUtils.checkNotNull(value, "value");
 
-        TreeMap<Version, V> tmpMap = this.containsKey(key) ? this.map.get(key) : new TreeMap<Version, V>();
+        TreeMap<Version, V> tmpMap = this.containsKey(key) ? this.map.get(key) : new TreeMap<>();
 
         V result = tmpMap.put(value.version(), value);
 
@@ -174,7 +172,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      */
     @Override
     public synchronized V remove(Object key) {
-        return this.map.remove(key).lastEntry().getValue();
+        return this.containsKey(key) ? this.map.remove(key).lastEntry().getValue() : null;
     }
 
     public synchronized V remove(Object key, Version version) {
@@ -193,8 +191,18 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
     @Override
     public synchronized void putAll(Map<? extends K, ? extends V> m) {
         if (m != null) {
+            V value;
+
             for (K key : m.keySet()) {
-                this.put(key, m.get(key));
+                if (key == null) {
+                    continue;
+                }
+
+                value = m.get(key);
+
+                if (value != null) {
+                    this.put(key, m.get(key));
+                }
             }
         }
     }
@@ -224,9 +232,9 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      */
     @Override
     public Collection<V> values() {
-        Collection<V> collection = new ArrayList<V>(this.size());
+        Collection<V> collection = new ArrayList<>(this.size());
 
-        TreeMap<Version, V> tmpMap = null;
+        TreeMap<Version, V> tmpMap;
 
         for (K key : this.map.keySet()) {
             tmpMap = this.map.get(key);
@@ -239,8 +247,6 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
         return collection;
     }
 
-    //TODO: check implementaion
-
     /**
      * Returns a flatten set of all elements in the map.
      *
@@ -248,15 +254,15 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
      */
     @Override
     public Set<Entry<K, V>> entrySet() {
-        Set<Entry<K, V>> set = new TreeSet<>();
+        Set<Entry<K, V>> set = new HashSet<>();
 
-        TreeMap<Version, V> tmpMap = null;
+        TreeMap<Version, V> tmpMap;
 
         for (K key : this.map.keySet()) {
             tmpMap = this.map.get(key);
 
             for (Version version : tmpMap.keySet()) {
-                set.add(new AbstractMap.SimpleEntry<K, V>(key, tmpMap.get(key)));
+                set.add(new AbstractMap.SimpleEntry<>(key, tmpMap.get(version)));
             }
         }
 

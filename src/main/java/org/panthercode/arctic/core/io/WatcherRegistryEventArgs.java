@@ -16,16 +16,16 @@ public class WatcherRegistryEventArgs extends EventArgs {
 
     private final boolean recursive;
 
-    private final boolean hasEventHandler;
+    private final boolean hasHandler;
 
-    public WatcherRegistryEventArgs(WatchKey watchKey, Path path, boolean recursive, boolean hasEventHandler) {
+    public WatcherRegistryEventArgs(WatchKey watchKey, Path path, boolean recursive, boolean hasHandler) {
         this.watchKey = watchKey;
 
         this.path = path;
 
         this.recursive = recursive;
 
-        this.hasEventHandler = hasEventHandler;
+        this.hasHandler = hasHandler;
     }
 
     public WatchKey watchKey() {
@@ -40,7 +40,7 @@ public class WatcherRegistryEventArgs extends EventArgs {
         return this.recursive;
     }
 
-    public boolean hasEventHandler() {
-        return this.hasEventHandler;
+    public boolean hasHandler() {
+        return this.hasHandler;
     }
 }

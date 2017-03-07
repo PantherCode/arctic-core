@@ -13,30 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.concurrent.impl;
+package org.panthercode.arctic.core.concurrent.semaphore.impl;
 
 import org.panthercode.arctic.core.processing.priority.Priority;
 import org.panthercode.arctic.core.processing.priority.PriorityComparator;
 
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.*;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * This class queues threads by its toInteger. Threads with higher toInteger will be executed privileged. Threads with
- * same toInteger will executed by FIFO principle.
+ * same toInteger will executed by random.
  *
  * @author PantherCode
  * @see Priority
- * @see PrioritySemaphore
+ * @see PriorityQueuedSemaphore
  * @since 1.0
  */
-public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
+public class PrioritySemaphore extends AbstractSemaphore<Priority> {
+
+    /**
+     * object to create random numbers
+     */
+    private Random random;
 
     /**
      * collection with queued threads waiting in semaphore
      */
-    private Queue<Thread>[] queuedThreads;
+    private List<Thread>[] queuedThreads;
 
     /**
      * collection with queued priorities corresponding to threads
@@ -46,7 +50,7 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
     /**
      * Standard Constructor
      */
-    public PriorityQueuedSemaphore() {
+    public PrioritySemaphore() {
         this(1);
     }
 
@@ -55,15 +59,17 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
      *
      * @param allowedParalleledThreads maximal count of allowed threads running parallel
      */
-    public PriorityQueuedSemaphore(int allowedParalleledThreads) {
+    public PrioritySemaphore(int allowedParalleledThreads) {
         super(allowedParalleledThreads);
+
+        this.random = new Random(System.currentTimeMillis());
 
         this.queuedPriorities = new PriorityBlockingQueue<>(10, new PriorityComparator());
 
-        this.queuedThreads = new Queue[5];
+        this.queuedThreads = new List[5];
 
         for (int i = 0; i < 5; i++) {
-            this.queuedThreads[i] = new LinkedBlockingQueue<>();
+            this.queuedThreads[i] = Collections.synchronizedList(new ArrayList<>());
         }
     }
 
@@ -73,7 +79,8 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
      * @throws InterruptedException Is thrown if thread is interrupted.
      */
     @Override
-    public synchronized void acquire() throws InterruptedException {
+    public synchronized void acquire()
+            throws InterruptedException {
         this.acquire(Priority.NORMAL);
     }
 
@@ -84,20 +91,24 @@ public class PriorityQueuedSemaphore extends AbstractSemaphore<Priority> {
      * @throws InterruptedException Is thrown if thread is interrupted.
      */
     @Override
-    public synchronized void acquire(Priority value) throws InterruptedException {
+    public synchronized void acquire(Priority value)
+            throws InterruptedException {
         if (this.counter() == 0) {
+            int priority = value.toInteger() - 1;
+
+            int index = this.random.nextInt(this.queuedThreads[priority].size() + 1);
+
+            this.queuedThreads[priority].add(index, Thread.currentThread());
+
             this.queuedPriorities.add(value);
 
-            this.queuedThreads[value.toInteger() - 1].add(Thread.currentThread());
-
-            while (this.counter() == 0 ||
-                    !Thread.currentThread().equals(this.queuedThreads[this.queuedPriorities.peek().toInteger() - 1].peek())) {
+            while (this.counter() == 0 || !Thread.currentThread().equals(this.queuedThreads[this.queuedPriorities.peek().toInteger() - 1].get(0))) {
                 this.wait();
             }
 
-            this.queuedThreads[value.toInteger() - 1].remove();
-
             this.queuedPriorities.remove();
+
+            this.queuedThreads[priority].remove(Thread.currentThread());
         }
 
         this.decrementCounter();

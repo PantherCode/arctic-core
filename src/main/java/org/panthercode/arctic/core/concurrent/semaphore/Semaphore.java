@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.concurrent;
+package org.panthercode.arctic.core.concurrent.semaphore;
+
+import org.panthercode.arctic.core.concurrent.Task;
 
 /**
  * Interface to implement a semaphore class.

@@ -21,13 +21,13 @@ import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.Versionable;
 
 /**
- * The <tt>VersionMapAllocator</tt> class is used to control the access to a <tt>VersionMap</tt> object.
+ * The <tt>DefaultAllocator</tt> class is used to control the access to a <tt>VersionMap</tt> object.
  *
  * @author PantherCode
  * @see VersionMap
  * @since 1.0
  */
-public class VersionMapAllocator<K, V extends Versionable> implements Allocator<K, V> {
+public class DefaultAllocator<K, V extends Versionable> implements Allocator<K, V> {
 
     /**
      * actual instance of VersionMap
@@ -39,10 +39,8 @@ public class VersionMapAllocator<K, V extends Versionable> implements Allocator<
      *
      * @param map actual <tt>VersionMap</tt> object
      */
-    public VersionMapAllocator(VersionMap<K, V> map) {
-        ArgumentUtils.checkNotNull(map, "map");
-
-        this.versionMap = map;
+    public DefaultAllocator(VersionMap<K, V> map) {
+        this.versionMap = ArgumentUtils.checkNotNull(map, "map");
     }
 
     /**
@@ -81,8 +79,13 @@ public class VersionMapAllocator<K, V extends Versionable> implements Allocator<
      * @return Returns the object if the map containsHandler it; Otherwise <tt>null</tt>.
      */
     @Override
-    public V allocate(Object key) {
+    public V allocate(Object key)
+            throws AllocationException {
         ArgumentUtils.checkNotNull(key, "key");
+
+        if (!this.contains(key)) {
+            throw new AllocationException("The map doesn't contain the key.");
+        }
 
         return this.versionMap.get(key);
     }
@@ -95,7 +98,8 @@ public class VersionMapAllocator<K, V extends Versionable> implements Allocator<
      * @return Returns the object if the map containsHandler it; Otherwise <tt>false</tt>.
      */
     @Override
-    public V allocate(Object key, Version version) {
+    public V allocate(Object key, Version version)
+            throws AllocationException {
         ArgumentUtils.checkNotNull(key, "key");
         ArgumentUtils.checkNotNull(version, "version");
 

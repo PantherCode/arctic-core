@@ -5,7 +5,7 @@ import org.panthercode.arctic.core.helper.version.Versionable;
 
 /**
  * TODO: implement AllocationException
- *
+ * <p>
  * Created by architect on 27.02.17.
  */
 public interface Allocator<V, K extends Versionable> {
@@ -14,7 +14,7 @@ public interface Allocator<V, K extends Versionable> {
 
     boolean contains(Object key, Version version);
 
-    K allocate(Object key);
+    K allocate(Object key) throws AllocationException;
 
-    K allocate(Object key, Version version);
+    K allocate(Object key, Version version) throws AllocationException;
 }

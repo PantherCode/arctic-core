@@ -45,9 +45,6 @@ public class PluginManager {
         return null;
     }
 
-    public InteractivePlugin getInteractivePlugin(String name) {
-        return null;
-    }
 
     public Set<Plugin> plugins() {
         return null;

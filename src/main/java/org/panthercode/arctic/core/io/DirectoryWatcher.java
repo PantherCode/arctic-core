@@ -15,20 +15,17 @@
  */
 package org.panthercode.arctic.core.io;
 
-import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.event.Event;
+import org.panthercode.arctic.core.event.EventBus;
 import org.panthercode.arctic.core.event.EventHandler;
-import org.quartz.*;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static java.nio.file.StandardWatchEventKinds.*;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 /**
  * Class to observe activities of directories in the filesystem.
@@ -39,60 +36,69 @@ import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 public class DirectoryWatcher implements Runnable {
 
     /**
-     * flag to indicate whether the watcher is running or not
-     */
-    private boolean isRunning = false;
-
-    /**
-     * delay time  afterRun each loop run
-     */
-    private long delayTimeInMillis = 1000L;
-
-    /**
      * map to store all observed directories
      */
-    private Map<Path, WatcherEntry> registeredPathsMap;
+    private final Map<Path, WatcherEntry> registeredPathsMap;
 
     /**
      * watch service of filesystem
      */
-    private WatchService service = null;
+    private final WatchService service;
 
-    private Event<WatcherEventArgs> entryEvent = null;
+    /**
+     *
+     */
+    private final Event<WatcherEventArgs> entryEvent;
 
-    private Event<WatcherEventArgs> entryCreateEvent = null;
+    /**
+     *
+     */
+    private final Event<WatcherEventArgs> entryCreateEvent;
 
-    private Event<WatcherEventArgs> entryModifyEvent = null;
+    /**
+     *
+     */
+    private final Event<WatcherEventArgs> entryModifyEvent;
 
-    private Event<WatcherEventArgs> entryDeleteEvent = null;
+    /**
+     *
+     */
+    private final Event<WatcherEventArgs> entryDeleteEvent;
 
-    private Event<WatcherRegistryEventArgs> entryRegistryEvent = null;
+    /**
+     *
+     */
+    private final Event<WatcherRegistryEventArgs> entryRegisteredEvent;
 
-    private Event<WatcherRegistryEventArgs> entryRemoveEvent = null;
+    /**
+     *
+     */
+    private final Event<WatcherRegistryEventArgs> entryRemoveEvent;
 
     /**
      * Standard Constructor
      *
      * @throws IOException Is thrown if an error is occurred while creating <tt>DirectoryWatcher</tt> instance.
      */
-    private DirectoryWatcher() throws IOException {
-        this(1000L);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param delayTimeInMillis delay time in milliseconds
-     * @throws IOException Is thrown if an error is occurred while creating <tt>DirectoryWatcher</tt> instance.
-     */
-    private DirectoryWatcher(long delayTimeInMillis) throws IOException {
-        ArgumentUtils.checkGreaterOrEqualsZero(delayTimeInMillis, "delay time");
-
-        this.delayTimeInMillis = delayTimeInMillis;
-
+    private DirectoryWatcher(final EventBus bus, final Path path, final boolean recursive, final EventHandler<WatcherEventArgs> handler)
+            throws IOException {
         this.registeredPathsMap = new HashMap<>();
 
         this.service = FileSystems.getDefault().newWatchService();
+
+        this.entryEvent = Event.register(bus);
+
+        this.entryCreateEvent = Event.register(bus);
+
+        this.entryModifyEvent = Event.register(bus);
+
+        this.entryDeleteEvent = Event.register(bus);
+
+        this.entryRegisteredEvent = Event.register(bus);
+
+        this.entryRemoveEvent = Event.register(bus);
+
+        this.register(path, recursive, handler);
     }
 
     /**
@@ -101,59 +107,57 @@ public class DirectoryWatcher implements Runnable {
      * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
      * @throws IOException Is thrown if an error occurred while creating new filesystem service.
      */
-    public static DirectoryWatcher create() throws IOException {
-        return new DirectoryWatcher();
-    }
-
-    /**
-     * Creates a new instance of <tt>DirectoryWatcher</tt> class.
-     *
-     * @param delayTimeInMillis delay time afterRun each look up the event loop
-     * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
-     * @throws IOException Is thrown if an error occurred while creating new filesystem service.
-     */
-    public static DirectoryWatcher create(long delayTimeInMillis) throws IOException {
-        return new DirectoryWatcher(delayTimeInMillis);
-    }
-
-    /**
-     * Creates a new instance of <tt>DirectoryWatcher</tt> class.
-     *
-     * @param duration duration of delay time afterRun each look up the event loop
-     * @param unit     time unit of duration
-     * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
-     * @throws IOException Is thrown if an error is occurred while creating new filesystem service.
-     */
-    public static DirectoryWatcher create(long duration, TimeUnit unit) throws IOException {
-        ArgumentUtils.checkNotNull(unit, "time unit");
-
-        return new DirectoryWatcher(unit.toMillis(duration));
-    }
-
-    public synchronized boolean register(Directory directory)
+    public static DirectoryWatcher create(final EventBus bus, final Path path)
             throws IOException {
-        return directory != null && this.register(directory.toPath());
+        return new DirectoryWatcher(bus, path, false, null);
     }
 
-    public synchronized boolean register(Directory directory, boolean recursive)
+    public static DirectoryWatcher create(final EventBus bus, final Path path, final boolean recursive)
             throws IOException {
-        return directory != null && this.register(directory.toPath(), recursive);
+        return new DirectoryWatcher(bus, path, recursive, null);
     }
 
-    public synchronized boolean register(Directory directory, boolean recursive, EventHandler<WatcherEventArgs> eventHandler)
+    public static DirectoryWatcher create(final EventBus bus, final Path path, final boolean recursive, final EventHandler<WatcherEventArgs> handler)
             throws IOException {
-        return directory != null && this.register(directory.toPath(), recursive, eventHandler);
+        return new DirectoryWatcher(bus, path, recursive, handler);
     }
 
-    public synchronized boolean register(Path path) throws IOException {
+    public Event<WatcherEventArgs> entryEvent() {
+        return this.entryEvent;
+    }
+
+    public Event<WatcherEventArgs> entryCreateEvent() {
+        return this.entryCreateEvent;
+    }
+
+    public Event<WatcherEventArgs> entryDeleteEvent() {
+        return this.entryDeleteEvent;
+    }
+
+    public Event<WatcherEventArgs> entryModifyEvent() {
+        return this.entryModifyEvent;
+    }
+
+    public Event<WatcherRegistryEventArgs> entryRegisteredEvent() {
+        return this.entryRegisteredEvent;
+    }
+
+    public Event<WatcherRegistryEventArgs> entryRemovedEvent() {
+        return this.entryRemoveEvent;
+    }
+
+    public synchronized boolean register(final Path path)
+            throws IOException {
         return this.register(path, false);
     }
 
-    public synchronized boolean register(Path path, boolean recursive) throws IOException {
+    public synchronized boolean register(final Path path, final boolean recursive)
+            throws IOException {
         return this.register(path, recursive, null);
     }
 
-    public synchronized boolean register(Path path, boolean recursive, EventHandler<WatcherEventArgs> eventHandler) throws IOException {
+    public synchronized boolean register(final Path path, final boolean recursive, final EventHandler<WatcherEventArgs> handler)
+            throws IOException {
         if (path == null) {
             return false;
         }
@@ -164,26 +168,26 @@ public class DirectoryWatcher implements Runnable {
             if (iterator.hasNext()) {
                 for (Path p = iterator.next(); iterator.hasNext(); p = iterator.next()) {
                     if (Files.isDirectory(p)) {
-                        this.createWatcherEntry(path, recursive, eventHandler);
+                        this.createWatcherEntry(path, recursive, handler);
                     }
                 }
             }
         } else {
-            this.createWatcherEntry(path, recursive, eventHandler);
+            this.createWatcherEntry(path, recursive, handler);
         }
 
         return true;
     }
 
-    public boolean isRegistered(Path path) {
+    public boolean isRegistered(final Path path) {
         return this.registeredPathsMap.containsKey(path);
     }
 
-    public synchronized boolean remove(Path path) {
+    public synchronized boolean unregister(final Path path) {
         if (this.registeredPathsMap.containsKey(path)) {
             WatcherEntry oldEntry = this.registeredPathsMap.remove(path);
 
-            this.entryRemoveEvent.raise(this, new WatcherRegistryEventArgs(oldEntry.watchKey, oldEntry.path(), oldEntry.isRecursive(), oldEntry.hasEventHandler()));
+            this.entryRemoveEvent.raise(this, new WatcherRegistryEventArgs(oldEntry.watchKey, oldEntry.path(), oldEntry.isRecursive(), oldEntry.hasHandler()));
 
             return true;
         }
@@ -209,13 +213,13 @@ public class DirectoryWatcher implements Runnable {
                 path = entry.path().resolve(event.context().toString());
 
                 if (kind == WatchEventKind.CREATE && Files.isDirectory(path) && entry.isRecursive()) {
-                    newEntries.put(path, entry.eventHandler());
+                    newEntries.put(path, entry.handler());
                 }
 
-                WatcherEventArgs e = new WatcherEventArgs(path, kind, entry.eventHandler != null, entry.isRecursive());
+                WatcherEventArgs e = new WatcherEventArgs(path, kind, entry.handler != null, entry.isRecursive());
 
-                if (entry.hasEventHandler()) {
-                    entry.eventHandler().handle(this, e);
+                if (entry.hasHandler()) {
+                    entry.handler().handle(this, e);
                 } else {
                     switch (kind) {
                         case CREATE:
@@ -246,105 +250,12 @@ public class DirectoryWatcher implements Runnable {
 
                 newEntries.clear();
             }
-
         } catch (IOException e) {
             throw new DirectoryWatcherException(e);
         }
     }
 
-    /**
-     * Starts the observation of all registered directories. This function is <tt>synchronized</tt>.
-     */
-    public synchronized void start() {
-        if (!isRunning) {
-            this.isRunning = true;
-
-            try {
-                SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
-
-                Scheduler sched = schedFact.getScheduler();
-
-                sched.start();
-
-                //JobDataMap map = RunnableJob.addToJobDataMap(this);
-
-                //JobDetail job = JobBuilder.newJob(RunnableJob.class).setJobData(map).build();
-
-                //Trigger trigger = TriggerBuilder.newTrigger().startNow().forJob(job).withSchedule(simpleSchedule()
-                //        .withIntervalInSeconds(10)
-                //        .repeatForever()).build();
-
-                //sched.scheduleJob(job, trigger);
-
-            } catch (SchedulerException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    /**
-     * Stops the observation of registered directories. This function is <tt>synchronized</tt>.
-     */
-    public synchronized void stop() {
-        if (this.isRunning) {
-            this.isRunning = false;
-        }
-    }
-
-    /**
-     * Returns a flag that indicates whether the watch is observing registered directories or not.
-     *
-     * @return Returns <tt>true</tt> if the watcher is observing registered directories; Otherwise <tt>false</tt>.
-     */
-    public boolean isRunning() {
-        return this.isRunning;
-    }
-
-    /**
-     * Returns the actual delay time of the watcher.
-     *
-     * @return Returns the actual delay time of the watcher.
-     */
-    public long delayTime() {
-        return this.delayTimeInMillis;
-    }
-
-    /**
-     * Returns the actual delay time of the watcher.
-     *
-     * @param other transform delay time to given time units
-     * @return Returns the actual delay time of the watcher.
-     */
-    public long delayTime(TimeUnit other) {
-        return other.convert(this.delayTimeInMillis, TimeUnit.MILLISECONDS);
-    }
-
-    public Event<WatcherEventArgs> entryEvent() {
-        return this.entryEvent;
-    }
-
-    public Event<WatcherEventArgs> entryCreateEvent() {
-        return this.entryCreateEvent;
-    }
-
-    public Event<WatcherEventArgs> entryDeleteEvent() {
-        return this.entryDeleteEvent;
-    }
-
-    public Event<WatcherEventArgs> getEntryModifyEvent() {
-        return this.entryModifyEvent;
-    }
-
-    public Event<WatcherRegistryEventArgs> entryRegistryEvent() {
-        return this.entryRegistryEvent;
-    }
-
-    public Event<WatcherRegistryEventArgs> entryRemoveEvent() {
-        return this.entryRemoveEvent;
-    }
-
-    private synchronized void createWatcherEntry(Path path, boolean recursive, EventHandler<WatcherEventArgs> eventHandler)
+    private synchronized void createWatcherEntry(final Path path, final boolean recursive, final EventHandler<WatcherEventArgs> eventHandler)
             throws IOException {
         if (path != null) {
             WatchKey watchKey = path.register(this.service, ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE);
@@ -353,7 +264,7 @@ public class DirectoryWatcher implements Runnable {
 
             this.registeredPathsMap.put(path, entry);
 
-            this.entryRegistryEvent.raise(this, new WatcherRegistryEventArgs(watchKey, path, recursive, entry.hasEventHandler()));
+            this.entryRegisteredEvent.raise(this, new WatcherRegistryEventArgs(watchKey, path, recursive, entry.hasHandler()));
         }
     }
 
@@ -372,17 +283,17 @@ public class DirectoryWatcher implements Runnable {
         /**
          * actual event handler
          */
-        private EventHandler<WatcherEventArgs> eventHandler;
+        private EventHandler<WatcherEventArgs> handler;
 
         /**
          * flag to observe also subdirectories
          */
         private boolean recursive;
 
-        WatcherEntry(WatchKey watchKey, Path path, boolean recursive, EventHandler<WatcherEventArgs> eventHandler) {
+        WatcherEntry(WatchKey watchKey, Path path, boolean recursive, EventHandler<WatcherEventArgs> handler) {
             this.watchKey = watchKey;
             this.path = path;
-            this.eventHandler = eventHandler;
+            this.handler = handler;
             this.recursive = recursive;
         }
 
@@ -394,12 +305,12 @@ public class DirectoryWatcher implements Runnable {
             return this.path;
         }
 
-        EventHandler<WatcherEventArgs> eventHandler() {
-            return this.eventHandler;
+        EventHandler<WatcherEventArgs> handler() {
+            return this.handler;
         }
 
-        boolean hasEventHandler() {
-            return this.eventHandler != null;
+        boolean hasHandler() {
+            return this.handler != null;
         }
 
         boolean isRecursive() {

@@ -1,8 +1,6 @@
 package org.panthercode.arctic.core.runtime.plugins;
 
 import org.panthercode.arctic.core.helper.identity.Identifiable;
-import org.panthercode.arctic.core.helper.identity.Identity;
-import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.Versionable;
 
 /**
@@ -10,21 +8,15 @@ import org.panthercode.arctic.core.helper.version.Versionable;
  */
 public interface Plugin extends Identifiable, Versionable {
 
-    Identity identity();
-
-    Version version();
-
     boolean canActivate();
 
     boolean isActivated();
 
-    void activate() throws Exception;
+    void activate() throws RuntimeException;
 
-    void deactivate() throws Exception;
+    void deactivate() throws RuntimeException;
 
-    Class<? extends Plugin>[] dependencies();
+    <T> T process(Class<T> returnType, Object... args) throws RuntimeException;
 
-    Class<? extends Plugin>[] checkDependencies(PluginManager manager);
-
-    Object behindObject();
+    <T> T getBehindObject(Class<T> clazz);
 }

@@ -17,7 +17,6 @@ package org.panthercode.arctic.core.helper.version;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.helper.Freezable;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
 
 /**
@@ -30,7 +29,7 @@ import org.panthercode.arctic.core.reflect.ReflectionUtils;
  * @see VersionInfo
  * @since 1.0
  */
-public class Version implements Freezable, Comparable<Version> {
+public class Version implements Comparable<Version> {
 
     /**
      * major number of version
@@ -51,11 +50,6 @@ public class Version implements Freezable, Comparable<Version> {
      * revision number of version
      */
     private int revision = 0;
-
-    /**
-     * flag to allow modifications
-     */
-    private boolean canModify = true;
 
     /**
      * standard constructor
@@ -94,7 +88,7 @@ public class Version implements Freezable, Comparable<Version> {
     public Version(VersionInfo info) {
         ArgumentUtils.checkNotNull(info, "version information");
 
-        this.set(info.major(), info.minor(), info.revision(), info.build());
+        this.set(info.major(), info.minor(), info.build(), info.revision());
     }
 
     /**
@@ -105,43 +99,37 @@ public class Version implements Freezable, Comparable<Version> {
     public Version(Version version) {
         ArgumentUtils.checkNotNull(version, "version");
 
-        this.set(version.majorNumber(), version.minorNumber(), version.revisionNumber(), version.buildNumber());
+        this.set(version.majorNumber(), version.minorNumber(), version.buildNumber(), version.revisionNumber());
     }
 
     /**
      * Increment the major number. This function is <tt>synchronized</tt>.
      */
     public synchronized void upgrade() {
-        if (this.canModify) {
-            this.major++;
-        }
+        this.major++;
     }
 
     /**
      * Increment the minor number. This function is <tt>synchronized</tt>.
      */
     public synchronized void update() {
-        if (this.canModify) {
-            this.minor++;
-        }
+        this.minor++;
+
     }
 
     /**
      * Increment the build number. This function is <tt>synchronized</tt>.
      */
     public synchronized void build() {
-        if (this.canModify) {
-            this.build++;
-        }
+        this.build++;
+
     }
 
     /**
      * Increment the revision number. This function is <tt>synchronized</tt>.
      */
     public synchronized void review() {
-        if (this.canModify) {
-            this.revision++;
-        }
+        this.revision++;
     }
 
     /**
@@ -185,9 +173,7 @@ public class Version implements Freezable, Comparable<Version> {
      * <tt>synchronized</tt>.
      */
     public synchronized void reset() {
-        if (this.canModify) {
-            this.major = this.minor = this.build = this.revision = 0;
-        }
+        this.major = this.minor = this.build = this.revision = 0;
     }
 
     /**
@@ -199,23 +185,21 @@ public class Version implements Freezable, Comparable<Version> {
      */
     public synchronized void set(final VersionField field, final int value)
             throws IllegalArgumentException {
-        if (this.canModify) {
-            ArgumentUtils.checkGreaterOrEqualsZero(value, field.toString());
+        ArgumentUtils.checkGreaterOrEqualsZero(value, field.toString());
 
-            switch (field) {
-                case MAJOR:
-                    this.major = value;
-                    break;
-                case MINOR:
-                    this.minor = value;
-                    break;
-                case BUILD:
-                    this.build = value;
-                    break;
-                case REVISION:
-                    this.revision = value;
-                    break;
-            }
+        switch (field) {
+            case MAJOR:
+                this.major = value;
+                break;
+            case MINOR:
+                this.minor = value;
+                break;
+            case BUILD:
+                this.build = value;
+                break;
+            case REVISION:
+                this.revision = value;
+                break;
         }
     }
 
@@ -230,17 +214,16 @@ public class Version implements Freezable, Comparable<Version> {
      */
     public synchronized void set(final int major, final int minor, final int build, final int revision)
             throws IllegalArgumentException {
-        if (this.canModify) {
-            ArgumentUtils.checkGreaterOrEqualsZero(major, "major");
-            ArgumentUtils.checkGreaterOrEqualsZero(minor, "minor");
-            ArgumentUtils.checkGreaterOrEqualsZero(build, "build");
-            ArgumentUtils.checkGreaterOrEqualsZero(revision, "revision");
+        ArgumentUtils.checkGreaterOrEqualsZero(major, "major");
+        ArgumentUtils.checkGreaterOrEqualsZero(minor, "minor");
+        ArgumentUtils.checkGreaterOrEqualsZero(build, "build");
+        ArgumentUtils.checkGreaterOrEqualsZero(revision, "revision");
 
-            this.major = major;
-            this.minor = minor;
-            this.build = build;
-            this.revision = revision;
-        }
+        this.major = major;
+        this.minor = minor;
+        this.build = build;
+        this.revision = revision;
+
     }
 
     /**
@@ -284,7 +267,7 @@ public class Version implements Freezable, Comparable<Version> {
      */
     public synchronized static Version parse(final String version)
             throws NumberFormatException {
-        if (version == null) {
+        if (version == null || version.isEmpty()) {
             return new Version();
         }
 
@@ -313,39 +296,19 @@ public class Version implements Freezable, Comparable<Version> {
      */
     @Override
     public String toString() {
-        String str = this.major + "." + this.minor;
+        StringBuilder builder = new StringBuilder();
 
-        str += (this.build == 0) ?
-                ((this.revision == 0) ? "" : "." + this.revision) :
-                "." + this.revision + "." + this.build;
+        builder.append(this.major).append(".").append(this.minor);
 
-        return str;
-    }
+        if (this.build > 0 || this.revision > 0) {
+            builder.append(".").append(this.build);
+        }
 
-    /**
-     * Freeze this object. The object can't be modified. This function is <tt>synchronized</tt>.
-     */
-    @Override
-    public synchronized void freeze() {
-        this.canModify = false;
-    }
+        if (this.revision > 0) {
+            builder.append(".").append(this.revision);
+        }
 
-    /**
-     * Unfreeze this object. The object can be modified. This function is <tt>synchronized</tt>.
-     */
-    @Override
-    public synchronized void unfreeze() {
-        this.canModify = true;
-    }
-
-    /**
-     * Returns a flag representing the object can be modified or not.
-     *
-     * @return Returns a boolean flag representing the object can be modified or not.
-     */
-    @Override
-    public boolean canModify() {
-        return this.canModify;
+        return builder.toString();
     }
 
     public Version copy() {
@@ -370,7 +333,7 @@ public class Version implements Freezable, Comparable<Version> {
 
         Version version = (Version) obj;
         return (this.major == version.majorNumber() && this.minor == version.minorNumber() &&
-                this.revision == version.revisionNumber() && this.build == version.buildNumber());
+                this.build == version.buildNumber() && this.revision == version.revisionNumber());
     }
 
     /**
@@ -396,6 +359,10 @@ public class Version implements Freezable, Comparable<Version> {
      */
     @Override
     public int compareTo(Version other) {
+        if (other == null) {
+            return 1;
+        }
+
         int[] actualVersion = {this.majorNumber(), this.minorNumber(), this.buildNumber(), this.revisionNumber()};
         int[] otherVersion = {other.majorNumber(), other.minorNumber(), other.buildNumber(), other.revisionNumber()};
 

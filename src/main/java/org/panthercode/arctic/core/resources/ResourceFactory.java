@@ -17,7 +17,7 @@ package org.panthercode.arctic.core.resources;
 
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.concurrent.Semaphore;
+import org.panthercode.arctic.core.concurrent.semaphore.Semaphore;
 import org.panthercode.arctic.core.processing.priority.Priority;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
 import org.panthercode.arctic.core.settings.Configuration;

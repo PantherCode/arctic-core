@@ -74,46 +74,92 @@ public class Configuration extends Properties {
         this.setComment(comment);
     }
 
-    public <T> T get(Object key, Class<T> returnType){
-        ArgumentUtils.checkNotNull(returnType, "return type");
+    //TODO: throws Nullpoiner
+    public <T> T get(Object key, Class<T> returnType) {
+        ArgumentUtils.checkNotNull(returnType, "type");
 
         return returnType.cast(this.get(key));
+    }
+
+    public <T> T getOrDefault(Object key, Object defaultValue, Class<T> returnType) {
+        ArgumentUtils.checkNotNull(returnType, "type");
+        ArgumentUtils.checkNotNull(defaultValue, "default value");
+
+        Object result = this.contains(key) ? this.get(key) : defaultValue;
+
+        return returnType.cast(result);
     }
 
     public int getInteger(Object key) {
         return this.get(key, Integer.class);
     }
 
+    public int getIntegerOrDefault(Object key, int defaultValue) {
+        return this.getOrDefault(key, defaultValue, Integer.class);
+    }
+
     public String getString(Object key) {
         return this.get(key, String.class);
+    }
+
+    public String getStringOrDefault(Object key, String defaultValue) {
+        return this.getOrDefault(key, defaultValue, String.class);
     }
 
     public boolean getBoolean(Object key) {
         return this.get(key, Boolean.class);
     }
 
+    public boolean getBooleanOrDefault(Object key, boolean defaultValue) {
+        return this.getOrDefault(key, defaultValue, Boolean.class);
+    }
+
     public double getDouble(Object key) {
         return this.get(key, Double.class);
+    }
+
+    public double getDoubleOrDefault(Object key, double defaultValue) {
+        return this.getOrDefault(key, defaultValue, Double.class);
     }
 
     public byte getByte(Object key) {
         return this.get(key, Byte.class);
     }
 
+    public byte getByteOrDefault(Object key, byte defaultValue) {
+        return this.getOrDefault(key, defaultValue, Byte.class);
+    }
+
     public float getFloat(Object key) {
         return this.get(key, Float.class);
+    }
+
+    public float getFloatOrDefault(Object key, float defaultValue) {
+        return this.getOrDefault(key, defaultValue, Float.class);
     }
 
     public long getLong(Object key) {
         return this.get(key, Long.class);
     }
 
+    public long getLongOrDefault(Object key, long defaultValue) {
+        return this.getOrDefault(key, defaultValue, Long.class);
+    }
+
     public short getShort(Object key) {
         return this.get(key, Short.class);
     }
 
+    public short getShortOrDefault(Object key, short defaultValue) {
+        return this.getOrDefault(key, defaultValue, Short.class);
+    }
+
     public Character getCharater(Object key) {
         return this.get(key, Character.class);
+    }
+
+    public Character getCharacterOrDefault(Object key, char defaultValue) {
+        return this.getOrDefault(key, defaultValue, Character.class);
     }
 
     /**
@@ -155,6 +201,26 @@ public class Configuration extends Properties {
     public void store(final String path) throws IOException {
         try (FileOutputStream stream = FileUtils.openOutputStream(new File(path))) {
             store(stream, this.comment);
+        }
+    }
+
+    public static ConfigurationBuilder create() {
+        return new ConfigurationBuilder();
+    }
+
+    public static class ConfigurationBuilder {
+        private Properties properties = new Properties();
+
+        public ConfigurationBuilder append(Object key, Object value) {
+            ArgumentUtils.checkNotNull(key, "key");
+
+            this.properties.put(key, value);
+
+            return this;
+        }
+
+        public Configuration build() {
+            return new Configuration(this.properties);
         }
     }
 }

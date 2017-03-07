@@ -16,7 +16,6 @@
 package org.panthercode.arctic.core.helper.identity;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.panthercode.arctic.core.helper.Freezable;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
 
 import java.util.Random;
@@ -39,7 +38,7 @@ import java.util.Random;
  * @see IdentityInfo
  * @since 1.0
  */
-public final class Identity implements Freezable {
+public final class Identity {
 
     /**
      * unique identifier of object
@@ -55,11 +54,6 @@ public final class Identity implements Freezable {
      * name of group the object belongs to
      */
     private String group;
-
-    /**
-     * flag to allow modifications
-     */
-    private boolean canModify = true;
 
     /**
      * private constructor
@@ -111,11 +105,7 @@ public final class Identity implements Freezable {
      */
     public synchronized void setName(final String name)
             throws RuntimeException {
-        if (this.canModify) {
             this.name = (name == null) ? "unknown" : name;
-        } else {
-            throw new RuntimeException("The object is frozen and can't be modified.");
-        }
     }
 
     /**
@@ -136,11 +126,7 @@ public final class Identity implements Freezable {
      */
     public synchronized void setGroup(final String group)
             throws RuntimeException {
-        if (this.canModify) {
             this.group = (group == null) ? "default" : group;
-        } else {
-            throw new RuntimeException("The object is frozen and can't be modified.");
-        }
     }
 
     /**
@@ -171,32 +157,6 @@ public final class Identity implements Freezable {
      */
     public Identity copy() {
         return new Identity(this.id, this.name, this.group);
-    }
-
-    /**
-     * Freeze this object. The object can't be modified. This function is <tt>synchronized</tt>.
-     */
-    @Override
-    public synchronized void freeze() {
-        this.canModify = false;
-    }
-
-    /**
-     * Unfreeze this object. The object can be modified. This function is <tt>synchronized</tt>.
-     */
-    @Override
-    public synchronized void unfreeze() {
-        this.canModify = true;
-    }
-
-    /**
-     * Returns a flag representing the object can be modified or not.
-     *
-     * @return Returns a boolean flag representing the object can be modified or not.
-     */
-    @Override
-    public boolean canModify() {
-        return this.canModify;
     }
 
     /**

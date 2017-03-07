@@ -16,7 +16,8 @@
 package org.panthercode.arctic.core.processing.modules;
 
 import org.panthercode.arctic.core.collections.VersionMap;
-import org.panthercode.arctic.core.collections.helper.VersionMapAllocator;
+import org.panthercode.arctic.core.collections.helper.AllocationException;
+import org.panthercode.arctic.core.collections.helper.DefaultAllocator;
 import org.panthercode.arctic.core.helper.version.Version;
 
 /**
@@ -26,7 +27,7 @@ import org.panthercode.arctic.core.helper.version.Version;
  * @see VersionMap
  * @since 1.0
  */
-public class ModuleAllocator extends VersionMapAllocator<Object, Module> {
+public class ModuleAllocator extends DefaultAllocator<Object, Module> {
 
     /**
      * Constructor
@@ -42,16 +43,12 @@ public class ModuleAllocator extends VersionMapAllocator<Object, Module> {
      *
      * @param key key of module
      * @return Returns the object if the map contains it
-     * @throws ModuleAllocationException Is thrown if the module repository doesn't contain the given key.
+     * @throws AllocationException Is thrown if the module repository doesn't contain the given key.
      */
     @Override
     public Module allocate(Object key)
-            throws ModuleAllocationException {
+            throws AllocationException {
         Module module = super.allocate(key);
-
-        if (module == null) {
-            throw new ModuleAllocationException("No module found.");
-        }
 
         return module.copy();
     }
@@ -62,16 +59,12 @@ public class ModuleAllocator extends VersionMapAllocator<Object, Module> {
      * @param key     key of module
      * @param version version of module
      * @return Returns the module if the map contains it.
-     * @throws ModuleAllocationException Is thrown if the module repository doesn't contain the given element.
+     * @throws AllocationException Is thrown if the module repository doesn't contain the given element.
      */
     @Override
     public Module allocate(Object key, Version version)
-            throws ModuleAllocationException {
+            throws AllocationException {
         Module module = super.allocate(key, version);
-
-        if (module == null) {
-            throw new ModuleAllocationException("No module found.");
-        }
 
         return module.copy();
     }

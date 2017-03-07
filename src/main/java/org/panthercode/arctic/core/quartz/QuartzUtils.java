@@ -1,4 +1,4 @@
-package org.panthercode.arctic.core.concurrent.helper;
+package org.panthercode.arctic.core.quartz;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
@@ -151,12 +151,6 @@ public class QuartzUtils {
     public static TriggerBuilder triggerBuilderTimeSpan(String name, String group, LocalDateTime startAt, LocalDateTime endAt, ScheduleBuilder<? extends Trigger> schedule) {
         return QuartzUtils.triggerBuilderStartAt(name, group, startAt, schedule)
                 .endAt(Date.from(endAt.atZone(ZoneId.systemDefault()).toInstant()));
-    }
-
-    public static JobBuilder identifiableJobBuilder(Class<? extends IdentifiableJob> clazz) {
-        ArgumentUtils.checkNotNull(clazz, "class");
-
-        return QuartzUtils.jobBuilder(clazz, Identity.fromAnnotation(clazz));
     }
 
     public static JobBuilder jobBuilder(Class<? extends Job> clazz, Identity identity) {

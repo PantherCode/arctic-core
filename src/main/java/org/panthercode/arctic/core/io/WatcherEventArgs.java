@@ -35,7 +35,7 @@ public class WatcherEventArgs extends EventArgs {
         return this.kind;
     }
 
-    public boolean hasEventHandler() {
+    public boolean hasHandler() {
         return this.hasEventHandler;
     }
 

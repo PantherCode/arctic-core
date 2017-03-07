@@ -16,7 +16,8 @@
 package org.panthercode.arctic.core.resources;
 
 import org.panthercode.arctic.core.collections.VersionMap;
-import org.panthercode.arctic.core.collections.helper.VersionMapAllocator;
+import org.panthercode.arctic.core.collections.helper.AllocationException;
+import org.panthercode.arctic.core.collections.helper.DefaultAllocator;
 import org.panthercode.arctic.core.helper.version.Version;
 
 /**
@@ -24,30 +25,24 @@ import org.panthercode.arctic.core.helper.version.Version;
  * @see VersionMap
  * @since 1.0
  */
-public class ResourceAllocator extends VersionMapAllocator<Object, Resource> {
+public class ResourceAllocator extends DefaultAllocator<Object, Resource> {
 
     public ResourceAllocator(VersionMap<Object, Resource> resourcePool) {
         super(resourcePool);
     }
 
     @Override
-    public Resource allocate(Object key) {
+    public Resource allocate(Object key)
+            throws AllocationException {
         Resource resource = super.allocate(key);
-
-        if (resource == null) {
-            throw new ResourceAllocationExcepion("No resource found.");
-        }
 
         return resource.copy();
     }
 
     @Override
-    public Resource allocate(Object key, Version version) {
+    public Resource allocate(Object key, Version version)
+            throws AllocationException {
         Resource resource = super.allocate(key, version);
-
-        if (resource == null) {
-            throw new ResourceAllocationExcepion("No resource found");
-        }
 
         return resource.copy();
     }

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.concurrent.impl;
+package org.panthercode.arctic.core.concurrent.semaphore.impl;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import org.panthercode.arctic.core.concurrent.Semaphore;
+import org.panthercode.arctic.core.concurrent.semaphore.Semaphore;
 
 /**
  * The <tt>AbstractSemaphore</tt> class contains the basic functionality to implement a semaphore.
