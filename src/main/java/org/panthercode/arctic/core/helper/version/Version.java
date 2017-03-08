@@ -214,16 +214,10 @@ public class Version implements Comparable<Version> {
      */
     public synchronized void set(final int major, final int minor, final int build, final int revision)
             throws IllegalArgumentException {
-        ArgumentUtils.checkGreaterOrEqualsZero(major, "major");
-        ArgumentUtils.checkGreaterOrEqualsZero(minor, "minor");
-        ArgumentUtils.checkGreaterOrEqualsZero(build, "build");
-        ArgumentUtils.checkGreaterOrEqualsZero(revision, "revision");
-
-        this.major = major;
-        this.minor = minor;
-        this.build = build;
-        this.revision = revision;
-
+        this.major = ArgumentUtils.checkGreaterOrEqualsZero(major, "major");
+        this.minor = ArgumentUtils.checkGreaterOrEqualsZero(minor, "minor");
+        this.build = ArgumentUtils.checkGreaterOrEqualsZero(build, "build");
+        this.revision = ArgumentUtils.checkGreaterOrEqualsZero(revision, "revision");
     }
 
     /**
@@ -278,7 +272,7 @@ public class Version implements Comparable<Version> {
         int length = parts.length > 4 ? 4 : parts.length;
 
         for (int i = 0; i < length; i++) {
-            fields[i] = Integer.parseInt(parts[i]);
+            fields[i] = ArgumentUtils.checkGreaterOrEqualsZero(Integer.parseInt(parts[i]), "version field");
         }
 
         return new Version(fields[0], fields[1], fields[2], fields[3]);

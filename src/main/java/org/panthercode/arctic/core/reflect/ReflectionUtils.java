@@ -171,7 +171,7 @@ public class ReflectionUtils {
      */
     public static List<Class<?>> filterClassListByAnnotation(final List<Class<?>> classList,
                                                              final Class<? extends Annotation> filter)
-            throws NullPointerException {
+            {
         ArgumentUtils.checkNotNull(classList, "list");
         ArgumentUtils.checkNotNull(filter, "filter");
 

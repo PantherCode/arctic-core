@@ -101,11 +101,9 @@ public final class Identity {
      * This function is <tt>synchronized</tt>.
      *
      * @param name new object name
-     * @throws RuntimeException Is thrown if the name is tried to modify, but it's not allowed.
      */
-    public synchronized void setName(final String name)
-            throws RuntimeException {
-            this.name = (name == null) ? "unknown" : name;
+    public synchronized void setName(final String name) {
+        this.name = (name == null) ? "unknown" : name;
     }
 
     /**
@@ -122,11 +120,9 @@ public final class Identity {
      * This function is <tt>synchronized</tt>.
      *
      * @param group new group name
-     * @throws RuntimeException Is thrown if the group name is tried to modify, but it's not allowed.
      */
-    public synchronized void setGroup(final String group)
-            throws RuntimeException {
-            this.group = (group == null) ? "default" : group;
+    public synchronized void setGroup(final String group) {
+        this.group = (group == null) ? "default" : group;
     }
 
     /**
@@ -208,6 +204,14 @@ public final class Identity {
      * @return Returns <tt>true</tt> if both objects have same name and same group.
      */
     public boolean match(Identity identity) {
+        if (identity == this) {
+            return true;
+        }
+
+        if (identity == null) {
+            return false;
+        }
+
         return this.getName().equals(identity.getName()) &&
                 this.getGroup().equals(identity.getGroup());
     }
@@ -230,6 +234,7 @@ public final class Identity {
         }
 
         Identity identity = (Identity) obj;
+
         return this.id() == identity.id() &&
                 this.getName().equals(identity.getName()) &&
                 this.getGroup().equals(identity.getGroup());
@@ -266,6 +271,7 @@ public final class Identity {
         Random seed = new Random(System.currentTimeMillis());
 
         HashCodeBuilder builder = new HashCodeBuilder();
+
         long id = builder.append(name)
                 .append(group).toHashCode();
         id = Math.abs(id * seed.nextLong());

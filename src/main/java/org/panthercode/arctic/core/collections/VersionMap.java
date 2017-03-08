@@ -22,8 +22,6 @@ import org.panthercode.arctic.core.helper.version.Versionable;
 
 import java.util.*;
 
-//TODO: process mehtod to get all versions of an object
-
 /**
  * The <tt>VersionMap</tt> stores a set of objects with its version.
  *
@@ -37,13 +35,13 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
     /**
      * actual map to store objects
      */
-    private final HashMap<K, TreeMap<Version, V>> map = new HashMap<K, TreeMap<Version, V>>();
+    private final HashMap<K, TreeMap<Version, V>> map;
 
     /**
      * Default Constructor
      */
     public VersionMap() {
-        super();
+        this.map = new HashMap<>();
     }
 
     /**
@@ -175,7 +173,16 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
         return this.containsKey(key) ? this.map.remove(key).lastEntry().getValue() : null;
     }
 
-    public synchronized V remove(Object key, Version version) {
+    @Override
+    public synchronized boolean remove(Object key, Object version) {
+        if (!(version instanceof Version)) {
+            throw new IllegalArgumentException("The class type of value is not Version.");
+        }
+
+        return this.removeValue(key, (Version) version) != null;
+    }
+
+    public synchronized V removeValue(Object key, Version version) {
         if (this.map.containsKey(key) && this.map.get(key).containsKey(version)) {
             return this.map.get(key).remove(version);
         }

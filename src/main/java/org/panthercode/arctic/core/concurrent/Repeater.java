@@ -19,7 +19,7 @@ public class Repeater implements Runnable {
 
     private Runnable runnable;
 
-    private Semaphore<Void> semaphore = Semaphores.createQueuedSemaphore();
+    private final Semaphore<Void> semaphore = Semaphores.createQueuedSemaphore();
 
     public Repeater(Runnable runnable) {
         this(runnable, DEFAULT_DELAY_TIME_MS);
@@ -73,6 +73,8 @@ public class Repeater implements Runnable {
 
                 while (this.isRunning()) {
                     this.runnable.run();
+
+                    Thread.sleep(this.delayTimeInMillis);
                 }
             } else {
                 this.semaphore.release();

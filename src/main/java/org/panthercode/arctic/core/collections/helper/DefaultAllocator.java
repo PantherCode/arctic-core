@@ -32,7 +32,7 @@ public class DefaultAllocator<K, V extends Versionable> implements Allocator<K, 
     /**
      * actual instance of VersionMap
      */
-    private VersionMap<K, V> versionMap;
+    private final VersionMap<K, V> versionMap;
 
     /**
      * Constructor
@@ -102,6 +102,10 @@ public class DefaultAllocator<K, V extends Versionable> implements Allocator<K, 
             throws AllocationException {
         ArgumentUtils.checkNotNull(key, "key");
         ArgumentUtils.checkNotNull(version, "version");
+
+        if (!this.contains(key, version)) {
+            throw new AllocationException("The map doesn't contain the key.");
+        }
 
         return this.versionMap.get(key, version);
     }

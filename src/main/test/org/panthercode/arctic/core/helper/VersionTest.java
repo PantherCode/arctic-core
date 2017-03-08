@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
  * <p>
  * major.minor[.build[.revision]]
  */
+@Test(sequential = true)
 public class VersionTest {
 
     private static final Version VERSION_1 = new Version();
@@ -157,8 +158,17 @@ public class VersionTest {
         Assert.assertEquals(actualVersion, VERSION_4, "Actual value of version object");
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T010_Version_setFail_negativeNumber() {
+        final int negativeMajorNumber = -1;
+
+        final Version actualVersion = new Version();
+
+        actualVersion.set(VersionField.MAJOR, negativeMajorNumber);
+    }
+
     @Test
-    public void T010_Version_set() {
+    public void T011_Version_set() {
         final int expectedMajorNumber = 1;
 
         final int expectedMinorNumber = 2;
@@ -174,18 +184,33 @@ public class VersionTest {
         Assert.assertEquals(actualVersion, VERSION_4, "Actual value of version object");
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T012_Version_setFail() {
+        final int majorNumber = 1;
+
+        final int minorNumber = 2;
+
+        final int negativeBuildNumber = -3;
+
+        final int revisionNumber = 4;
+
+        final Version actualVersion = new Version();
+
+        actualVersion.set(majorNumber, minorNumber, negativeBuildNumber, revisionNumber);
+    }
+
     @Test
-    public void T011_Version_isAnnotated() {
+    public void T013_Version_isAnnotated() {
         Assert.assertTrue(Version.isAnnotated(TestVersionClass.class), "Class is annotated");
     }
 
     @Test
-    public void T012_Version_isAnnotatedFail() {
+    public void T014_Version_isAnnotatedFail() {
         Assert.assertFalse(Version.isAnnotated(TestClass.class), "Class is annotated");
     }
 
     @Test
-    public void T013_Version_fromAnnotation() {
+    public void T015_Version_fromAnnotation() {
         final Version actualVersion = Version.fromAnnotation(TestVersionClass.class);
 
         Assert.assertNotNull(actualVersion, "Actual value of version object");
@@ -194,14 +219,14 @@ public class VersionTest {
     }
 
     @Test
-    public void T014_Version_fromAnnotationFail() {
+    public void T016_Version_fromAnnotationFail() {
         final Version actualVersion = Version.fromAnnotation(TestClass.class);
 
         Assert.assertEquals(actualVersion, VERSION_1, "Actual value of version object");
     }
 
     @Test
-    public void T015_Version_parse() {
+    public void T017_Version_parse() {
         final String versionString1 = "0.0";
 
         final String versionString2 = "1.2";
@@ -246,21 +271,28 @@ public class VersionTest {
     }
 
     @Test(expectedExceptions = NumberFormatException.class)
-    public void T016_Version_parseFail_invalidNumber() {
+    public void T018_Version_parseFail_invalidNumber() {
         final String versionString = "1.a";
 
         final Version actualVersion = Version.parse(versionString);
     }
 
     @Test(expectedExceptions = NumberFormatException.class)
-    public void T017_Version_parseFail_wrongDelimiter() {
+    public void T019_Version_parseFail_wrongDelimiter() {
         final String versionString = "1,0";
 
         final Version actualVersion = Version.parse(versionString);
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void T020_Version_parseFail_negativeNumber() {
+        final String versionString = "1.-2";
+
+        final Version actualVersion = Version.parse(versionString);
+    }
+
     @Test
-    public void T018_Version_toString() {
+    public void T021_Version_toString() {
         final String expectedVersionString1 = "0.0";
 
         final String expectedVersionString2 = "1.2";
@@ -276,14 +308,14 @@ public class VersionTest {
     }
 
     @Test
-    public void T019_Version_copy() {
+    public void T022_Version_copy() {
         final Version actualVersion = VERSION_3.copy();
 
         Assert.assertEquals(actualVersion, VERSION_3, "Value of actual version object");
     }
 
     @Test
-    public void T020_Version_equals() {
+    public void T023_Version_equals() {
         final TestClass invalidValue = new TestClass();
 
         final Version validValue = VERSION_4.copy();
@@ -298,7 +330,7 @@ public class VersionTest {
     }
 
     @Test
-    public void T021_Version_equals() {
+    public void T024_Version_equals() {
         final int lessThan = -1;
 
         final int equals = 0;

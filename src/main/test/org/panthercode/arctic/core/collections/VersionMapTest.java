@@ -3,7 +3,9 @@ package org.panthercode.arctic.core.collections;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.Versionable;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import java.util.Set;
 /**
  * Created by architect on 06.03.17.
  */
-@Test(singleThreaded = true, sequential = true)
+@Test(sequential = true)
 public class VersionMapTest {
 
     private static final String KEY_1 = "Test Key 1";
@@ -49,14 +51,14 @@ public class VersionMapTest {
 
     private static final VersionMap<String, TestVersionClass> MAP = new VersionMap<>();
 
-    @BeforeMethod
+    @BeforeClass
     public void before() {
         MAP.put(KEY_1, TEST_VERSION_CLASS_1);
         MAP.put(KEY_2, TEST_VERSION_CLASS_2);
         MAP.put(KEY_3, TEST_VERSION_CLASS_3);
     }
 
-    @AfterMethod
+    @AfterClass
     public void after() {
         MAP.clear();
     }
@@ -133,7 +135,7 @@ public class VersionMapTest {
 
         Assert.assertEquals(MAP.get(KEY_1), value, "Value from map");
 
-        MAP.remove(KEY_1, value);
+        Assert.assertTrue(MAP.remove(KEY_1, version), "Remove element from map");
     }
 
     @Test
@@ -171,7 +173,7 @@ public class VersionMapTest {
 
         Assert.assertEquals(MAP.size(), expectedSize, "Size of map");
 
-        MAP.remove(key, version);
+        Assert.assertTrue(MAP.remove(key, version), "Remove element from map");
     }
 
     @Test(expectedExceptions = NullPointerException.class)
@@ -227,7 +229,7 @@ public class VersionMapTest {
 
         Assert.assertTrue(MAP.contains(KEY_3, version), "Map contains given element");
 
-        Assert.assertEquals(MAP.remove(KEY_3, version), value, "Value from map");
+        Assert.assertTrue(MAP.remove(KEY_3, version), "Remove element from map");
 
         Assert.assertFalse(MAP.contains(KEY_3, version), "Map contains given element");
     }
@@ -238,9 +240,9 @@ public class VersionMapTest {
 
         final Version version = new Version(2, 0);
 
-        Assert.assertNull(MAP.remove(key, VERSION_1), "Value from map");
+        Assert.assertFalse(MAP.remove(key, VERSION_1), "VRemove element from map");
 
-        Assert.assertNull(MAP.remove(KEY_1, version), "Value from map");
+        Assert.assertFalse(MAP.remove(KEY_1, version), "Remove element from map");
     }
 
     @Test
@@ -273,9 +275,9 @@ public class VersionMapTest {
 
         Assert.assertTrue(MAP.contains(key2, version2), "Map contains given element");
 
-        MAP.remove(key1, value1);
+        Assert.assertTrue(MAP.remove(key1, version1), "Remove element from map");
 
-        MAP.remove(key2, value2);
+        Assert.assertTrue(MAP.remove(key2, version2), "Remove element from map");
     }
 
     @Test
@@ -312,7 +314,9 @@ public class VersionMapTest {
         Assert.assertEquals(MAP.size(), expectedSize, "Size of map");
 
         MAP.put(KEY_1, TEST_VERSION_CLASS_1);
+
         MAP.put(KEY_2, TEST_VERSION_CLASS_2);
+
         MAP.put(KEY_3, TEST_VERSION_CLASS_3);
     }
 
@@ -349,9 +353,9 @@ public class VersionMapTest {
 
         Assert.assertEquals(actualCollection.size(), expectedSize, "Size of value collection");
 
-        MAP.remove(KEY_1, value1);
+        Assert.assertTrue(MAP.remove(KEY_1, version1), "Remove element from map");
 
-        MAP.remove(KEY_3, value2);
+        Assert.assertTrue(MAP.remove(KEY_3, version2), "Remove element from map");
     }
 
     @Test
@@ -376,8 +380,8 @@ public class VersionMapTest {
 
         Assert.assertEquals(actualEntrySet.size(), expectedSize, "Size of entry set");
 
-        MAP.remove(KEY_1, value1);
+        Assert.assertTrue(MAP.remove(KEY_1, version1), "Remove element from map");
 
-        MAP.remove(KEY_3, value2);
+        Assert.assertTrue(MAP.remove(KEY_3, version2), "Remove element from map");
     }
 }
