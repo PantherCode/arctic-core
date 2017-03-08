@@ -18,11 +18,13 @@ package org.panthercode.arctic.core.reflect;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -57,6 +59,9 @@ public class ReflectionUtils {
      */
     public static void invokeMethod(Object object, String functionName, Object... arguments)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        ArgumentUtils.checkNotNull(object, "object");
+        ArgumentUtils.checkNotNull(functionName, "function name");
+
         MethodUtils.invokeMethod(object, functionName, arguments);
     }
 
@@ -78,7 +83,11 @@ public class ReflectionUtils {
     @SuppressWarnings("unchecked")
     public static <T> T invokeMethod(Object object, String functionName, Class<T> returnType, Object... arguments)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        return (T) MethodUtils.invokeMethod(object, functionName, arguments);
+        ArgumentUtils.checkNotNull(object, "object");
+        ArgumentUtils.checkNotNull(functionName, "function name");
+        ArgumentUtils.checkNotNull(returnType, "return type");
+
+        return returnType.cast(MethodUtils.invokeMethod(object, functionName, arguments));
     }
 
     /**
@@ -92,6 +101,10 @@ public class ReflectionUtils {
     public static List<String> extractClassNamesFromJar(Path path)
             throws NullPointerException, IOException {
         ArgumentUtils.checkNotNull(path, "path");
+
+        if (!Files.exists(path)) {
+            throw new FileNotFoundException("Can't find the given path.");
+        }
 
         List<String> classNameList = new ArrayList<>();
 
@@ -124,6 +137,10 @@ public class ReflectionUtils {
             throws IOException, ClassNotFoundException, IllegalArgumentException {
         ArgumentUtils.checkNotNull(path, "path");
 
+        if (!Files.exists(path)) {
+            throw new FileNotFoundException("Can't find the given path.");
+        }
+
         List<Class<?>> classList = new ArrayList<>();
 
         URL[] urlArray = {new URL("jar:file:" + path + "!/")};
@@ -153,7 +170,7 @@ public class ReflectionUtils {
         final List<Class<?>> filteredList = new ArrayList<>();
 
         for (Class<?> clazz : classList) {
-            if (filter.equals(clazz)) {
+            if (filter.isAssignableFrom(clazz)) {
                 filteredList.add(clazz);
             }
         }
@@ -170,8 +187,7 @@ public class ReflectionUtils {
      * @throws NullPointerException Is thrown if one of the parameters is <tt>null</tt>.
      */
     public static List<Class<?>> filterClassListByAnnotation(final List<Class<?>> classList,
-                                                             final Class<? extends Annotation> filter)
-            {
+                                                             final Class<? extends Annotation> filter) {
         ArgumentUtils.checkNotNull(classList, "list");
         ArgumentUtils.checkNotNull(filter, "filter");
 
@@ -194,6 +210,6 @@ public class ReflectionUtils {
      * @return Returns <tt>true</tt> if the class is annotated with the given annotation; Otherwise <tt>false</tt>.
      */
     public static boolean isAnnotated(final Class<?> clazz, final Class<? extends Annotation> annotation) {
-        return clazz != null && annotation != null && clazz.getAnnotation(annotation) != null;
+        return clazz != null && annotation != null && clazz.isAnnotationPresent(annotation);
     }
 }

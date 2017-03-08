@@ -63,8 +63,8 @@ public class Context extends Hashtable<Object, Object> {
         super(map);
     }
 
-    //TODO: throws Nullpoiner
-    public <T> T get(Object key, Class<T> returnType) {
+    public <T> T get(Object key, Class<T> returnType)
+            throws NullPointerException {
         ArgumentUtils.checkNotNull(returnType, "type");
 
         return returnType.cast(this.get(key));

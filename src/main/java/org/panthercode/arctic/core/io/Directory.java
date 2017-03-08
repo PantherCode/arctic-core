@@ -15,6 +15,7 @@
  */
 package org.panthercode.arctic.core.io;
 
+import org.apache.commons.io.FileUtils;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 import java.io.FileNotFoundException;
@@ -263,14 +264,12 @@ public class Directory {
         return result.toArray(array);
     }
 
-    public void clear() throws IOException {
-        //TODO: implement
+    public void clean() throws IOException {
+        FileUtils.cleanDirectory(this.path.toFile());
     }
 
     public void delete() throws IOException {
-        this.clear();
-
-        Files.delete(this.path);
+        FileUtils.deleteDirectory(this.path.toFile());
     }
 
     public void walkFileTree(FileVisitor<Path> visitor) throws IOException {
@@ -299,6 +298,7 @@ public class Directory {
         return this.path.toUri();
     }
 
+    //TODO: implement
     @Override
     public String toString() {
         return this.path.toString();

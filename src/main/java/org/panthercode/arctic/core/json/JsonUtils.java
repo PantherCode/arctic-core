@@ -16,8 +16,10 @@
 package org.panthercode.arctic.core.json;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,6 +55,10 @@ public class JsonUtils {
         return new Gson();
     }
 
+    public static GsonBuilder builder() {
+        return new GsonBuilder();
+    }
+
     /**
      * Converts a json string to an object.
      *
@@ -62,6 +68,12 @@ public class JsonUtils {
      * @return Returns the converted object of corresponding json string.
      */
     public static <T> T fromJson(String json, Type type) {
+        return gson.fromJson(json, type);
+    }
+
+    public static <T> T fromJson(String json, Type type, Gson gson) {
+        ArgumentUtils.checkNotNull(gson, "gson");
+
         return gson.fromJson(json, type);
     }
 
@@ -77,6 +89,12 @@ public class JsonUtils {
         return gson.fromJson(json, clazz);
     }
 
+    public static <T> T fromJson(String json, Class<T> clazz, Gson gson) {
+        ArgumentUtils.checkNotNull(gson, "gson");
+
+        return gson.fromJson(json, clazz);
+    }
+
     /**
      * Converts an object to its json string representation.
      *
@@ -87,13 +105,18 @@ public class JsonUtils {
         return gson.toJson(object);
     }
 
+    public static String toJson(Object object, Gson gson) {
+        ArgumentUtils.checkNotNull(gson, "gson");
+
+        return gson.toJson(object);
+    }
+
     /**
      * Creates a new <tt>JsonReader</tt> from a json string.
      *
      * @param json json string
      * @return Returns a new instance of <tt>JsonReader</tt> class.
      */
-    //TODO: implement null check
     public static JsonReader toReader(String json) {
         return new JsonReader(new StringReader(json));
     }

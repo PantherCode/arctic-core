@@ -30,12 +30,12 @@ public class ClassBuilder<T> {
     /**
      * class type of new instances
      */
-    Class<T> clazz = null;
+    private Class<T> clazz = null;
 
     /**
      * parameter for constructor call
      */
-    Object[] arguments = null;
+    private Object[] arguments = null;
 
     /**
      * private constructor
@@ -83,7 +83,7 @@ public class ClassBuilder<T> {
      */
     public T build()
             throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
-        return ConstructorUtils.invokeConstructor(clazz, this.arguments);
+        return ConstructorUtils.invokeConstructor(this.clazz, this.arguments);
     }
 
     /**
@@ -94,6 +94,6 @@ public class ClassBuilder<T> {
      * @return Returns a new instance of a builder.
      */
     public static <T> ClassBuilder<T> create(Class<T> clazz) {
-        return new ClassBuilder<T>(clazz);
+        return new ClassBuilder<>(clazz);
     }
 }
