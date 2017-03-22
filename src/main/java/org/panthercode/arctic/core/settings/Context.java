@@ -16,6 +16,7 @@
 package org.panthercode.arctic.core.settings;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -149,6 +150,54 @@ public class Context extends Hashtable<Object, Object> {
 
     public Character getCharacterOrDefault(Object key, char defaultValue) {
         return this.getOrDefault(key, defaultValue, Character.class);
+    }
+
+    public Object[] getAll(Object key1, Object key2) {
+        throw new NotImplementedException();
+    }
+
+    public Object[] getAll(Object key1, Object key2, Object key3) {
+        throw new NotImplementedException();
+    }
+
+    public Object[] getAll(Object key1, Object key2, Object key3, Object... rest) {
+        throw new NotImplementedException();
+    }
+
+    public void merge(Context other) {
+        throw new NotImplementedException();
+    }
+
+    public void merge(Context other, Object key) {
+        throw new NotImplementedException();
+    }
+
+    public void merge(Context other, Object key1, Object key2) {
+        throw new NotImplementedException();
+    }
+
+    public void merge(Context other, Object key1, Object key2, Object key3) {
+        throw new NotImplementedException();
+    }
+
+    public void merge(Context other, Object key1, Object key2, Object key3, Object... rest) {
+        throw new NotImplementedException();
+    }
+
+    public void check(Object key) {
+        throw new NotImplementedException();
+    }
+
+    public void check(Object key1, Object key2) {
+        throw new NotImplementedException();
+    }
+
+    public void check(Object key1, Object key2, Object key3) {
+        throw new NotImplementedException();
+    }
+
+    public void check(Object key1, Object key2, Object key3, Object... rest) {
+        throw new NotImplementedException();
     }
 
     /**

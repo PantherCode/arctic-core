@@ -163,7 +163,7 @@ public interface Module extends Identifiable, Versionable {
      *
      * @throws ProcessException Is eventually thrown by the concrete implementation of this interface.
      */
-    boolean start() throws ProcessException;
+    boolean start(Object[] args) throws ProcessException;
 
     /**
      * To abort the actual run call the stop() method. The process state is change to "stopped".
@@ -178,6 +178,10 @@ public interface Module extends Identifiable, Versionable {
      * @throws ProcessException Is eventually thrown by the concrete implementation of this interface.
      */
     boolean reset() throws ProcessException;
+
+    boolean hasResult();
+
+    Object result();
 
     /**
      * Creates a new deep copy of an object.
