@@ -141,7 +141,7 @@ public abstract class ModuleImpl implements Module {
 
         this.actualState = ProcessState.READY;
 
-        this.setContext(context);
+        this.context = (context == null) ? new Context() : context;
 
         this.initialiseStateMap();
     }
@@ -302,7 +302,7 @@ public abstract class ModuleImpl implements Module {
      * @return
      * @throws ProcessException Is thrown if an error occurred while running the process.
      */
-    public abstract boolean start() throws ProcessException;
+    public abstract boolean start(Object[] args) throws ProcessException;
 
     /**
      * Stops the actual run and set process state to 'Stopped'.

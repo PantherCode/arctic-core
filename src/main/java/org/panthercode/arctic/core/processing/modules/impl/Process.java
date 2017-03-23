@@ -15,14 +15,13 @@
  */
 package org.panthercode.arctic.core.processing.modules.impl;
 
+import java.util.Iterator;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
-import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.ProcessException;
+import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.Context;
-
-import java.util.Iterator;
 
 /**
  * The Process class runs one element afterRun another.
@@ -62,7 +61,7 @@ public class Process extends Bundle {
      * @param process object to copy
      */
     public Process(Process process)
-            throws NullPointerException {
+        throws NullPointerException {
         super(process);
     }
 
@@ -78,11 +77,12 @@ public class Process extends Bundle {
     /**
      * Starts the process.
      *
-     * @throws Exception Is eventually thrown by actual module or if an error occurred while running process.
+     * @throws Exception Is eventually thrown by actual module or if an error occurred while running
+     * process.
      */
     @Override
-    public boolean start()
-            throws ProcessException {
+    public boolean start(Object[] args)
+        throws ProcessException {
         if (this.changeState(ProcessState.RUNNING)) {
 
             this.before();
@@ -92,13 +92,12 @@ public class Process extends Bundle {
                 while (iterator.hasNext() && this.isRunning()) {
                     this.currentModule = iterator.next();
 
-                    this.currentModule.start();
+                    this.currentModule.start(args);
 
                     if (!this.currentModule.isSucceeded()) {
                         this.currentModule = null;
 
-                        //Todo: return false for whole process instead of throwing an exceptions
-                        throw new RuntimeException("Step does not return successful.");
+                        return false;
                     }
                 }
 
@@ -112,6 +111,8 @@ public class Process extends Bundle {
             } catch (Exception e) {
                 this.changeState(ProcessState.FAILED);
                 this.after();
+                throw new ProcessException("While running the process module an error is occurred.",
+                    e);
             }
         }
 
@@ -119,13 +120,14 @@ public class Process extends Bundle {
     }
 
     /**
-     * Stops the actual process. It's not guaranteed that process stops immediately, but afterRun finishing actual module.
-     * Calls actual module's <tt>stop()</tt> method.
+     * Stops the actual process. It's not guaranteed that process stops immediately, but afterRun
+     * finishing actual module. Calls actual module's <tt>stop()</tt> method.
      *
-     * @throws Exception Is eventually thrown by actual module or if an error occurred while stopping process.
+     * @throws Exception Is eventually thrown by actual module or if an error occurred while
+     * stopping process.
      */
     public boolean stop()
-            throws ProcessException {
+        throws ProcessException {
         if (this.currentModule != null) {
             this.currentModule.stop();
         }
@@ -137,6 +139,16 @@ public class Process extends Bundle {
     public boolean reset() throws ProcessException {
         // Todo: implement
         return false;
+    }
+
+    @Override
+    public boolean hasResult() {
+        return false;
+    }
+
+    @Override
+    public Object result() {
+        return null;
     }
 
     /**
@@ -172,7 +184,7 @@ public class Process extends Bundle {
 
     @Override
     public Process copy()
-            throws UnsupportedOperationException {
+        throws UnsupportedOperationException {
         return new Process(this);
     }
 }

@@ -82,7 +82,7 @@ public class Container extends ModuleImpl {
      *                   process state or actual child module is <tt>null</tt>.
      */
     @Override
-    public synchronized boolean start()
+    public synchronized boolean start(Object[] args)
             throws ProcessException {
         if (worker == null) {
             throw new NullPointerException("There is no worker to execute.");
@@ -112,6 +112,16 @@ public class Container extends ModuleImpl {
     @Override
     public boolean reset() throws ProcessException {
         return false;
+    }
+
+    @Override
+    public boolean hasResult() {
+        return false;
+    }
+
+    @Override
+    public Object result() {
+        return null;
     }
 
     /**

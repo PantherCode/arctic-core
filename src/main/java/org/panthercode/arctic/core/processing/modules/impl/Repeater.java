@@ -265,7 +265,7 @@ public abstract class Repeater extends ModuleImpl {
     }
 
     @Override
-    public synchronized boolean start() throws ProcessException {
+    public synchronized boolean start(Object[] args) throws ProcessException {
         if (this.changeState(ProcessState.RUNNING)) {
             before();
 
@@ -273,7 +273,7 @@ public abstract class Repeater extends ModuleImpl {
                 this.module.reset();
 
                 try {
-                    this.module.start();
+                    this.module.start(args);
 
                     if ((module.isSucceeded() && this.canQuit()) || this.isStopped()) {
                         break;

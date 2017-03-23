@@ -78,12 +78,12 @@ public abstract class Step extends ModuleImpl {
      * @throws ProcessException      Is thrown if an error occurred while running the step.
      */
     @Override
-    public synchronized boolean start()
+    public synchronized boolean start(Object[] args)
             throws ProcessException {
         if (this.changeState(ProcessState.RUNNING)) {
 
             try {
-                ProcessState result = this.step() ? ProcessState.SUCCEEDED : ProcessState.FAILED;
+                ProcessState result = this.step(args) ? ProcessState.SUCCEEDED : ProcessState.FAILED;
 
                 return this.changeState(result);
             } catch (ProcessException e) {
@@ -102,7 +102,7 @@ public abstract class Step extends ModuleImpl {
      * @return Returns <tt>true</tt> if the actual run was successful; Otherwise <tt>false</tt>.
      * @throws ProcessException Is thrown if an error occurred while running the step.
      */
-    public abstract boolean step() throws ProcessException;
+    public abstract boolean step(Object[] args) throws ProcessException;
 
     public abstract Step copy() throws UnsupportedOperationException;
 }

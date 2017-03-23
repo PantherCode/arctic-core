@@ -81,7 +81,7 @@ public class Chunk extends Bundle {
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while running process.
      */
-    public synchronized boolean start()
+    public synchronized boolean start(Object[] args)
             throws ProcessException {
         if (this.modules().isEmpty()) {
             return true;
@@ -102,7 +102,7 @@ public class Chunk extends Bundle {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    current.start();
+                    current.start(args);
                 }
             });
         }
@@ -132,6 +132,16 @@ public class Chunk extends Bundle {
     public boolean reset() throws ProcessException {
         //Todo: implement
         return false;
+    }
+
+    @Override
+    public boolean hasResult() {
+        return false;
+    }
+
+    @Override
+    public Object result() {
+        return null;
     }
 
     /**

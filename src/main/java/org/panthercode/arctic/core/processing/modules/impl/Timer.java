@@ -150,6 +150,16 @@ public class Timer extends Repeater {
         return this.isRunning() ? this.controller.value() : 0L;
     }
 
+    @Override
+    public boolean hasResult() {
+        return false;
+    }
+
+    @Override
+    public Object result() {
+        return null;
+    }
+
     /**
      * Creates a copy of this object.
      *

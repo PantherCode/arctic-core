@@ -121,6 +121,16 @@ public class Counter extends Repeater {
 
 
     @Override
+    public boolean hasResult() {
+        return false;
+    }
+
+    @Override
+    public Object result() {
+        return null;
+    }
+
+    @Override
     public Counter copy()
             throws UnsupportedOperationException {
         return new Counter(this);
