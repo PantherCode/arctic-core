@@ -15,6 +15,10 @@
  */
 package org.panthercode.arctic.core.runtime;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Paths;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
@@ -23,11 +27,6 @@ import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.io.Directory;
 import org.panthercode.arctic.core.runtime.plugins.PluginManager;
 import org.panthercode.arctic.core.settings.Settings;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Paths;
 
 /**
  * Abstraction of an application to offer basic functionality.
@@ -142,54 +141,10 @@ public abstract class Application {
     }
 
     /**
-     * Throws an exception to force the application to close.
-     *
-     * @throws ShutdownException Is thrown when this method is called.
-     */
-    public void shutdown()
-            throws ShutdownException {
-        throw new ShutdownException();
-    }
-
-    /**
-     * Throws an exception to force the application to close.
-     *
-     * @param message message of the exception
-     * @throws ShutdownException Is thrown when this method is called.
-     */
-    public void shutdown(String message)
-            throws ShutdownException {
-        throw new ShutdownException(message);
-    }
-
-    /**
-     * Throws an exception to force the application to close.
-     *
-     * @param cause cause of the exception
-     * @throws ShutdownException Is thrown when this method is called.
-     */
-    public void shutdown(Throwable cause)
-            throws ShutdownException {
-        throw new ShutdownException(cause);
-    }
-
-    /**
-     * Throws an exception to force the application to close.
-     *
-     * @param message message of the exception
-     * @param cause   cause of the exception
-     * @throws ShutdownException Is thron when this method is called.
-     */
-    public void shutdown(String message, Throwable cause)
-            throws ShutdownException {
-        throw new ShutdownException(message, cause);
-    }
-
-    /**
      * Method to start the application.
      *
      * @param application actual instance of an application class
-     * @param args        (commandline) arguments
+     * @param args (commandline) arguments
      */
     public static void start(Application application, String[] args) {
         ArgumentUtils.checkNotNull(application, "application");
@@ -199,13 +154,9 @@ public abstract class Application {
         args = args == null ? new String[0] : args;
 
         try {
-            application.beforeRun(args);
+            application.initialize(args);
 
             application.run(args);
-
-            application.afterRun();
-        } catch (ShutdownException e) {
-            application.shutdownHandler(e);
         } catch (Exception e) {
             application.exceptionHandler(e);
         }
@@ -226,19 +177,12 @@ public abstract class Application {
 
     /**
      * TODO: documentation
-     *
-     * @param clazz
-     * @param <T>
-     * @return
      */
     public static <T extends Application> T current(Class<T> clazz) {
         return clazz.cast(current());
     }
 
-    public void beforeRun(String[] args) throws Exception {
-    }
-
-    public void afterRun() throws Exception {
+    public void initialize(String[] args) throws Exception {
     }
 
     /**
@@ -250,16 +194,10 @@ public abstract class Application {
     public abstract void run(String[] args) throws Exception;
 
     /**
-     * Handles all unhandled exceptions at runtime to avoid an uncontrolled crash of the application.
+     * Handles all unhandled exceptions at runtime to avoid an uncontrolled crash of the
+     * application.
      *
      * @param e unhandled exception
      */
     public abstract void exceptionHandler(Exception e);
-
-    /**
-     * Handles all <tt>ShutdownException</tt> at runtime to avoid an uncontrolled crash of the  application.
-     *
-     * @param e actual exception
-     */
-    public abstract void shutdownHandler(ShutdownException e);
 }
