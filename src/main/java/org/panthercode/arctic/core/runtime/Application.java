@@ -15,6 +15,10 @@
  */
 package org.panthercode.arctic.core.runtime;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Paths;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
@@ -22,11 +26,6 @@ import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.io.Directory;
 import org.panthercode.arctic.core.settings.Settings;
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Paths;
 
 /**
  * Abstraction of an application to offer basic functionality.
@@ -136,19 +135,19 @@ public abstract class Application {
      * Method to start the application.
      *
      * @param application actual instance of an application class
-     * @param args        (commandline) arguments
+     * @param args (commandline) arguments
      */
     public static void start(Application application, String[] args) {
-        instance = ArgumentUtils.checkNotNull(application, "application");
+        ArgumentUtils.checkNotNull(application, "application");
+
+        instance = application;
 
         args = args == null ? new String[0] : args;
 
         try {
-            application.beforeRun(args);
+            application.initialize(args);
 
             application.run(args);
-
-            application.afterRun();
         } catch (Exception e) {
             application.exceptionHandler(e);
         }
@@ -169,19 +168,12 @@ public abstract class Application {
 
     /**
      * TODO: documentation
-     *
-     * @param clazz
-     * @param <T>
-     * @return
      */
     public static <T extends Application> T current(Class<T> clazz) {
         return clazz.cast(current());
     }
 
-    public void beforeRun(String[] args) throws Exception {
-    }
-
-    public void afterRun() throws Exception {
+    public void initialize(String[] args) throws Exception {
     }
 
     /**
@@ -193,7 +185,8 @@ public abstract class Application {
     public abstract void run(String[] args) throws Exception;
 
     /**
-     * Handles all unhandled exceptions at runtime to avoid an uncontrolled crash of the application.
+     * Handles all unhandled exceptions at runtime to avoid an uncontrolled crash of the
+     * application.
      *
      * @param e unhandled exception
      */
