@@ -1,18 +1,26 @@
 package org.panthercode.arctic.core.runtime.kernel;
 
+import org.panthercode.arctic.core.event.Handler;
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.version.Versionable;
+import org.panthercode.arctic.core.settings.Context;
 
 /**
  * Created by architect on 05.03.17.
  */
-public interface Service extends Identifiable, Versionable {
+public interface Service<T> extends Identifiable, Versionable {
 
-    void start();
+    boolean canActivate();
 
-    void shutdown();
+    boolean isActive();
 
-    boolean isStarted();
+    void activate();
 
-    Object process(Object... args);
+    void activate(Context context);
+
+    void deactivate();
+
+    void process(T argument);
+
+    <E> void process(T argument, Handler<E> handler);
 }

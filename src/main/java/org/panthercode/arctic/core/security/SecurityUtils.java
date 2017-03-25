@@ -1,5 +1,7 @@
 package org.panthercode.arctic.core.security;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.util.Arrays;
 
 /**
@@ -9,6 +11,9 @@ public class SecurityUtils {
     private SecurityUtils() {
     }
 
+    public static char[] generatePasswort(char[] alphabet, int length) {
+        throw new NotImplementedException();
+    }
 
     public static boolean equals(char[] data, char[] other) {
         if (data == null) {
