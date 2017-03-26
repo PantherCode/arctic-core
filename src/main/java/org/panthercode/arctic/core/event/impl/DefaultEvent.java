@@ -18,7 +18,7 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
     /**
      *
      */
-    private final Set<EventHandler<T>> handlers;
+    private final Set<EventHandler<T>> eventHandlers;
 
     /**
      *
@@ -26,12 +26,19 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
     private final EventBus eventBus;
 
     /**
+     *
+     */
+    private final Handler<Message<T>> messageHandler;
+
+    /**
      * @param eventBus
      */
-    public DefaultEvent(EventBus eventBus) {
+    public DefaultEvent(EventBus eventBus, Handler<Message<T>> messageHandler) {
         this.eventBus = ArgumentUtils.checkNotNull(eventBus, "event bus");
 
-        this.handlers = new HashSet<>();
+        this.messageHandler = ArgumentUtils.checkNotNull(messageHandler, "message messageHandler");
+
+        this.eventHandlers = new HashSet<>();
     }
 
     /**
@@ -40,7 +47,7 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
      */
     @Override
     public boolean addHandler(EventHandler<T> handler) {
-        return handler != null && this.handlers.add(handler);
+        return handler != null && this.eventHandlers.add(handler);
     }
 
     /**
@@ -49,7 +56,7 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
      */
     @Override
     public boolean removeHandler(EventHandler<T> handler) {
-        return handler != null && this.handlers.remove(handler);
+        return handler != null && this.eventHandlers.remove(handler);
     }
 
     /**
@@ -58,12 +65,12 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
      */
     @Override
     public boolean hasHandler(EventHandler<T> handler) {
-        return handler != null && this.handlers.contains(handler);
+        return handler != null && this.eventHandlers.contains(handler);
     }
 
     @Override
     public Set<EventHandler<T>> handlers() {
-        return this.handlers;
+        return this.eventHandlers;
     }
 
     /**
@@ -71,7 +78,7 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
      */
     @Override
     public int size() {
-        return this.handlers.size();
+        return this.eventHandlers.size();
     }
 
     /**
@@ -79,7 +86,7 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
      */
     @Override
     public boolean isEmpty() {
-        return this.handlers.isEmpty();
+        return this.eventHandlers.isEmpty();
     }
 
     /**
@@ -88,19 +95,9 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
      */
     @Override
     public void send(Object source, T eventArgs) {
-        this.send(source, eventArgs, null);
-    }
-
-    /**
-     * @param source
-     * @param data
-     * @param messageHandler
-     */
-    @SuppressWarnings("unchecked")
-    public void send(Object source, T data, Handler<Message<T>> messageHandler) {
         if (!this.isEmpty()) {
-            for (EventHandler<T> eventHandler : this.handlers) {
-                this.eventBus.process(new EventMessage(source, data, eventHandler, messageHandler));
+            for (EventHandler<T> handler : this.eventHandlers) {
+                this.eventBus.process(new EventMessage<>(source, eventArgs, handler, this.messageHandler));
             }
         }
     }

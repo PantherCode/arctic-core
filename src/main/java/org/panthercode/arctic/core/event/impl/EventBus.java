@@ -115,6 +115,8 @@ public class EventBus implements Service {
     public void activate(Context context) {
         synchronized (LOCK) {
             if (!this.isActive) {
+                this.isActive = true;
+
                 this.thread = new Thread(new EventBusRunnable());
 
                 thread.start();
@@ -130,11 +132,12 @@ public class EventBus implements Service {
         synchronized (LOCK) {
             if (this.isActive) {
                 this.isActive = false;
-                this.thread = null;
 
                 if (this.queue.isEmpty()) {
                     LOCK.notify();
                 }
+
+                this.thread = null;
             }
         }
     }

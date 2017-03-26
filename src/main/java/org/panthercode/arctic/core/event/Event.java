@@ -47,11 +47,4 @@ public interface Event<T extends EventArgs> {
      * @param eventArgs
      */
     void send(Object source, T eventArgs);
-
-    /**
-     * @param source
-     * @param eventArgs
-     * @param handler
-     */
-    void send(Object source, T eventArgs, Handler<Message<T>> handler);
 }

@@ -15,10 +15,9 @@
  */
 package org.panthercode.arctic.core.io.watcher;
 
+import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.event.Event;
 import org.panthercode.arctic.core.event.EventFactory;
-import org.panthercode.arctic.core.event.Handler;
-import org.panthercode.arctic.core.runtime.Message;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -47,11 +46,6 @@ public class DirectoryWatcher implements Runnable {
     /**
      *
      */
-    private Handler<Message<WatcherEventArgs>> messageHandler;
-
-    /**
-     *
-     */
     private final Event<WatcherEventArgs> createEvent;
 
     /**
@@ -69,19 +63,19 @@ public class DirectoryWatcher implements Runnable {
      *
      * @throws IOException Is thrown if an error is occurred while creating <tt>DirectoryWatcher</tt> instance.
      */
-    private DirectoryWatcher(final EventFactory eventFactory, Handler<Message<WatcherEventArgs>> messageHandler)
+    private DirectoryWatcher(final EventFactory<WatcherEventArgs> factory)
             throws IOException {
+        ArgumentUtils.checkNotNull(factory, "event factory");
+
         this.service = FileSystems.getDefault().newWatchService();
 
         this.registeredPathsMap = new HashMap<>();
 
-        this.messageHandler = messageHandler;
+        this.createEvent = factory.register();
 
-        this.createEvent = eventFactory.create();
+        this.modifyEvent = factory.register();
 
-        this.modifyEvent = eventFactory.create();
-
-        this.deleteEvent = eventFactory.create();
+        this.deleteEvent = factory.register();
     }
 
     /**
@@ -90,20 +84,9 @@ public class DirectoryWatcher implements Runnable {
      * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
      * @throws IOException Is thrown if an error occurred while creating new filesystem service.
      */
-    public static DirectoryWatcher create(final EventFactory eventFactory)
+    public static DirectoryWatcher create(final EventFactory factory)
             throws IOException {
-        return DirectoryWatcher.create(eventFactory, null);
-    }
-
-    /**
-     * @param eventFactory
-     * @param messageHandler
-     * @return
-     * @throws IOException
-     */
-    public static DirectoryWatcher create(final EventFactory eventFactory, Handler<Message<WatcherEventArgs>> messageHandler)
-            throws IOException {
-        return new DirectoryWatcher(eventFactory, messageHandler);
+        return DirectoryWatcher.create(factory);
     }
 
     /**
@@ -229,13 +212,13 @@ public class DirectoryWatcher implements Runnable {
 
                 switch (kind) {
                     case CREATE:
-                        createEvent.send(this, e, this.messageHandler);
+                        createEvent.send(this, e);
                         break;
                     case DELETE:
-                        deleteEvent.send(this, e, this.messageHandler);
+                        deleteEvent.send(this, e);
                         break;
                     case MODIFY:
-                        modifyEvent.send(this, e, this.messageHandler);
+                        modifyEvent.send(this, e);
                         break;
                     default:
                         break;
