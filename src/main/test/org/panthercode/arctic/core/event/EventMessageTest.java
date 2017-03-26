@@ -2,6 +2,7 @@ package org.panthercode.arctic.core.event;
 
 import org.panthercode.arctic.core.event.impl.EventMessage;
 import org.panthercode.arctic.core.event.impl.arguments.AbstractEventArgs;
+import org.panthercode.arctic.core.runtime.Message;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,71 +11,97 @@ import org.testng.annotations.Test;
  */
 public class EventMessageTest {
 
+    private static String CONTENT = "Hello World";
+
+    private static Object SOURCE = new Object();
+
     private static class TestEventArgs extends AbstractEventArgs {
 
-        private String data;
+        private String content;
 
-        TestEventArgs(String data) {
-            this.data = data;
+        public TestEventArgs(String content) {
+            this.content = content;
         }
 
-        public String data() {
-            return this.data;
+        public String content() {
+            return this.content;
         }
     }
-
-    private static final String EVENT_ARGS_DATA = "Hello World";
-
-    private static final Object SOURCE = new Object();
-
-    private static final TestEventArgs EVENT_ARGS = new TestEventArgs(EVENT_ARGS_DATA);
 
     private static final EventHandler<TestEventArgs> EVENT_HANDLER = new EventHandler<TestEventArgs>() {
         @Override
         public void handle(Object source, TestEventArgs e) {
-            String expectedString = "Hello World";
-
-            Assert.assertNotNull(source, "Actual value of source");
-
-            Assert.assertNotNull(e, "Actual value of event args");
-
-            Assert.assertEquals(source, SOURCE, "Actual source of event");
-
-            Assert.assertEquals(e.data(), expectedString, "Actual event content");
+            Assert.assertEquals(e.content(), CONTENT, "Actual content of event");
         }
     };
 
-    private static final Handler<EventMessage<TestEventArgs>> MESSAGE_HANDLER = new Handler<EventMessage<TestEventArgs>>() {
+    private static final Handler<Message<TestEventArgs>> MESSAGE_HANDLER = new Handler<Message<TestEventArgs>>() {
         @Override
-        public void handle(EventMessage<TestEventArgs> e) {
-            Assert.assertNotNull(e, "Actual event message");
-
-            Assert.assertEquals(e.source(), SOURCE, "Actual source of event");
-
-            Assert.assertEquals(e.eventHandler(), EVENT_HANDLER, "Actual event handler");
-
-            Assert.assertEquals(e.content(), EVENT_ARGS, "Actual event args");
-
+        public void handle(Message<TestEventArgs> e) {
             Assert.assertTrue(e.isConsumed(), "Message is consumed");
 
             Assert.assertFalse(e.isFailed(), "Message is failed");
         }
     };
 
-    private static final EventMessage<TestEventArgs> EVENT_MESSAGE = new EventMessage<TestEventArgs>(null, null, null);
+    private static final EventHandler<TestEventArgs> EXCEPTION_EVENT_HANDLER = new EventHandler<TestEventArgs>() {
+        @Override
+        public void handle(Object source, TestEventArgs e) {
+            Assert.assertEquals(e.content(), CONTENT, "Actual content of event");
+
+            throw new RuntimeException();
+        }
+    };
+
+    private static final Handler<Message<TestEventArgs>> EXCEPTION_MESSAGE_HANDLER = new Handler<Message<TestEventArgs>>() {
+        @Override
+        public void handle(Message<TestEventArgs> e) {
+            Assert.assertTrue(e.isConsumed(), "Message is consumed");
+
+            Assert.assertTrue(e.isFailed(), "Message is failed");
+        }
+    };
 
     @Test
-    public void T01_DefaultEventMessage_Constructor() {
-        Assert.assertEquals(EVENT_MESSAGE.eventHandler(), EVENT_HANDLER, "Actual event handler");
+    public void T01_EventMessage_Constructor() {
+        TestEventArgs eventArgs = new TestEventArgs(CONTENT);
 
-        Assert.assertEquals(EVENT_MESSAGE.content(), EVENT_HANDLER, "Actual event args");
+        EventMessage<TestEventArgs> eventMessage = new EventMessage<>(SOURCE, eventArgs, EVENT_HANDLER, MESSAGE_HANDLER);
 
-        Assert.assertEquals(EVENT_MESSAGE.source(), SOURCE, "Actual source of event");
+        Assert.assertEquals(eventMessage.source(), SOURCE, "Actual value of source");
 
-        Assert.assertEquals(EVENT_MESSAGE.handler(), MESSAGE_HANDLER, "Actual message handler");
+        Assert.assertEquals(eventMessage.eventHandler(), EVENT_HANDLER, "Actual value of event handler");
 
-        Assert.assertTrue(EVENT_MESSAGE.isConsumed(), "Message is consumed");
+        Assert.assertEquals(eventMessage.handler(), MESSAGE_HANDLER, "Actual value of message handler");
 
-        Assert.assertFalse(EVENT_MESSAGE.isFailed(), "Message is failed");
+        Assert.assertFalse(eventMessage.isConsumed(), "Message is consumed");
+
+        Assert.assertFalse(eventMessage.isFailed(), "Message is failed");
+    }
+
+    @Test
+    public void T02_EventMessage_consume() {
+        TestEventArgs eventArgs = new TestEventArgs(CONTENT);
+
+        EventMessage<TestEventArgs> eventMessage = new EventMessage<>(SOURCE, eventArgs, EVENT_HANDLER, MESSAGE_HANDLER);
+
+        eventMessage.consume();
+
+        Assert.assertTrue(eventMessage.isConsumed(), "Message is consumed");
+
+        Assert.assertFalse(eventMessage.isFailed(), "Message is failed");
+    }
+
+    @Test
+    public void T03_EventMessage_consumeFail() {
+        TestEventArgs eventArgs = new TestEventArgs(CONTENT);
+
+        EventMessage<TestEventArgs> eventMessage = new EventMessage<>(SOURCE, eventArgs, EXCEPTION_EVENT_HANDLER, EXCEPTION_MESSAGE_HANDLER);
+
+        eventMessage.consume();
+
+        Assert.assertTrue(eventMessage.isConsumed(), "Message is consumed");
+
+        Assert.assertTrue(eventMessage.isFailed(), "Message is failed");
     }
 }
