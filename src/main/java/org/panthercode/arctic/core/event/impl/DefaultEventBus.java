@@ -17,18 +17,39 @@ import java.util.Queue;
 @IdentityInfo(name = "DefaultEventBus")
 @VersionInfo(major = 1, minor = 0)
 public class DefaultEventBus implements EventBus {
+    /**
+     *
+     */
     private static final Object LOCK = new Object();
 
+    /**
+     *
+     */
     private boolean isActive;
 
+    /**
+     *
+     */
     private final Identity identity;
 
+    /**
+     *
+     */
     private final Version version;
 
+    /**
+     *
+     */
     private final Queue<EventMessage> queue;
 
+    /**
+     *
+     */
     private Thread thread;
 
+    /**
+     *
+     */
     public DefaultEventBus() {
         this.isActive = false;
 
@@ -39,36 +60,63 @@ public class DefaultEventBus implements EventBus {
         this.queue = new LinkedList<>();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Identity identity() {
         return this.identity.copy();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Version version() {
         return this.version.copy();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean canActivate() {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean canDeactivate() {
         return this.queue.isEmpty();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isActive() {
         return this.isActive;
     }
 
+    /**
+     *
+     */
     @Override
     public void activate() {
         this.activate(null);
     }
 
+    /**
+     *
+     * @param context
+     */
     @Override
     public void activate(Context context) {
         synchronized (LOCK) {
@@ -80,6 +128,9 @@ public class DefaultEventBus implements EventBus {
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void deactivate() {
         synchronized (LOCK) {
@@ -94,6 +145,10 @@ public class DefaultEventBus implements EventBus {
         }
     }
 
+    /**
+     *
+     * @param message
+     */
     @Override
     public void process(EventMessage message) {
         if (message != null) {
@@ -107,6 +162,9 @@ public class DefaultEventBus implements EventBus {
         }
     }
 
+    /**
+     *
+     */
     private class EventBusRunnable implements Runnable {
         @Override
         public void run() {

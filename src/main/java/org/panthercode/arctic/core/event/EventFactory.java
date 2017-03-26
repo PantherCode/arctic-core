@@ -5,5 +5,10 @@ package org.panthercode.arctic.core.event;
  */
 public interface EventFactory {
 
+    /**
+     *
+     * @param <T>
+     * @return
+     */
     <T extends EventArgs> Event<T> create();
 }

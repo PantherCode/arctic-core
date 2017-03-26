@@ -7,7 +7,15 @@ import org.panthercode.arctic.core.runtime.ServiceMessage;
  */
 public interface EventMessage<T extends EventArgs> extends ServiceMessage {
 
+    /**
+     *
+     * @return
+     */
     Object source();
 
+    /**
+     *
+     * @return
+     */
     EventHandler<T> eventHandler();
 }

@@ -45,7 +45,7 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
     }
 
     /**
-     * Returns the actual number of elements the map contains.
+     * Returns the actual number of elements the {@link Map} contains.
      *
      * @return Returns the actual number of elements the map contains.
      */
@@ -173,6 +173,12 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
         return this.containsKey(key) ? this.map.remove(key).lastEntry().getValue() : null;
     }
 
+    /**
+     *
+     * @param key
+     * @param version
+     * @return
+     */
     @Override
     public synchronized boolean remove(Object key, Object version) {
         if (!(version instanceof Version)) {
@@ -182,6 +188,12 @@ public class VersionMap<K, V extends Versionable> implements Map<K, V> {
         return this.removeValue(key, (Version) version) != null;
     }
 
+    /**
+     *
+     * @param key
+     * @param version
+     * @return
+     */
     public synchronized V removeValue(Object key, Version version) {
         if (this.map.containsKey(key) && this.map.get(key).containsKey(version)) {
             return this.map.get(key).remove(version);

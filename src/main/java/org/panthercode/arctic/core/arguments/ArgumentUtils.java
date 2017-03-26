@@ -54,6 +54,14 @@ public class ArgumentUtils {
         ArgumentUtils.checkNull(value, name, null);
     }
 
+    /**
+     *
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     */
     public static void checkNull(final Object value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value == null, generateErrorMessage(name, "not null", additionalMessage), args);
     }
@@ -70,35 +78,92 @@ public class ArgumentUtils {
         return ArgumentUtils.checkNotNull(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @param <T>
+     * @return
+     */
     public static <T> T checkNotNull(final T value, final String name, String additionalMessage, Object... args) {
         return Preconditions.checkNotNull(value, generateErrorMessage(name, "null", additionalMessage), args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkLessZero(final byte value, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkLessZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkLessZero(final byte value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkLessZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkLessZero(final short value, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkLessZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkLessZero(final short value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkLessZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkLessZero(final int value, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkLessZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkLessZero(final int value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkLessZero((long) value, name, additionalMessage, args);
@@ -116,57 +181,143 @@ public class ArgumentUtils {
         return ArgumentUtils.checkLessZero(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkLessZero(final long value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value < 0L, generateErrorMessage(name, "equals or greater than zero", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkLessZero(final float value, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkLessZero((double) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkLessZero(final float value, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkLessZero((double) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkLessZero(final double value, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkLessZero(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkLessZero(final double value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value < 0.0, generateErrorMessage(name, "equals or greater than zero", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkGreaterZero(final byte value, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkGreaterZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkGreaterZero(final byte value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkGreaterZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkGreaterZero(final short value, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkGreaterZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkGreaterZero(final short value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkGreaterZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkGreaterZero(final int value, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkGreaterZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkGreaterZero(final int value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkGreaterZero((long) value, name, additionalMessage, args);
@@ -184,433 +335,1156 @@ public class ArgumentUtils {
         return ArgumentUtils.checkGreaterZero(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkGreaterZero(final long value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value > 0L, generateErrorMessage(name, "equals or less than zero", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkGreaterZero(final float value, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkGreaterZero((double) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkGreaterZero(final float value, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkGreaterZero((double) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkGreaterZero(final double value, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkGreaterZero(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkGreaterZero(final double value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value > 0.0, generateErrorMessage(name, "equals or less than zero", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkLessOrEqualsZero(final byte value, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkLessOrEqualsZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkLessOrEqualsZero(final byte value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkLessOrEqualsZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkLessOrEqualsZero(final short value, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkLessOrEqualsZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkLessOrEqualsZero(final short value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkLessOrEqualsZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkLessOrEqualsZero(final int value, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkLessOrEqualsZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkLessOrEqualsZero(final int value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkLessOrEqualsZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static long checkLessOrEqualsZero(final long value, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkLessOrEqualsZero(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkLessOrEqualsZero(final long value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value <= 0L, generateErrorMessage(name, "greater than zero", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkLessOrEqualsZero(final float value, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkLessOrEqualsZero((double) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkLessOrEqualsZero(final float value, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkLessOrEqualsZero((double) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkLessOrEqualsZero(final double value, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkLessOrEqualsZero(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkLessOrEqualsZero(final double value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value <= 0.0, generateErrorMessage(name, "greater than zero", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkGreaterOrEqualsZero(final byte value, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkGreaterOrEqualsZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkGreaterOrEqualsZero(final byte value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkGreaterOrEqualsZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkGreaterOrEqualsZero(final short value, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkGreaterOrEqualsZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkGreaterOrEqualsZero(final short value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkGreaterOrEqualsZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkGreaterOrEqualsZero(final int value, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkGreaterOrEqualsZero((long) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkGreaterOrEqualsZero(final int value, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkGreaterOrEqualsZero((long) value, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static long checkGreaterOrEqualsZero(final long value, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkGreaterOrEqualsZero(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkGreaterOrEqualsZero(final long value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value >= 0L, generateErrorMessage(name, "less than zero", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkGreaterOrEqualsZero(final float value, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkGreaterOrEqualsZero((double) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkGreaterOrEqualsZero(final float value, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkGreaterOrEqualsZero((double) value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkGreaterOrEqualsZero(final double value, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkGreaterOrEqualsZero(value, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkGreaterOrEqualsZero(final double value, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value >= 0.0, generateErrorMessage(name, "less than zero", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkLessThan(final byte value, final long limit, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkLessThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkLessThan(final byte value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkLessThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkLessThan(final short value, final long limit, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkLessThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkLessThan(final short value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkLessThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkLessThan(final int value, final long limit, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkLessThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkLessThan(final int value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkLessThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static long checkLessThan(final long value, final long limit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkLessThan(value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkLessThan(final long value, final long limit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value < limit, generateErrorMessage(name, "equals or greater than the limit", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkLessThan(final float value, final double limit, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkLessThan((double) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkLessThan(final float value, final double limit, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkLessThan((double) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkLessThan(final double value, final double limit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkLessThan(value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkLessThan(final double value, final double limit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value < limit, generateErrorMessage(name, "equals or greater than the limit", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkLessOrEqualsThan(final byte value, final long limit, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkLessOrEqualsThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkLessOrEqualsThan(final byte value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkLessOrEqualsThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkLessOrEqualsThan(final short value, final long limit, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkLessOrEqualsThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkLessOrEqualsThan(final short value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkLessOrEqualsThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkLessOrEqualsThan(final int value, final long limit, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkLessOrEqualsThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkLessOrEqualsThan(final int value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkLessOrEqualsThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static long checkLessOrEqualsThan(final long value, final long limit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkLessOrEqualsThan(value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkLessOrEqualsThan(final long value, final long limit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value <= limit, generateErrorMessage(name, "greater than the limit", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkLessOrEqualsThan(final float value, final double limit, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkLessOrEqualsThan((double) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkLessOrEqualsThan(final float value, final double limit, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkLessOrEqualsThan((double) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkLessOrEqualsThan(final double value, final double limit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkLessOrEqualsThan(value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkLessOrEqualsThan(final double value, final double limit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value <= limit, generateErrorMessage(name, "greater than the limit", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkGreaterThan(final byte value, final long limit, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkGreaterThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkGreaterThan(final byte value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkGreaterThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkGreaterThan(final short value, final long limit, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkGreaterThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkGreaterThan(final short value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkGreaterThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkGreaterThan(final int value, final long limit, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkGreaterThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkGreaterThan(final int value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkGreaterThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static long checkGreaterThan(final long value, final long limit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkGreaterThan(value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkGreaterThan(final long value, final long limit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value > limit, generateErrorMessage(name, "less or equals than the limit", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkGreaterThan(final float value, final double limit, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkGreaterThan((double) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkGreaterThan(final float value, final double limit, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkGreaterThan((double) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkGreaterThan(final double value, final double limit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkGreaterThan(value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkGreaterThan(final double value, final double limit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value > limit, generateErrorMessage(name, "less or equals than the limit", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkGreaterOrEqualsThan(final byte value, final long limit, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkGreaterOrEqualsThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkGreaterOrEqualsThan(final byte value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkGreaterOrEqualsThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkGreaterOrEqualsThan(final short value, final long limit, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkGreaterOrEqualsThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkGreaterOrEqualsThan(final short value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkGreaterOrEqualsThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkGreaterOrEqualsThan(final int value, final long limit, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkGreaterOrEqualsThan((long) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkGreaterOrEqualsThan(final int value, final long limit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkGreaterOrEqualsThan((long) value, limit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static long checkGreaterOrEqualsThan(final long value, final long limit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkGreaterOrEqualsThan(value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkGreaterOrEqualsThan(final long value, final long limit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value >= limit, generateErrorMessage(name, "less than the limit", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkGreaterOrEqualsThan(final float value, final double limit, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkGreaterOrEqualsThan((double) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkGreaterOrEqualsThan(final float value, final double limit, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkGreaterOrEqualsThan((double) value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkGreaterOrEqualsThan(final double value, final double limit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkGreaterOrEqualsThan(value, limit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param limit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkGreaterOrEqualsThan(final double value, final double limit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value >= limit, generateErrorMessage(name, "less than the limit", additionalMessage), args);
 
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkRange(final byte value, final long lowerLimit, final long upperLimit, final String name)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkRange((long) value, lowerLimit, upperLimit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static byte checkRange(final byte value, final long lowerLimit, final long upperLimit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (byte) ArgumentUtils.checkRange((long) value, lowerLimit, upperLimit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkRange(final short value, final long lowerLimit, final long upperLimit, final String name)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkRange((long) value, lowerLimit, upperLimit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static short checkRange(final short value, final long lowerLimit, final long upperLimit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (short) ArgumentUtils.checkRange((long) value, lowerLimit, upperLimit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkRange(final int value, final long lowerLimit, final long upperLimit, final String name)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkRange((long) value, lowerLimit, upperLimit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static int checkRange(final int value, final long lowerLimit, final long upperLimit, final String name, String additionalMessage, Object... args)
             throws IllegalArgumentException {
         return (int) ArgumentUtils.checkRange((long) value, lowerLimit, upperLimit, name, additionalMessage, args);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static long checkRange(final long value, final long lowerLimit, final long upperLimit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkRange(value, lowerLimit, upperLimit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static long checkRange(final long value, final long lowerLimit, final long upperLimit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value >= lowerLimit, generateErrorMessage(name, "less than the lower limit", additionalMessage), args);
         Preconditions.checkArgument(value <= upperLimit, generateErrorMessage(name, "greater than the upper limit", additionalMessage), args);
@@ -618,20 +1492,58 @@ public class ArgumentUtils {
         return value;
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static float checkRange(final float value, final double lowerLimit, final double upperLimit, final String name)
             throws IllegalArgumentException {
         return (float) ArgumentUtils.checkRange((double) value, lowerLimit, upperLimit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static float checkRange(final float value, final double lowerLimit, final double upperLimit, final String name, String additionalMessage, Object... args) {
         return (float) ArgumentUtils.checkRange((double) value, lowerLimit, upperLimit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @return
+     * @throws IllegalArgumentException
+     */
     public static double checkRange(final double value, final double lowerLimit, final double upperLimit, final String name)
             throws IllegalArgumentException {
         return ArgumentUtils.checkRange(value, lowerLimit, upperLimit, name, null);
     }
 
+    /**
+     *
+     * @param value
+     * @param lowerLimit
+     * @param upperLimit
+     * @param name
+     * @param additionalMessage
+     * @param args
+     * @return
+     */
     public static double checkRange(final double value, final double lowerLimit, final double upperLimit, final String name, String additionalMessage, Object... args) {
         Preconditions.checkArgument(value >= lowerLimit, generateErrorMessage(name, "less than the lower limit", additionalMessage), args);
         Preconditions.checkArgument(value <= upperLimit, generateErrorMessage(name, "greater than the upper limit", additionalMessage), args);
@@ -639,18 +1551,42 @@ public class ArgumentUtils {
         return value;
     }
 
+    /**
+     *
+     * @param index
+     * @param name
+     * @param collection
+     * @param <T>
+     * @return
+     */
     public static <T> int checkIndex(final int index, final String name, Collection<T> collection) {
         ArgumentUtils.checkNotNull(collection, "collection");
 
         return Preconditions.checkPositionIndex(index, collection.size(), generateErrorMessage(name, "out of bounds", null));
     }
 
+    /**
+     *
+     * @param index
+     * @param name
+     * @param array
+     * @param <T>
+     * @return
+     */
     public static <T> int checkIndex(final int index, final String name, T[] array) {
         ArgumentUtils.checkNotNull(array, "array");
 
         return Preconditions.checkPositionIndex(index, array.length, generateErrorMessage(name, "out of bounds", null));
     }
 
+    /**
+     *
+     * @param index
+     * @param name
+     * @param object
+     * @param <T>
+     * @return
+     */
     public static <T> int checkIndex(final int index, final String name, String object) {
         ArgumentUtils.checkNotNull(object, "object");
 
@@ -699,6 +1635,13 @@ public class ArgumentUtils {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @param message
+     * @param additionalMessage
+     * @return
+     */
     private static String generateErrorMessage(String name, String message, String additionalMessage) {
         StringBuilder builder = new StringBuilder();
 
@@ -722,4 +1665,3 @@ public class ArgumentUtils {
         return builder.toString();
     }
 }
-

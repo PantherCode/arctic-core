@@ -37,8 +37,6 @@ import org.panthercode.arctic.core.concurrent.Task;
  * combination with <tt>Tasks</tt>.
  *
  * @author PantherCode
- * @see WorkerOld
- * @see Task
  * @since 1.0
  */
 public interface Semaphore<T> {

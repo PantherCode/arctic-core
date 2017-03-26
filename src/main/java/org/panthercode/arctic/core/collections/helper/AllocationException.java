@@ -5,19 +5,42 @@ package org.panthercode.arctic.core.collections.helper;
  */
 public class AllocationException extends Exception {
 
+    /**
+     *
+     */
     public AllocationException() {
         super();
     }
 
-    public AllocationException(Throwable e) {
-        super(e);
-    }
-
+    /**
+     * @param message
+     */
     public AllocationException(String message) {
         super(message);
     }
 
-    public AllocationException(String message, Throwable e) {
-        super(message, e);
+    /**
+     * @param message
+     * @param cause
+     */
+    public AllocationException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    /**
+     * @param cause
+     */
+    public AllocationException(Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * @param message
+     * @param cause
+     * @param enableSuppression
+     * @param writableStackTrace
+     */
+    protected AllocationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

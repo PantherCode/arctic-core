@@ -5,5 +5,10 @@ package org.panthercode.arctic.core.event;
  */
 public interface EventHandler<T extends EventArgs> {
 
+    /**
+     *
+     * @param source
+     * @param e
+     */
     void handle(Object source, T e);
 }

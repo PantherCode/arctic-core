@@ -11,51 +11,99 @@ import java.util.Set;
  */
 public final class DefaultEvent<T extends EventArgs> implements Event<T> {
 
+    /**
+     *
+     */
     private final Set<EventHandler<T>> handlerSet;
 
+    /**
+     *
+     */
     private final EventBus eventBus;
 
+    /**
+     *
+     * @param eventBus
+     */
     public DefaultEvent(EventBus eventBus) {
         this.eventBus = ArgumentUtils.checkNotNull(eventBus, "event bus");
 
         this.handlerSet = new HashSet<>();
     }
 
+    /**
+     *
+     * @param handler
+     * @return
+     */
     @Override
     public boolean addHandler(EventHandler<T> handler) {
         return handler != null && this.handlerSet.add(handler);
     }
 
+    /**
+     *
+     * @param handler
+     * @return
+     */
     @Override
     public boolean removeHandler(EventHandler<T> handler) {
         return handler != null && this.handlerSet.remove(handler);
     }
 
+    /**
+     *
+     * @param handler
+     * @return
+     */
     @Override
     public boolean hasHandler(EventHandler<T> handler) {
         return handler != null && this.handlerSet.contains(handler);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Set<EventHandler<T>> handlerSet() {
         return this.handlerSet;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int size() {
         return this.handlerSet.size();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isEmpty() {
         return this.handlerSet.isEmpty();
     }
 
+    /**
+     *
+     * @param source
+     * @param data
+     */
     @Override
     public void raise(Object source, T data) {
         this.raise(source, data, null);
     }
 
+    /**
+     *
+     * @param source
+     * @param data
+     * @param messageHandler
+     */
     @Override
     @SuppressWarnings("unchecked")
     public void raise(Object source, T data, Handler<EventMessage<T>> messageHandler) {

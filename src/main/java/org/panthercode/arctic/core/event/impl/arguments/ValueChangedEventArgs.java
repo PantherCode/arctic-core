@@ -5,10 +5,21 @@ package org.panthercode.arctic.core.event.impl.arguments;
  */
 public class ValueChangedEventArgs extends AbstractEventArgs {
 
+    /**
+     *
+     */
     private Object oldValue;
 
+    /**
+     *
+     */
     private Object newValue;
 
+    /**
+     *
+     * @param oldValue
+     * @param newValue
+     */
     public ValueChangedEventArgs(Object oldValue, Object newValue) {
         super();
 
@@ -17,10 +28,18 @@ public class ValueChangedEventArgs extends AbstractEventArgs {
         this.newValue = newValue;
     }
 
+    /**
+     *
+     * @return
+     */
     public Object oldValue() {
         return this.oldValue;
     }
 
+    /**
+     *
+     * @return
+     */
     public Object newValue() {
         return this.newValue;
     }

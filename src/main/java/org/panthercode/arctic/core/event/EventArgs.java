@@ -5,7 +5,15 @@ package org.panthercode.arctic.core.event;
  */
 public interface EventArgs {
 
+    /**
+     *
+     * @return
+     */
     boolean isHandled();
 
+    /**
+     *
+     * @param value
+     */
     void isHandled(boolean value);
 }

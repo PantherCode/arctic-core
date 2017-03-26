@@ -38,7 +38,8 @@ public class RequestEntity<T> extends AbstractEntity<T> {
         return RequestEntity.fromJson(entity, clazz);
     }
 
-    public static <T> RequestEntity<T> fromResponse(HttpResponse response, Class<RequestEntity<T>> clazz, Gson gson) throws IOException {
+    public static <T> RequestEntity<T> fromResponse(HttpResponse response, Class<RequestEntity<T>> clazz, Gson gson)
+            throws IOException {
         ArgumentUtils.checkNotNull(response, "response");
 
         String entity = EntityUtils.toString(response.getEntity());
