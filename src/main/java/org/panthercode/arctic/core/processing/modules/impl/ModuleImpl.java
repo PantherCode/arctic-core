@@ -225,7 +225,7 @@ public abstract class ModuleImpl implements Module {
      * @param handler new handler
      */
     //public synchronized boolean removeProcessStateHandler(Handler<EventOld<ProcessState>> handler) {
-    //    return this.processStateHandlers.unregister(handler);
+    //    return this.processStateHandlers.removePath(handler);
     //}
 
     //public List<Handler<EventOld<ProcessState>>> processStateHandlers() {

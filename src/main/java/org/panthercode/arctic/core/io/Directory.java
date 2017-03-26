@@ -17,6 +17,7 @@ package org.panthercode.arctic.core.io;
 
 import org.apache.commons.io.FileUtils;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.io.watcher.DirectoryWatcher;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

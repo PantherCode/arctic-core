@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.panthercode.arctic.core.io;
+package org.panthercode.arctic.core.io.watcher;
 
-import org.panthercode.arctic.core.event.*;
+import org.panthercode.arctic.core.event.Event;
+import org.panthercode.arctic.core.event.EventFactory;
+import org.panthercode.arctic.core.event.EventMessage;
+import org.panthercode.arctic.core.event.Handler;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -52,22 +52,17 @@ public class DirectoryWatcher implements Runnable {
     /**
      *
      */
-    private final Event<WatcherEventArgs> entryEvent;
+    private final Event<WatcherEventArgs> createEvent;
 
     /**
      *
      */
-    private final Event<WatcherEventArgs> entryCreateEvent;
+    private final Event<WatcherEventArgs> modifyEvent;
 
     /**
      *
      */
-    private final Event<WatcherEventArgs> entryModifyEvent;
-
-    /**
-     *
-     */
-    private final Event<WatcherEventArgs> entryDeleteEvent;
+    private final Event<WatcherEventArgs> deleteEvent;
 
     /**
      * Standard Constructor
@@ -82,13 +77,11 @@ public class DirectoryWatcher implements Runnable {
 
         this.messageHandler = messageHandler;
 
-        this.entryEvent = eventFactory.create();
+        this.createEvent = eventFactory.create();
 
-        this.entryCreateEvent = eventFactory.create();
+        this.modifyEvent = eventFactory.create();
 
-        this.entryModifyEvent = eventFactory.create();
-
-        this.entryDeleteEvent = eventFactory.create();
+        this.deleteEvent = eventFactory.create();
     }
 
     /**
@@ -102,60 +95,95 @@ public class DirectoryWatcher implements Runnable {
         return DirectoryWatcher.create(eventFactory, null);
     }
 
+    /**
+     * @param eventFactory
+     * @param messageHandler
+     * @return
+     * @throws IOException
+     */
     public static DirectoryWatcher create(final EventFactory eventFactory, Handler<EventMessage<WatcherEventArgs>> messageHandler)
             throws IOException {
         return new DirectoryWatcher(eventFactory, messageHandler);
     }
 
-    public Event<WatcherEventArgs> entryEvent() {
-        return this.entryEvent;
+    /**
+     * @return
+     */
+    public Event<WatcherEventArgs> createEvent() {
+        return this.createEvent;
     }
 
-    public Event<WatcherEventArgs> entryCreateEvent() {
-        return this.entryCreateEvent;
+    /**
+     * @return
+     */
+    public Event<WatcherEventArgs> deleteEvent() {
+        return this.deleteEvent;
     }
 
-    public Event<WatcherEventArgs> entryDeleteEvent() {
-        return this.entryDeleteEvent;
+    /**
+     * @return
+     */
+    public Event<WatcherEventArgs> modifyEvent() {
+        return this.modifyEvent;
     }
 
-    public Event<WatcherEventArgs> entryModifyEvent() {
-        return this.entryModifyEvent;
-    }
-
-    public synchronized boolean register(final Path path)
-            throws IOException {
-        return this.register(path, false);
-    }
-
-    public synchronized boolean register(final Path path, final boolean recursive)
+    /**
+     * @param path
+     * @return
+     * @throws IOException
+     */
+    public synchronized boolean add(final Path path)
             throws IOException {
         if (path == null) {
             return false;
         }
 
-        if (recursive) {
-            Iterator<Path> iterator = Files.walk(path).iterator();
+        if (!this.registeredPathsMap.containsKey(path)) {
+            this.createWatcherEntry(path, false);
 
-            if (iterator.hasNext()) {
-                for (Path p = iterator.next(); iterator.hasNext(); p = iterator.next()) {
-                    if (Files.isDirectory(p)) {
-                        this.createWatcherEntry(path, recursive);
-                    }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param path
+     * @return
+     * @throws IOException
+     */
+    public synchronized boolean addRecursively(final Path path)
+            throws IOException {
+        if (path == null) {
+            return false;
+        }
+
+        Iterator<Path> iterator = Files.walk(path).iterator();
+
+        if (iterator.hasNext()) {
+            for (Path p = iterator.next(); iterator.hasNext(); p = iterator.next()) {
+                if (Files.isDirectory(p) && !this.registeredPathsMap.containsKey(p)) {
+                    this.createWatcherEntry(path, true);
                 }
             }
-        } else {
-            this.createWatcherEntry(path, recursive);
         }
 
         return true;
     }
 
-    public boolean isRegistered(final Path path) {
+    /**
+     * @param path
+     * @return
+     */
+    public boolean contains(final Path path) {
         return this.registeredPathsMap.containsKey(path);
     }
 
-    public synchronized boolean unregister(final Path path) {
+    /**
+     * @param path
+     * @return
+     */
+    public synchronized boolean remove(final Path path) {
         if (this.registeredPathsMap.containsKey(path)) {
             DirectoryWatcherEntry oldEntry = this.registeredPathsMap.remove(path);
 
@@ -165,16 +193,25 @@ public class DirectoryWatcher implements Runnable {
         return false;
     }
 
+    /**
+     * @return
+     */
     public Set<Path> pathSet() {
         return this.registeredPathsMap.keySet();
     }
 
-    public Map<Path, DirectoryWatcherEntry> entries() {
+    /**
+     * @return
+     */
+    public Map<Path, DirectoryWatcherEntry> paths() {
         return this.registeredPathsMap;
     }
 
+    /**
+     *
+     */
     public synchronized void run() {
-        Map<Path, EventHandler<WatcherEventArgs>> newEntries = new HashMap<>();
+        Set<Path> newElements = new HashSet<>();
         Path path;
         WatchEventKind kind;
 
@@ -185,48 +222,47 @@ public class DirectoryWatcher implements Runnable {
                 path = entry.path().resolve(event.context().toString());
 
                 if (kind == WatchEventKind.CREATE && Files.isDirectory(path) && entry.isRecursive()) {
-                    newEntries.put(path, entry.handler());
+                    newElements.add(path);
                 }
 
-                WatcherEventArgs e = new WatcherEventArgs(path, kind, entry.handler != null, entry.isRecursive());
+                WatcherEventArgs e = new WatcherEventArgs(path, kind, entry.isRecursive());
 
-                if (entry.hasHandler()) {
-                    entry.handler().handle(this, e);
-                } else {
-                    switch (kind) {
-                        case CREATE:
-                            entryCreateEvent.raise(this, e);
-                            break;
-                        case DELETE:
-                            entryDeleteEvent.raise(this, e);
-                            break;
-                        case MODIFY:
-                            entryModifyEvent.raise(this, e);
-                            break;
-                        default:
-                            break;
-                    }
-
-                    entryEvent.raise(this, e);
+                switch (kind) {
+                    case CREATE:
+                        createEvent.raise(this, e, this.messageHandler);
+                        break;
+                    case DELETE:
+                        deleteEvent.raise(this, e, this.messageHandler);
+                        break;
+                    case MODIFY:
+                        modifyEvent.raise(this, e, this.messageHandler);
+                        break;
+                    default:
+                        break;
                 }
             }
 
-            entry.watchKey.reset();
+            entry.watchKey().reset();
         }
 
         try {
-            if (!newEntries.isEmpty()) {
-                for (Path newPath : newEntries.keySet()) {
-                    createWatcherEntry(newPath, true, newEntries.get(newPath));
+            if (!newElements.isEmpty()) {
+                for (Path newPath : newElements) {
+                    createWatcherEntry(newPath, true);
                 }
 
-                newEntries.clear();
+                newElements.clear();
             }
         } catch (IOException e) {
             throw new DirectoryWatcherException(e);
         }
     }
 
+    /**
+     * @param path
+     * @param recursive
+     * @throws IOException
+     */
     private synchronized void createWatcherEntry(final Path path, final boolean recursive)
             throws IOException {
         if (path != null) {
@@ -235,42 +271,6 @@ public class DirectoryWatcher implements Runnable {
             DirectoryWatcherEntry entry = new DirectoryWatcherEntry(watchKey, path, recursive);
 
             this.registeredPathsMap.put(path, entry);
-        }
-    }
-
-    /**
-     * Inner class to store information about registered directories.
-     */
-    public class DirectoryWatcherEntry {
-
-        private final WatchKey watchKey;
-
-        /**
-         * path of directory
-         */
-        private final Path path;
-
-        /**
-         * flag to observe also subdirectories
-         */
-        private final boolean recursive;
-
-        public DirectoryWatcherEntry(final WatchKey watchKey, final Path path, final boolean recursive) {
-            this.watchKey = watchKey;
-            this.path = path;
-            this.recursive = recursive;
-        }
-
-        public WatchKey watchKey() {
-            return this.watchKey;
-        }
-
-        public Path path() {
-            return this.path;
-        }
-
-        public boolean isRecursive() {
-            return this.recursive;
         }
     }
 }

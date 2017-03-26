@@ -7,10 +7,9 @@ import org.panthercode.arctic.core.event.EventArgs;
  */
 public abstract class AbstractEventArgs implements EventArgs {
 
-    private boolean isHandled;
+    private boolean isHandled = false;
 
     public AbstractEventArgs() {
-        this.isHandled = false;
     }
 
     public synchronized void isHandled(boolean isHandled) {

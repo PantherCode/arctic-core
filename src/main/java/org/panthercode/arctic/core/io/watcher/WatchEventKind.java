@@ -1,4 +1,4 @@
-package org.panthercode.arctic.core.io;
+package org.panthercode.arctic.core.io.watcher;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 
@@ -12,16 +12,35 @@ import static java.nio.file.StandardWatchEventKinds.*;
  * @since 1.0
  */
 public enum WatchEventKind {
+    /**
+     *
+     */
     CREATE("Create"),
 
+    /**
+     *
+     */
     DELETE("Delete"),
 
+    /**
+     *
+     */
     MODIFY("Modify"),
 
+    /**
+     *
+     */
     OVERFLOW("Overflow");
 
+    /**
+     *
+     */
     private final String value;
 
+    /**
+     *
+     * @param value
+     */
     WatchEventKind(String value) {
         this.value = value;
     }
