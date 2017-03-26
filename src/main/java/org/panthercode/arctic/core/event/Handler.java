@@ -29,7 +29,7 @@ public interface Handler<T> {
     /**
      * This function is called to commit changes to handler class.
      *
-     * @param e event data
+     * @param e event content
      */
     void handle(T e);
 }

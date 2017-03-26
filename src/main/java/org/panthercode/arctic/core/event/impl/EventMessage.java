@@ -2,17 +2,17 @@ package org.panthercode.arctic.core.event.impl;
 
 import org.panthercode.arctic.core.event.EventArgs;
 import org.panthercode.arctic.core.event.EventHandler;
-import org.panthercode.arctic.core.event.EventMessage;
 import org.panthercode.arctic.core.event.Handler;
+import org.panthercode.arctic.core.runtime.Message;
 
 /**
  * Created by architect on 26.03.17.
  */
-public class DefaultEventMessage<T extends EventArgs> implements EventMessage<T> {
+public class EventMessage<T extends EventArgs> implements Message<T> {
     /**
      *
      */
-    private final T data;
+    private final T content;
 
     /**
      *
@@ -27,7 +27,7 @@ public class DefaultEventMessage<T extends EventArgs> implements EventMessage<T>
     /**
      *
      */
-    private final Handler<EventMessage<T>> messageHandler;
+    private final Handler<Message<T>> messageHandler;
 
     /**
      *
@@ -41,26 +41,26 @@ public class DefaultEventMessage<T extends EventArgs> implements EventMessage<T>
 
     /**
      * @param source
-     * @param data
+     * @param content
      * @param eventHandler
      */
-    public DefaultEventMessage(Object source,
-                               T data,
-                               EventHandler<T> eventHandler) {
-        this(source, data, eventHandler, null);
+    public EventMessage(Object source,
+                        T content,
+                        EventHandler<T> eventHandler) {
+        this(source, content, eventHandler, null);
     }
 
     /**
      * @param source
-     * @param data
+     * @param content
      * @param eventHandler
      * @param messageHandler
      */
-    public DefaultEventMessage(Object source,
-                               T data,
-                               EventHandler<T> eventHandler,
-                               Handler<EventMessage<T>> messageHandler) {
-        this.data = data;
+    public EventMessage(Object source,
+                        T content,
+                        EventHandler<T> eventHandler,
+                        Handler<Message<T>> messageHandler) {
+        this.content = content;
         this.source = source;
         this.eventHandler = eventHandler;
         this.messageHandler = messageHandler;
@@ -76,7 +76,7 @@ public class DefaultEventMessage<T extends EventArgs> implements EventMessage<T>
     public void consume() {
         if (this.eventHandler != null) {
             try {
-                this.eventHandler.handle(this.source, this.data);
+                this.eventHandler.handle(this.source, this.content);
             } catch (Exception e) {
                 this.isFailed = true;
             }
@@ -109,14 +109,20 @@ public class DefaultEventMessage<T extends EventArgs> implements EventMessage<T>
      * @return
      */
     @Override
-    public T data() {
-        return this.data;
+    public T content() {
+        return this.content;
     }
 
     /**
      * @return
      */
-    @Override
+    public EventHandler<T> eventHandler() {
+        return this.eventHandler;
+    }
+
+    /**
+     * @return
+     */
     public Object source() {
         return this.source;
     }
@@ -125,15 +131,7 @@ public class DefaultEventMessage<T extends EventArgs> implements EventMessage<T>
      * @return
      */
     @Override
-    public EventHandler<T> eventHandler() {
-        return this.eventHandler;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public Handler<EventMessage<T>> messageHandler() {
+    public Handler<Message<T>> handler() {
         return this.messageHandler;
     }
 }

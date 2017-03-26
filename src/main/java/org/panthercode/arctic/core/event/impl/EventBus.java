@@ -1,11 +1,11 @@
 package org.panthercode.arctic.core.event.impl;
 
-import org.panthercode.arctic.core.event.EventBus;
-import org.panthercode.arctic.core.event.EventMessage;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
+import org.panthercode.arctic.core.runtime.Message;
+import org.panthercode.arctic.core.runtime.Service;
 import org.panthercode.arctic.core.settings.Context;
 
 import java.util.LinkedList;
@@ -14,9 +14,9 @@ import java.util.Queue;
 /**
  * Created by architect on 28.02.17.
  */
-@IdentityInfo(name = "DefaultEventBus")
+@IdentityInfo(name = "EventBus")
 @VersionInfo(major = 1, minor = 0)
-public class DefaultEventBus implements EventBus {
+public class EventBus implements Service {
     /**
      *
      */
@@ -40,7 +40,7 @@ public class DefaultEventBus implements EventBus {
     /**
      *
      */
-    private final Queue<EventMessage> queue;
+    private final Queue<Message> queue;
 
     /**
      *
@@ -50,7 +50,7 @@ public class DefaultEventBus implements EventBus {
     /**
      *
      */
-    public DefaultEventBus() {
+    public EventBus() {
         this.isActive = false;
 
         this.identity = Identity.fromAnnotation(this.getClass());
@@ -61,7 +61,6 @@ public class DefaultEventBus implements EventBus {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -70,7 +69,6 @@ public class DefaultEventBus implements EventBus {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -79,7 +77,6 @@ public class DefaultEventBus implements EventBus {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -88,7 +85,6 @@ public class DefaultEventBus implements EventBus {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -97,7 +93,6 @@ public class DefaultEventBus implements EventBus {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -114,7 +109,6 @@ public class DefaultEventBus implements EventBus {
     }
 
     /**
-     *
      * @param context
      */
     @Override
@@ -145,12 +139,8 @@ public class DefaultEventBus implements EventBus {
         }
     }
 
-    /**
-     *
-     * @param message
-     */
     @Override
-    public void process(EventMessage message) {
+    public <T> void process(Message<T> message) {
         if (message != null) {
             synchronized (LOCK) {
                 this.queue.add(message);
@@ -168,11 +158,11 @@ public class DefaultEventBus implements EventBus {
     private class EventBusRunnable implements Runnable {
         @Override
         public void run() {
-            EventMessage actualMessage;
+            Message actualMessage;
 
-            while (DefaultEventBus.this.isActive) {
+            while (EventBus.this.isActive) {
                 synchronized (LOCK) {
-                    while (DefaultEventBus.this.queue.isEmpty()) {
+                    while (EventBus.this.queue.isEmpty()) {
                         try {
                             LOCK.wait();
                         } catch (InterruptedException e) {
@@ -180,11 +170,11 @@ public class DefaultEventBus implements EventBus {
                         }
                     }
 
-                    if (!DefaultEventBus.this.isActive) {
+                    if (!EventBus.this.isActive) {
                         return;
                     }
 
-                    actualMessage = DefaultEventBus.this.queue.remove();
+                    actualMessage = EventBus.this.queue.remove();
                 }
 
                 actualMessage.consume();

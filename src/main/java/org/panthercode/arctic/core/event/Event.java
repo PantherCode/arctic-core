@@ -1,6 +1,6 @@
 package org.panthercode.arctic.core.event;
 
-import org.panthercode.arctic.core.event.impl.DefaultEvent;
+import org.panthercode.arctic.core.runtime.Message;
 
 import java.util.Set;
 
@@ -10,56 +10,48 @@ import java.util.Set;
 public interface Event<T extends EventArgs> {
 
     /**
-     *
      * @param handler
      * @return
      */
     boolean addHandler(EventHandler<T> handler);
 
     /**
-     *
      * @param handler
      * @return
      */
     boolean removeHandler(EventHandler<T> handler);
 
     /**
-     *
      * @param handler
      * @return
      */
     boolean hasHandler(EventHandler<T> handler);
 
     /**
-     *
      * @return
      */
-    Set<EventHandler<T>> handlerSet();
+    Set<EventHandler<T>> handlers();
 
     /**
-     *
      * @return
      */
     int size();
 
     /**
-     *
      * @return
      */
     boolean isEmpty();
 
     /**
-     *
      * @param source
-     * @param args
+     * @param eventArgs
      */
-    void raise(Object source, T args);
+    void send(Object source, T eventArgs);
 
     /**
-     *
      * @param source
-     * @param args
+     * @param eventArgs
      * @param handler
      */
-    void raise(Object source, T args, Handler<EventMessage<T>> handler);
+    void send(Object source, T eventArgs, Handler<Message<T>> handler);
 }

@@ -17,8 +17,8 @@ package org.panthercode.arctic.core.io.watcher;
 
 import org.panthercode.arctic.core.event.Event;
 import org.panthercode.arctic.core.event.EventFactory;
-import org.panthercode.arctic.core.event.EventMessage;
 import org.panthercode.arctic.core.event.Handler;
+import org.panthercode.arctic.core.runtime.Message;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -47,7 +47,7 @@ public class DirectoryWatcher implements Runnable {
     /**
      *
      */
-    private Handler<EventMessage<WatcherEventArgs>> messageHandler;
+    private Handler<Message<WatcherEventArgs>> messageHandler;
 
     /**
      *
@@ -69,7 +69,7 @@ public class DirectoryWatcher implements Runnable {
      *
      * @throws IOException Is thrown if an error is occurred while creating <tt>DirectoryWatcher</tt> instance.
      */
-    private DirectoryWatcher(final EventFactory eventFactory, Handler<EventMessage<WatcherEventArgs>> messageHandler)
+    private DirectoryWatcher(final EventFactory eventFactory, Handler<Message<WatcherEventArgs>> messageHandler)
             throws IOException {
         this.service = FileSystems.getDefault().newWatchService();
 
@@ -101,7 +101,7 @@ public class DirectoryWatcher implements Runnable {
      * @return
      * @throws IOException
      */
-    public static DirectoryWatcher create(final EventFactory eventFactory, Handler<EventMessage<WatcherEventArgs>> messageHandler)
+    public static DirectoryWatcher create(final EventFactory eventFactory, Handler<Message<WatcherEventArgs>> messageHandler)
             throws IOException {
         return new DirectoryWatcher(eventFactory, messageHandler);
     }
@@ -229,13 +229,13 @@ public class DirectoryWatcher implements Runnable {
 
                 switch (kind) {
                     case CREATE:
-                        createEvent.raise(this, e, this.messageHandler);
+                        createEvent.send(this, e, this.messageHandler);
                         break;
                     case DELETE:
-                        deleteEvent.raise(this, e, this.messageHandler);
+                        deleteEvent.send(this, e, this.messageHandler);
                         break;
                     case MODIFY:
-                        modifyEvent.raise(this, e, this.messageHandler);
+                        modifyEvent.send(this, e, this.messageHandler);
                         break;
                     default:
                         break;

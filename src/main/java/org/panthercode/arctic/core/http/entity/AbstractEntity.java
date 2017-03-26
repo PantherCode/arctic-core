@@ -40,7 +40,7 @@ public abstract class AbstractEntity<T> {
      * @param data
      */
     public void setData(T data) {
-        this.data = ArgumentUtils.checkNotNull(data, "data");
+        this.data = ArgumentUtils.checkNotNull(data, "content");
     }
 
     /**

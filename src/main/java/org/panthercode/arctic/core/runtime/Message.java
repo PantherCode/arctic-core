@@ -5,21 +5,18 @@ import org.panthercode.arctic.core.event.Handler;
 /**
  * Created by architect on 26.03.17.
  */
-public interface ServiceMessage<T> {
+public interface Message<T> {
     /**
-     *
      * @return
      */
-    T data();
+    T content();
 
     /**
-     *
      * @return
      */
     boolean isConsumed();
 
     /**
-     *
      * @return
      */
     boolean isFailed();
@@ -30,8 +27,7 @@ public interface ServiceMessage<T> {
     void consume();
 
     /**
-     *
      * @return
      */
-    Handler<ServiceMessage<T>> messageHandler();
+    Handler<Message<T>> handler();
 }
