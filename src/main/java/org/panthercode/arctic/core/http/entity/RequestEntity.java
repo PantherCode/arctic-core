@@ -12,23 +12,52 @@ import java.io.IOException;
  * Created by architect on 26.03.17.
  */
 public class RequestEntity<T> extends AbstractEntity<T> {
-
+    /**
+     *
+     */
     public RequestEntity() {
         super();
     }
 
+    /**
+     *
+     * @param data
+     */
     public RequestEntity(T data) {
         super(data);
     }
 
+    /**
+     *
+     * @param json
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public static <T> RequestEntity<T> fromJson(String json, Class<RequestEntity<T>> clazz) {
         return JsonUtils.fromJson(json, clazz);
     }
 
+    /**
+     *
+     * @param json
+     * @param clazz
+     * @param gson
+     * @param <T>
+     * @return
+     */
     public static <T> RequestEntity<T> fromJson(String json, Class<RequestEntity<T>> clazz, Gson gson) {
         return JsonUtils.fromJson(json, clazz);
     }
 
+    /**
+     *
+     * @param response
+     * @param clazz
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
     public static <T> RequestEntity<T> fromResponse(HttpResponse response, Class<RequestEntity<T>> clazz)
             throws IOException {
         ArgumentUtils.checkNotNull(response, "response");
@@ -38,6 +67,15 @@ public class RequestEntity<T> extends AbstractEntity<T> {
         return RequestEntity.fromJson(entity, clazz);
     }
 
+    /**
+     *
+     * @param response
+     * @param clazz
+     * @param gson
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
     public static <T> RequestEntity<T> fromResponse(HttpResponse response, Class<RequestEntity<T>> clazz, Gson gson)
             throws IOException {
         ArgumentUtils.checkNotNull(response, "response");
@@ -47,10 +85,19 @@ public class RequestEntity<T> extends AbstractEntity<T> {
         return RequestEntity.fromJson(entity, clazz, gson);
     }
 
+    /**
+     *
+     * @return
+     */
     public String toJson() {
         return JsonUtils.toJson(this);
     }
 
+    /**
+     *
+     * @param gson
+     * @return
+     */
     public String toJson(Gson gson) {
         return JsonUtils.toJson(this, gson);
     }
