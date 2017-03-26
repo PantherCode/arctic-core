@@ -27,10 +27,20 @@ import org.panthercode.arctic.core.helper.version.Version;
  */
 public class ResourceAllocator extends DefaultAllocator<Object, Resource> {
 
+    /**
+     *
+     * @param resourcePool
+     */
     public ResourceAllocator(VersionMap<Object, Resource> resourcePool) {
         super(resourcePool);
     }
 
+    /**
+     *
+     * @param key key of object
+     * @return
+     * @throws AllocationException
+     */
     @Override
     public Resource allocate(Object key)
             throws AllocationException {
@@ -39,6 +49,13 @@ public class ResourceAllocator extends DefaultAllocator<Object, Resource> {
         return resource.copy();
     }
 
+    /**
+     *
+     * @param key     key of object
+     * @param version version of object
+     * @return
+     * @throws AllocationException
+     */
     @Override
     public Resource allocate(Object key, Version version)
             throws AllocationException {

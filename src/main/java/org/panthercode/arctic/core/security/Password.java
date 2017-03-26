@@ -13,55 +13,112 @@ import java.security.spec.InvalidKeySpecException;
  */
 public final class Password {
 
+    /**
+     *
+     */
     private final static String ALGORITHM = "PBKDF2WithHmacSHA512";
 
+    /**
+     *
+     */
     private final static int ITERATIONS = 32;
 
+    /**
+     *
+     */
     private final static int KEY_LENGTH = 256;
 
+    /**
+     *
+     */
     private byte[] salt = new byte[0];
 
+    /**
+     *
+     */
     private char[] password = new char[0];
 
+    /**
+     *
+     */
     public Password() {
         this(null);
     }
 
+    /**
+     *
+     * @param password
+     */
     public Password(char[] password) {
         this(password, null);
     }
 
+    /**
+     *
+     * @param password
+     * @param salt
+     */
     public Password(char[] password, byte[] salt) {
         this.setPassword(password);
 
         this.setSalt(salt);
     }
 
+    /**
+     *
+     * @param password
+     */
     public void setPassword(char[] password) {
         this.password = password == null ? new char[0] : password;
     }
 
+    /**
+     *
+     * @return
+     */
     public char[] getPassword() {
         return this.password;
     }
 
+    /**
+     *
+     * @param salt
+     */
     public void setSalt(byte[] salt) {
         this.salt = salt == null ? new byte[0] : salt;
     }
 
+    /**
+     *
+     * @return
+     */
     public byte[] getSalt() {
         return this.salt;
     }
 
+    /**
+     *
+     */
     public void clear() {
         SecurityUtils.clearArray(this.salt);
         SecurityUtils.clearArray(this.password);
     }
 
+    /**
+     *
+     * @return
+     */
     public PasswordHash hash() {
         return this.hash(ALGORITHM, ITERATIONS, KEY_LENGTH);
     }
 
+    /**
+     *
+     * @param algorithm
+     * @param iterations
+     * @param keyLength
+     * @return
+     */
     public PasswordHash hash(String algorithm, int iterations, int keyLength) {
         ArgumentUtils.checkNotNull(algorithm, "algorithm");
         ArgumentUtils.checkGreaterZero(iterations, "iterations");
@@ -78,6 +135,11 @@ public final class Password {
         }
     }
 
+    /**
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(final Object obj) {
         if (obj == this) {
@@ -94,6 +156,10 @@ public final class Password {
                 SecurityUtils.equals(this.salt, other.getSalt());
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String args[]) {
         char[] password = "Password".toCharArray();
 

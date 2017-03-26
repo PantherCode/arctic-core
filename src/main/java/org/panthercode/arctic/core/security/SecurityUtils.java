@@ -8,13 +8,26 @@ import java.util.Arrays;
  * Created by architect on 22.03.17.
  */
 public class SecurityUtils {
+    /**
+     *
+     */
     private SecurityUtils() {
     }
 
+    /**
+     * @param alphabet
+     * @param length
+     * @return
+     */
     public static char[] generatePasswort(char[] alphabet, int length) {
         throw new NotImplementedException();
     }
 
+    /**
+     * @param data
+     * @param other
+     * @return
+     */
     public static boolean equals(char[] data, char[] other) {
         if (data == null) {
             data = new char[0];
@@ -37,6 +50,11 @@ public class SecurityUtils {
         return flag;
     }
 
+    /**
+     * @param data
+     * @param other
+     * @return
+     */
     public static boolean equals(byte[] data, byte[] other) {
         if (data == null) {
             data = new byte[0];
@@ -59,10 +77,16 @@ public class SecurityUtils {
         return flag;
     }
 
+    /**
+     * @param array
+     */
     public static void clearArray(char[] array) {
         Arrays.fill(array, (char) 0);
     }
 
+    /**
+     * @param array
+     */
     public static void clearArray(byte[] array) {
         Arrays.fill(array, (byte) 0);
     }

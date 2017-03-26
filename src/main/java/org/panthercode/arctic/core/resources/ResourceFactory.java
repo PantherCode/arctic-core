@@ -41,6 +41,13 @@ public class ResourceFactory {
     private ResourceFactory() {
     }
 
+    /**
+     *
+     * @param path
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     @SuppressWarnings("unchecked")
     public List<Class<?>> load(Path path)
             throws IOException, ClassNotFoundException {
@@ -49,14 +56,44 @@ public class ResourceFactory {
         return ReflectionUtils.filterClassList(classes, AbstractResource.class);
     }
 
+    /**
+     *
+     * @param resourceClass
+     * @return
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     */
     public static Resource create(Class<? extends AbstractResource> resourceClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         return ResourceFactory.create(resourceClass, null);
     }
 
+    /**
+     *
+     * @param resourceClass
+     * @param configuration
+     * @return
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws InvocationTargetException
+     */
     public static Resource create(Class<? extends AbstractResource> resourceClass, Configuration configuration) throws NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
         return ResourceFactory.create(resourceClass, configuration, null);
     }
 
+    /**
+     *
+     * @param resourceClass
+     * @param configuration
+     * @param semaphore
+     * @return
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     */
     public static Resource create(Class<? extends AbstractResource> resourceClass, Configuration configuration, Semaphore<Priority> semaphore) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         ArgumentUtils.checkNotNull(resourceClass, "resource class");
 

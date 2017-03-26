@@ -27,22 +27,62 @@ import org.panthercode.arctic.core.settings.Configurable;
  * @since 1.0
  */
 public interface Resource extends Identifiable, Versionable, Configurable {
-
+    /**
+     *
+     * @return
+     */
     boolean isOpen();
 
+    /**
+     *
+     * @return
+     */
     boolean isBusy();
 
+    /**
+     *
+     * @return
+     */
     int actualThreadCount();
 
+    /**
+     *
+     * @return
+     */
     int allowedParalleledThreads();
 
+    /**
+     *
+     * @throws Exception
+     */
     void acquire() throws Exception;
 
+    /**
+     *
+     * @param priority
+     * @throws Exception
+     */
     void acquire(Priority priority) throws Exception;
 
+    /**
+     *
+     */
     void release();
 
+    /**
+     *
+     * @return
+     */
     Resource copy();
 
+    /**
+     *
+     * @param functionName
+     * @param returnType
+     * @param arguments
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
     <T> T execute(String functionName, Class<T> returnType, Object... arguments) throws Exception;
 }

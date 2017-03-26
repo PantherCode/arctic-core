@@ -74,6 +74,14 @@ public class Configuration extends Properties {
         this.setComment(comment);
     }
 
+    /**
+     *
+     * @param key
+     * @param returnType
+     * @param <T>
+     * @return
+     * @throws NullPointerException
+     */
     public <T> T get(Object key, Class<T> returnType)
             throws NullPointerException {
         ArgumentUtils.checkNotNull(returnType, "type");
@@ -81,6 +89,14 @@ public class Configuration extends Properties {
         return returnType.cast(this.get(key));
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @param returnType
+     * @param <T>
+     * @return
+     */
     public <T> T getOrDefault(Object key, Object defaultValue, Class<T> returnType) {
         ArgumentUtils.checkNotNull(returnType, "type");
         ArgumentUtils.checkNotNull(defaultValue, "default value");
@@ -90,74 +106,173 @@ public class Configuration extends Properties {
         return returnType.cast(result);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public int getInteger(Object key) {
         return this.get(key, Integer.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public int getIntegerOrDefault(Object key, int defaultValue) {
         return this.getOrDefault(key, defaultValue, Integer.class);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public String getString(Object key) {
         return this.get(key, String.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public String getStringOrDefault(Object key, String defaultValue) {
         return this.getOrDefault(key, defaultValue, String.class);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public boolean getBoolean(Object key) {
         return this.get(key, Boolean.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public boolean getBooleanOrDefault(Object key, boolean defaultValue) {
         return this.getOrDefault(key, defaultValue, Boolean.class);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public double getDouble(Object key) {
         return this.get(key, Double.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public double getDoubleOrDefault(Object key, double defaultValue) {
         return this.getOrDefault(key, defaultValue, Double.class);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public byte getByte(Object key) {
         return this.get(key, Byte.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public byte getByteOrDefault(Object key, byte defaultValue) {
         return this.getOrDefault(key, defaultValue, Byte.class);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public float getFloat(Object key) {
         return this.get(key, Float.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public float getFloatOrDefault(Object key, float defaultValue) {
         return this.getOrDefault(key, defaultValue, Float.class);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public long getLong(Object key) {
         return this.get(key, Long.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public long getLongOrDefault(Object key, long defaultValue) {
         return this.getOrDefault(key, defaultValue, Long.class);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public short getShort(Object key) {
         return this.get(key, Short.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public short getShortOrDefault(Object key, short defaultValue) {
         return this.getOrDefault(key, defaultValue, Short.class);
     }
 
+    /**
+     *
+     * @param key
+     * @return
+     */
     public Character getCharater(Object key) {
         return this.get(key, Character.class);
     }
 
+    /**
+     *
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public Character getCharacterOrDefault(Object key, char defaultValue) {
         return this.getOrDefault(key, defaultValue, Character.class);
     }
@@ -204,13 +319,29 @@ public class Configuration extends Properties {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public static ConfigurationBuilder create() {
         return new ConfigurationBuilder();
     }
 
+    /**
+     *
+     */
     public static class ConfigurationBuilder {
+        /**
+         *
+         */
         private Properties properties = new Properties();
 
+        /**
+         *
+         * @param key
+         * @param value
+         * @return
+         */
         public ConfigurationBuilder append(Object key, Object value) {
             ArgumentUtils.checkNotNull(key, "key");
 
@@ -219,6 +350,10 @@ public class Configuration extends Properties {
             return this;
         }
 
+        /**
+         *
+         * @return
+         */
         public Configuration build() {
             return new Configuration(this.properties);
         }

@@ -16,14 +16,25 @@ public abstract class ApplicationSystem<T extends Kernel> extends Application {
      */
     private static ApplicationSystem instance = null;
 
+    /**
+     *
+     */
     private final T kernel;
 
+    /**
+     *
+     * @param kernel
+     */
     protected ApplicationSystem(T kernel) {
         super();
 
         this.kernel = ArgumentUtils.checkNotNull(kernel, "kernel");
     }
 
+    /**
+     *
+     * @return
+     */
     public T kernel() {
         return this.kernel;
     }
@@ -68,13 +79,28 @@ public abstract class ApplicationSystem<T extends Kernel> extends Application {
         return clazz.cast(current());
     }
 
+    /**
+     *
+     * @return
+     */
     public static Kernel currentKernel() {
         return current().kernel();
     }
 
+    /**
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public static <T extends Kernel> T currentKernel(Class<T> clazz) {
         return clazz.cast(currentKernel());
     }
 
+    /**
+     *
+     * @param args
+     * @throws Exception
+     */
     public abstract void initialize(String[] args) throws Exception;
 }

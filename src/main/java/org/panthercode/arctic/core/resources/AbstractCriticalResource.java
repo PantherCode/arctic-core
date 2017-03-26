@@ -31,12 +31,24 @@ import org.panthercode.arctic.core.settings.Configuration;
 @VersionInfo(major = 1, minor = 0, build = 0, revision = 0)
 public abstract class AbstractCriticalResource extends AbstractResource {
 
+    /**
+     *
+     */
     private Semaphore<Priority> semaphore = null;
 
+    /**
+     *
+     * @param semaphore
+     */
     public AbstractCriticalResource(Semaphore<Priority> semaphore) {
         this(semaphore, null);
     }
 
+    /**
+     *
+     * @param semaphore
+     * @param configuration
+     */
     public AbstractCriticalResource(Semaphore<Priority> semaphore,
                                     Configuration configuration) {
         super(configuration);
@@ -44,26 +56,47 @@ public abstract class AbstractCriticalResource extends AbstractResource {
         this.semaphore = semaphore;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isBusy() {
         return this.semaphore.hasQueuedThreads();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int actualThreadCount() {
         return this.semaphore.actualThreadCount();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int allowedParalleledThreads() {
         return this.semaphore.allowedParalleledThreads();
     }
 
+    /**
+     *
+     * @throws Exception
+     */
     @Override
     public void acquire() throws Exception {
         this.acquire(Priority.NORMAL);
     }
 
+    /**
+     *
+     * @param priority
+     * @throws Exception
+     */
     @Override
     public void acquire(Priority priority) throws Exception {
         this.semaphore.acquire(priority);
@@ -71,6 +104,9 @@ public abstract class AbstractCriticalResource extends AbstractResource {
         super.acquire(priority);
     }
 
+    /**
+     *
+     */
     @Override
     public void release() {
         this.semaphore.release();
