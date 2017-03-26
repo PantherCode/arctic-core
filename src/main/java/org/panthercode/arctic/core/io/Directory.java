@@ -75,14 +75,35 @@ public class Directory {
         return new Directory(Files.createDirectory(path, attributes));
     }
 
+    /**
+     * @param path1
+     * @param path2
+     * @param attributes
+     * @return
+     * @throws IOException
+     */
     public static Directory[] create(Path path1, Path path2, FileAttribute<?>... attributes) throws IOException {
         return create(new Path[]{path1, path2}, attributes);
     }
 
+    /**
+     * @param path1
+     * @param path2
+     * @param path3
+     * @param attributes
+     * @return
+     * @throws IOException
+     */
     public static Directory[] create(Path path1, Path path2, Path path3, FileAttribute<?>... attributes) throws IOException {
         return create(new Path[]{path1, path2, path3}, attributes);
     }
 
+    /**
+     * @param path
+     * @param attributes
+     * @return
+     * @throws IOException
+     */
     public static Directory[] create(Path[] path, FileAttribute<?>... attributes) throws IOException {
         Directory[] array = new Directory[path.length];
 
@@ -105,10 +126,24 @@ public class Directory {
         return new Directory(path);
     }
 
+    /**
+     * @param path1
+     * @param path2
+     * @return
+     * @throws FileNotFoundException
+     */
     public static Directory[] open(Path path1, Path path2) throws FileNotFoundException {
         return open(new Path[]{path1, path2});
     }
 
+    /**
+     * @param path1
+     * @param path2
+     * @param path3
+     * @param other
+     * @return
+     * @throws FileNotFoundException
+     */
     public static Directory[] open(Path path1, Path path2, Path path3, Path... other) throws FileNotFoundException {
         Path[] paths = new Path[3 + other.length];
 
@@ -121,6 +156,11 @@ public class Directory {
         return open(paths);
     }
 
+    /**
+     * @param paths
+     * @return
+     * @throws FileNotFoundException
+     */
     public static Directory[] open(Path[] paths) throws FileNotFoundException {
         Directory[] array = new Directory[paths.length];
 
@@ -147,14 +187,35 @@ public class Directory {
         return Directory.open(path);
     }
 
+    /**
+     * @param path1
+     * @param path2
+     * @param attributes
+     * @return
+     * @throws IOException
+     */
     public static Directory[] openOrCreate(Path path1, Path path2, FileAttribute<?>... attributes) throws IOException {
         return openOrCreate(new Path[]{path1, path2}, attributes);
     }
 
+    /**
+     * @param path1
+     * @param path2
+     * @param path3
+     * @param attributes
+     * @return
+     * @throws IOException
+     */
     public static Directory[] openOrCreate(Path path1, Path path2, Path path3, FileAttribute<?>... attributes) throws IOException {
         return openOrCreate(new Path[]{path1, path2, path3}, attributes);
     }
 
+    /**
+     * @param path
+     * @param attributes
+     * @return
+     * @throws IOException
+     */
     public static Directory[] openOrCreate(Path[] path, FileAttribute<?>... attributes) throws IOException {
         Directory[] array = new Directory[path.length];
 
@@ -165,10 +226,20 @@ public class Directory {
         return array;
     }
 
+    /**
+     * @param clazz
+     * @param path
+     * @param <T>
+     * @return
+     * @throws FileNotFoundException
+     */
     public static <T extends Directory> T openAs(Class<T> clazz, Path path) throws FileNotFoundException {
         return clazz.cast(open(path));
     }
 
+    /**
+     * @return
+     */
     public String name() {
         return this.path.getFileName().toString();
     }
@@ -183,32 +254,62 @@ public class Directory {
         return this.get(Paths.get(name));
     }
 
+    /**
+     * @param name
+     * @param others
+     * @return
+     */
     public Path get(String name, String... others) {
         return this.get(Paths.get(name, others));
     }
 
+    /**
+     * @param path
+     * @return
+     */
     public Path get(Path path) {
         return this.path.resolve(path);
     }
 
+    /**
+     * @param name
+     * @return
+     */
     public boolean hasChild(String name) {
         return this.hasChild(Paths.get(name));
     }
 
+    /**
+     * @param name
+     * @param others
+     * @return
+     */
     public boolean hasChild(String name, String... others) {
         return this.hasChild(Paths.get(name, others));
     }
 
+    /**
+     * @param path
+     * @return
+     */
     public boolean hasChild(Path path) {
         return Files.exists(this.path.resolve(path));
     }
 
+    /**
+     * @return
+     * @throws IOException
+     */
     public boolean isEmpty() throws IOException {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(this.path)) {
             return !stream.iterator().hasNext();
         }
     }
 
+    /**
+     * @return
+     * @throws IOException
+     */
     public Path[] children() throws IOException {
         List<Path> result = new ArrayList<>();
 
@@ -223,6 +324,10 @@ public class Directory {
         return result.toArray(array);
     }
 
+    /**
+     * @return
+     * @throws IOException
+     */
     public Path[] files() throws IOException {
         List<Path> result = new ArrayList<>();
 
@@ -244,6 +349,10 @@ public class Directory {
         return result.toArray(array);
     }
 
+    /**
+     * @return
+     * @throws IOException
+     */
     public Directory[] directories() throws IOException {
         List<Directory> result = new ArrayList<>();
 
@@ -265,18 +374,34 @@ public class Directory {
         return result.toArray(array);
     }
 
+    /**
+     * @throws IOException
+     */
     public void clean() throws IOException {
         FileUtils.cleanDirectory(this.path.toFile());
     }
 
+    /**
+     * @throws IOException
+     */
     public void delete() throws IOException {
         FileUtils.deleteDirectory(this.path.toFile());
     }
 
+    /**
+     * @param visitor
+     * @throws IOException
+     */
     public void walkFileTree(FileVisitor<Path> visitor) throws IOException {
         Files.walkFileTree(this.path, visitor);
     }
 
+    /**
+     * @param options
+     * @param maxDepth
+     * @param visitor
+     * @throws IOException
+     */
     public void walkFileTree(Set<FileVisitOption> options, int maxDepth, FileVisitor<Path> visitor) throws IOException {
         Files.walkFileTree(this.path, options, maxDepth, visitor);
     }
@@ -300,16 +425,27 @@ public class Directory {
     }
 
     //TODO: implement
+
+    /**
+     * @return
+     */
     @Override
     public String toString() {
         return this.path.toString();
     }
 
+    /**
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
 
+    /**
+     * @return
+     */
     @Override
     public int hashCode() {
         return super.hashCode();

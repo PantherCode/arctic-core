@@ -55,6 +55,10 @@ public class JsonUtils {
         return new Gson();
     }
 
+    /**
+     *
+     * @return
+     */
     public static GsonBuilder builder() {
         return new GsonBuilder();
     }
@@ -71,6 +75,14 @@ public class JsonUtils {
         return gson.fromJson(json, type);
     }
 
+    /**
+     *
+     * @param json
+     * @param type
+     * @param gson
+     * @param <T>
+     * @return
+     */
     public static <T> T fromJson(String json, Type type, Gson gson) {
         ArgumentUtils.checkNotNull(gson, "gson");
 
@@ -89,6 +101,14 @@ public class JsonUtils {
         return gson.fromJson(json, clazz);
     }
 
+    /**
+     *
+     * @param json
+     * @param clazz
+     * @param gson
+     * @param <T>
+     * @return
+     */
     public static <T> T fromJson(String json, Class<T> clazz, Gson gson) {
         ArgumentUtils.checkNotNull(gson, "gson");
 
@@ -105,6 +125,12 @@ public class JsonUtils {
         return gson.toJson(object);
     }
 
+    /**
+     *
+     * @param object
+     * @param gson
+     * @return
+     */
     public static String toJson(Object object, Gson gson) {
         ArgumentUtils.checkNotNull(gson, "gson");
 

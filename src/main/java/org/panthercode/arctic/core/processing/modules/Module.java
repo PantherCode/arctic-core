@@ -179,8 +179,16 @@ public interface Module extends Identifiable, Versionable {
      */
     boolean reset() throws ProcessException;
 
+    /**
+     *
+     * @return
+     */
     boolean hasResult();
 
+    /**
+     *
+     * @return
+     */
     Object result();
 
     /**

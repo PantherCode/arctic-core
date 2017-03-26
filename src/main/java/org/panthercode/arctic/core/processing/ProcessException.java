@@ -22,28 +22,46 @@ package org.panthercode.arctic.core.processing;
  * @since 1.0
  */
 public class ProcessException extends RuntimeException {
-
+    /**
+     *
+     */
     public ProcessException() {
         super();
     }
 
+    /**
+     *
+     * @param message
+     */
     public ProcessException(String message) {
         super(message);
     }
 
+    /**
+     *
+     * @param message
+     * @param cause
+     */
     public ProcessException(String message, Throwable cause) {
         super(message, cause);
     }
 
+    /**
+     *
+     * @param cause
+     */
     public ProcessException(Throwable cause) {
         super(cause);
     }
 
-    protected ProcessException(String message,
-                               Throwable cause,
-                               boolean enableSuppression,
-                               boolean writableStackTrace) {
+    /**
+     *
+     * @param message
+     * @param cause
+     * @param enableSuppression
+     * @param writableStackTrace
+     */
+    protected ProcessException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
-
 }

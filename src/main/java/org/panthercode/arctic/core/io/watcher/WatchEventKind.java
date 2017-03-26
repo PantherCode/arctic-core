@@ -45,11 +45,20 @@ public enum WatchEventKind {
         this.value = value;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return this.value;
     }
 
+    /**
+     *
+     * @param kind
+     * @return
+     */
     public static WatchEventKind valueOf(WatchEvent.Kind<?> kind) {
         ArgumentUtils.checkNotNull(kind, "watch event kind");
 
