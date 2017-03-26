@@ -66,9 +66,7 @@ public class Context extends Hashtable<Object, Object> {
 
     public <T> T get(Object key, Class<T> returnType)
             throws NullPointerException {
-        ArgumentUtils.checkNotNull(returnType, "type");
-
-        return returnType.cast(this.get(key));
+        return ArgumentUtils.checkNotNull(returnType, "type").cast(this.get(key));
     }
 
     public <T> T getOrDefault(Object key, Object defaultValue, Class<T> returnType) {
@@ -184,19 +182,23 @@ public class Context extends Hashtable<Object, Object> {
         throw new NotImplementedException();
     }
 
-    public void check(Object key) {
+    public void check(Object key)
+            throws MissingKeyException {
         throw new NotImplementedException();
     }
 
-    public void check(Object key1, Object key2) {
+    public void check(Object key1, Object key2)
+            throws MissingKeyException {
         throw new NotImplementedException();
     }
 
-    public void check(Object key1, Object key2, Object key3) {
+    public void check(Object key1, Object key2, Object key3)
+            throws MissingKeyException {
         throw new NotImplementedException();
     }
 
-    public void check(Object key1, Object key2, Object key3, Object... rest) {
+    public void check(Object key1, Object key2, Object key3, Object... rest)
+            throws MissingKeyException {
         throw new NotImplementedException();
     }
 
