@@ -3,9 +3,7 @@ package org.panthercode.arctic.core.event;
 /**
  * Created by architect on 26.03.17.
  */
-public interface EventArgs {
+public interface EventFactory {
 
-    boolean isHandled();
-
-    void isHandled(boolean value);
+    <T extends EventArgs> Event<T> create();
 }

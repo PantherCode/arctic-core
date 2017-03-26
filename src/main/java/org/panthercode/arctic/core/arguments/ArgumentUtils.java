@@ -21,7 +21,7 @@ import com.google.common.base.Strings;
 import java.util.Collection;
 
 /**
- * This class containsHandler functions to check arguments, whether they have a valid value. It's useful to asserting valid
+ * This class hashHandler functions to check arguments, whether they have a valid value. It's useful to asserting valid
  * value of (method) parameters beforeRun using those for processing.
  * <p>
  * Based on Google's Guava <tt>Preconditions</tt> class

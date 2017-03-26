@@ -1,28 +1,26 @@
 package org.panthercode.arctic.core.io;
 
-import org.panthercode.arctic.core.event.EventArgs;
+import org.panthercode.arctic.core.event.impl.arguments.AbstractEventArgs;
 
 import java.nio.file.Path;
 
 /**
  * Created by architect on 28.02.17.
  */
-public class WatcherEventArgs extends EventArgs {
+public class WatcherEventArgs extends AbstractEventArgs {
 
     private final Path path;
 
     private final WatchEventKind kind;
 
-    private final boolean hasEventHandler;
-
     private final boolean recursive;
 
-    public WatcherEventArgs(Path path, WatchEventKind kind, boolean hasEventHandler, boolean recursive) {
+    public WatcherEventArgs(Path path, WatchEventKind kind, boolean recursive) {
+        super();
+
         this.path = path;
 
         this.kind = kind;
-
-        this.hasEventHandler = hasEventHandler;
 
         this.recursive = recursive;
     }
@@ -33,10 +31,6 @@ public class WatcherEventArgs extends EventArgs {
 
     public WatchEventKind kind() {
         return this.kind;
-    }
-
-    public boolean hasHandler() {
-        return this.hasEventHandler;
     }
 
     public boolean isRecursive() {

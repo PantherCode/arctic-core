@@ -24,38 +24,23 @@ package org.panthercode.arctic.core.io;
  */
 public class DirectoryWatcherException extends RuntimeException {
 
-    /**
-     * Default Constructor
-     */
     public DirectoryWatcherException() {
         super();
     }
 
-    /**
-     * Constructor
-     *
-     * @param message message of exception
-     */
     public DirectoryWatcherException(String message) {
         super(message);
     }
 
-    /**
-     * Constructor
-     *
-     * @param message message of exception
-     * @param cause   cause of exception
-     */
     public DirectoryWatcherException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    /**
-     * Constructor
-     *
-     * @param cause cause of exception
-     */
     public DirectoryWatcherException(Throwable cause) {
         super(cause);
+    }
+
+    protected DirectoryWatcherException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -1,57 +1,27 @@
 package org.panthercode.arctic.core.event;
 
-import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.event.impl.DefaultEvent;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by architect on 28.02.17.
+ * Created by architect on 26.03.17.
  */
-public class Event<T extends EventArgs> {
+public interface Event<T extends EventArgs> {
 
-    private final Set<EventHandler<T>> handlers;
+    boolean addHandler(EventHandler<T> handler);
 
-    private final EventBus eventBus;
+    boolean removeHandler(EventHandler<T> handler);
 
-    private Event(EventBus bus) {
-        this.eventBus = bus;
+    boolean hasHandler(EventHandler<T> handler);
 
-        this.handlers = new HashSet<>();
-    }
+    Set<EventHandler<T>> handlerSet();
 
-    public static <T extends EventArgs> Event<T> register(EventBus bus) {
-        ArgumentUtils.checkNotNull(bus, "event bus");
+    int size();
 
-        return new Event<>(bus);
-    }
+    boolean isEmpty();
 
-    public synchronized boolean registerHandler(EventHandler<T> handler) {
-        return handler != null && this.handlers.add(handler);
-    }
+    void raise(Object source, T args);
 
-    public synchronized boolean unregisterHandler(EventHandler<T> handler) {
-        return this.containsHandler(handler) &&
-                this.handlers.remove(handler);
-    }
-
-    public boolean containsHandler(EventHandler<T> handler) {
-        return handler != null && this.handlers.contains(handler);
-    }
-
-    public int size() {
-        return this.handlers.size();
-    }
-
-    public Set<EventHandler<T>> handlers() {
-        return new HashSet<>(this.handlers);
-    }
-
-    public void raise(Object source, T e) {
-        ArgumentUtils.checkNotNull(e, "event args");
-
-        for (EventHandler<T> handler : this.handlers) {
-            this.eventBus.process(handler, source, e);
-        }
-    }
+    void raise(Object source, T args, Handler<EventMessage<T>> handler);
 }
