@@ -49,7 +49,7 @@ public final class PasswordHash {
      */
     public PasswordHash(byte[] data, int offset) {
         if (data == null) {
-            throw new NullPointerException("The value of data is null.");
+            throw new NullPointerException("The value of content is null.");
         }
 
         ArgumentUtils.checkRange(offset, 0, data.length, "offset");
