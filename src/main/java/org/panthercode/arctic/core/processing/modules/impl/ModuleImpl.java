@@ -215,17 +215,17 @@ public abstract class ModuleImpl implements Module {
      *
      * @return Returns the actual <tt>ProcessStateHandler</tt> the object is associated with.
      */
-    //public synchronized boolean addProcessStateHandler(Handler<EventOld<ProcessState>> handler) {
-    //    return this.processStateHandlers.add(handler);
+    //public synchronized boolean addProcessStateHandler(Handler<EventOld<ProcessState>> consumeHandler) {
+    //    return this.processStateHandlers.add(consumeHandler);
     //}
 
     /**
      * Set a new <tt>ProcessStatusHandler</tt> the object is associated with.
      *
-     * @param handler new handler
+     * @param consumeHandler new consumeHandler
      */
-    //public synchronized boolean removeProcessStateHandler(Handler<EventOld<ProcessState>> handler) {
-    //    return this.processStateHandlers.removePath(handler);
+    //public synchronized boolean removeProcessStateHandler(Handler<EventOld<ProcessState>> consumeHandler) {
+    //    return this.processStateHandlers.removePath(consumeHandler);
     //}
 
     //public List<Handler<EventOld<ProcessState>>> processStateHandlers() {
@@ -409,7 +409,7 @@ public abstract class ModuleImpl implements Module {
 
     /**
      * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
-     * TODO: each handler gets a new instance, it's synchronized -> fast handling
+     * TODO: each consumeHandler gets a new instance, it's synchronized -> fast handling
      *
      * @param newState new state of object
      */
@@ -419,10 +419,10 @@ public abstract class ModuleImpl implements Module {
 
             this.actualState = newState;
 
-            //for (Handler<EventOld<ProcessState>> handler : this.processStateHandlers) {
+            //for (Handler<EventOld<ProcessState>> consumeHandler : this.processStateHandlers) {
             //    EventOld<ProcessState> event = new EventOld<>(this, oldState, this.actualState);
 
-            //    handler.handle(event);
+            //    consumeHandler.handle(event);
             //          }
 
             return true;
