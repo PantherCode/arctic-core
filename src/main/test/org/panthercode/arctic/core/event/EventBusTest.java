@@ -51,11 +51,6 @@ public class EventBusTest {
         }
 
         @Override
-        public void setExceptionHandler(Handler<MessageConsumeFailure<String>> exceptionHandler) {
-
-        }
-
-        @Override
         public Handler<MessageConsumeFailure<String>> exceptionHandler() {
             return null;
         }
@@ -102,11 +97,6 @@ public class EventBusTest {
         @Override
         public Handler<Message<String>> consumedHandler() {
             return null;
-        }
-
-        @Override
-        public void setExceptionHandler(Handler<MessageConsumeFailure<String>> exceptionHandler) {
-
         }
 
         @Override
