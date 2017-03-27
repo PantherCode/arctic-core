@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 /**
  * Created by architect on 27.03.17.
  */
-public class DeaultEventTest {
+public class DefaultEventTest {
 
     private static final EventBus EVENT_BUS = new EventBus();
 

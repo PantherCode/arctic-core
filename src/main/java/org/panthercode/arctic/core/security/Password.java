@@ -7,6 +7,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 /**
  * Created by architect on 22.03.17.
@@ -46,7 +47,6 @@ public final class Password {
     }
 
     /**
-     *
      * @param password
      */
     public Password(char[] password) {
@@ -54,7 +54,6 @@ public final class Password {
     }
 
     /**
-     *
      * @param password
      * @param salt
      */
@@ -65,7 +64,6 @@ public final class Password {
     }
 
     /**
-     *
      * @param password
      */
     public void setPassword(char[] password) {
@@ -73,7 +71,6 @@ public final class Password {
     }
 
     /**
-     *
      * @return
      */
     public char[] getPassword() {
@@ -81,7 +78,6 @@ public final class Password {
     }
 
     /**
-     *
      * @param salt
      */
     public void setSalt(byte[] salt) {
@@ -89,7 +85,6 @@ public final class Password {
     }
 
     /**
-     *
      * @return
      */
     public byte[] getSalt() {
@@ -105,21 +100,19 @@ public final class Password {
     }
 
     /**
-     *
      * @return
      */
-    public PasswordHash hash() {
-        return this.hash(ALGORITHM, ITERATIONS, KEY_LENGTH);
+    public PasswordHash toHash() {
+        return this.toHash(ALGORITHM, ITERATIONS, KEY_LENGTH);
     }
 
     /**
-     *
      * @param algorithm
      * @param iterations
      * @param keyLength
      * @return
      */
-    public PasswordHash hash(String algorithm, int iterations, int keyLength) {
+    public PasswordHash toHash(String algorithm, int iterations, int keyLength) {
         ArgumentUtils.checkNotNull(algorithm, "algorithm");
         ArgumentUtils.checkGreaterZero(iterations, "iterations");
         ArgumentUtils.checkGreaterZero(keyLength, "key length");
@@ -129,14 +122,13 @@ public final class Password {
             PBEKeySpec spec = new PBEKeySpec(this.password, this.salt, iterations, keyLength);
             SecretKey key = secretKeyFactory.generateSecret(spec);
 
-            return new PasswordHash(key.getEncoded(), this.salt);
+            return new PasswordHash(key.getEncoded(), Arrays.copyOf(this.salt, this.salt.length));
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
-     *
      * @param obj
      * @return
      */
@@ -154,20 +146,5 @@ public final class Password {
 
         return SecurityUtils.equals(this.password, other.getPassword()) &&
                 SecurityUtils.equals(this.salt, other.getSalt());
-    }
-
-    /**
-     *
-     * @param args
-     */
-    public static void main(String args[]) {
-        char[] password = "Password".toCharArray();
-
-        byte[] salt = "SALTSALT".getBytes();
-
-        Password p = new Password(password, salt);
-
-        System.out.println(new String(p.hash().getHash()));
-        System.out.println(new String(p.hash().getSalt()));
     }
 }

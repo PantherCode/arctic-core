@@ -140,9 +140,9 @@ public class RepeaterOptions {
     }
 
     /**
-     * Returns a hash code value of this object.
+     * Returns a toHash code value of this object.
      *
-     * @return Returns a hash code value of this object.
+     * @return Returns a toHash code value of this object.
      */
     @Override
     public int hashCode() {

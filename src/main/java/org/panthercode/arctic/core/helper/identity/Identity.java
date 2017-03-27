@@ -26,7 +26,7 @@ import java.util.Random;
  * together.
  * <p>
  * Each object has an identifier which represents in a (pseudo) unique manner. But it's no guaranteed at all. For
- * generating a new identifier a hash code consisting of name and group name is calculated and multiplied with a random
+ * generating a new identifier a toHash code consisting of name and group name is calculated and multiplied with a random
  * number. Therefore the result of <tt>new Identity("name","group").equals(new Identity("name","group"))</tt>
  * returns always false.
  * <p>
@@ -184,9 +184,9 @@ public final class Identity {
     }
 
     /**
-     * Returns a hash code value of this object.
+     * Returns a toHash code value of this object.
      *
-     * @return Returns a hash code value of this object.
+     * @return Returns a toHash code value of this object.
      */
     @Override
     public int hashCode() {

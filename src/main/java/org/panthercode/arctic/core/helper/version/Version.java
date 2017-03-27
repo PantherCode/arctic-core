@@ -331,9 +331,9 @@ public class Version implements Comparable<Version> {
     }
 
     /**
-     * Returns the hash code value of this object.
+     * Returns the toHash code value of this object.
      *
-     * @return Returns the hash code value of this object.
+     * @return Returns the toHash code value of this object.
      */
     @Override
     public int hashCode() {
