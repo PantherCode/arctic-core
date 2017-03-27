@@ -1,6 +1,5 @@
 package org.panthercode.arctic.core.event.impl;
 
-import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.event.Event;
 import org.panthercode.arctic.core.event.EventArgs;
 import org.panthercode.arctic.core.event.EventHandler;
@@ -29,7 +28,7 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
     /**
      *
      */
-    private final Handler<Message<T>> messageHandler;
+    private final Handler<Message<T>> consumeHandler;
 
     /**
      *
@@ -37,14 +36,14 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
     private Handler<MessageConsumeFailure<T>> exceptionHandler;
 
     /**
-     * @param eventBus
+     * @param factory
      */
-    public DefaultEvent(EventBus eventBus, Handler<Message<T>> messageHandler, Handler<MessageConsumeFailure<T>> exceptionHandler) {
-        this.eventBus = ArgumentUtils.checkNotNull(eventBus, "event bus");
+    public DefaultEvent(DefaultEventFactory<T> factory) {
+        this.eventBus = factory.getEventBus();
 
-        this.messageHandler = ArgumentUtils.checkNotNull(messageHandler, "message messageHandler");
+        this.consumeHandler = factory.getConsumeHandler();
 
-        this.exceptionHandler = exceptionHandler;
+        this.exceptionHandler = factory.getExceptionHandler();
 
         this.eventHandlers = new HashSet<>();
     }
@@ -105,7 +104,7 @@ public final class DefaultEvent<T extends EventArgs> implements Event<T> {
     public void send(Object source, T eventArgs) {
         if (!this.isEmpty()) {
             for (EventHandler<T> handler : this.eventHandlers) {
-                this.eventBus.process(new EventMessage<>(source, eventArgs, handler, this.messageHandler, exceptionHandler));
+                this.eventBus.process(new EventMessage<>(source, eventArgs, handler, this.consumeHandler, exceptionHandler));
             }
         }
     }

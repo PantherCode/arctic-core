@@ -1,6 +1,7 @@
 package org.panthercode.arctic.core.event;
 
 import org.panthercode.arctic.core.event.impl.DefaultEvent;
+import org.panthercode.arctic.core.event.impl.DefaultEventFactory;
 import org.panthercode.arctic.core.event.impl.EventBus;
 import org.panthercode.arctic.core.event.impl.arguments.AbstractEventArgs;
 import org.panthercode.arctic.core.runtime.Message;
@@ -68,6 +69,8 @@ public class DeaultEventTest {
         }
     };
 
+    private static final DefaultEventFactory<TestEventArgs> FACTORY = new DefaultEventFactory<TestEventArgs>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
+
     @BeforeClass
     public void before() {
         EVENT_BUS.activate();
@@ -84,7 +87,7 @@ public class DeaultEventTest {
 
         int expectedSize2 = 2;
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
         Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
 
@@ -101,7 +104,7 @@ public class DeaultEventTest {
 
         int expectedSize2 = 1;
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
         Assert.assertFalse(event.addHandler(INVALID_EVENT_HANDLER), "Actual result of method");
 
@@ -120,7 +123,7 @@ public class DeaultEventTest {
 
         int expectedSize2 = 1;
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
         Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
 
@@ -137,7 +140,7 @@ public class DeaultEventTest {
     public void T04_DefaultEvent_removeHandlerFail() {
         int expectedSize = 1;
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
@@ -158,7 +161,7 @@ public class DeaultEventTest {
 
     @Test
     public void T05_DefaultEvent_hasHandler() {
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
@@ -169,7 +172,7 @@ public class DeaultEventTest {
 
     @Test
     public void T06_DefaultEvent_isEmpty() {
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
         Assert.assertTrue(event.isEmpty(), "Event is empty");
 
@@ -186,7 +189,7 @@ public class DeaultEventTest {
     public void T07_DefaultEvent_send() {
         TestEventArgs eventArgs = new TestEventArgs(CONTENT);
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 

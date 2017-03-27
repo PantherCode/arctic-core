@@ -84,9 +84,9 @@ public class DirectoryWatcher implements Runnable {
      * @return Returns a new instance of <tt>DirectoryWatcher</tt> class.
      * @throws IOException Is thrown if an error occurred while creating new filesystem service.
      */
-    public static DirectoryWatcher create(final EventFactory factory)
+    public static DirectoryWatcher create(final EventFactory<WatcherEventArgs> factory)
             throws IOException {
-        return DirectoryWatcher.create(factory);
+        return new DirectoryWatcher(factory);
     }
 
     /**

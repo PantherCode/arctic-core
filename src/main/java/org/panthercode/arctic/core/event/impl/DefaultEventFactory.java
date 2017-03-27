@@ -106,6 +106,6 @@ public class DefaultEventFactory<T extends EventArgs> implements EventFactory<T>
      */
     @Override
     public Event<T> register() {
-        return new DefaultEvent<T>(this.eventBus, this.consumeHandler, this.exceptionHandler);
+        return new DefaultEvent<T>(this);
     }
 }
