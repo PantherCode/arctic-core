@@ -89,13 +89,13 @@ public class DefaultEventTest {
 
         Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
-        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumedHandler");
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER2), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumedHandler");
     }
 
     @Test
@@ -108,13 +108,13 @@ public class DefaultEventTest {
 
         Assert.assertFalse(event.addHandler(INVALID_EVENT_HANDLER), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumedHandler");
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
         Assert.assertFalse(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumedHandler");
     }
 
     @Test
@@ -125,15 +125,15 @@ public class DefaultEventTest {
 
         Event<TestEventArgs> event = new DefaultEvent<>(FACTORY);
 
-        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumedHandler");
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumedHandler");
 
         Assert.assertTrue(event.removeHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumedHandler");
     }
 
     @Test
@@ -144,15 +144,15 @@ public class DefaultEventTest {
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumedHandler");
 
         Assert.assertFalse(event.removeHandler(INVALID_EVENT_HANDLER), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumedHandler");
 
         Assert.assertFalse(event.removeHandler(EVENT_HANDLER2), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumeHandler");
+        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumedHandler");
 
         Assert.assertTrue(event.removeHandler(EVENT_HANDLER1), "Actual result of method");
 
@@ -165,9 +165,9 @@ public class DefaultEventTest {
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertTrue(event.hasHandler(EVENT_HANDLER1), "Event contains consumeHandler");
+        Assert.assertTrue(event.hasHandler(EVENT_HANDLER1), "Event contains consumedHandler");
 
-        Assert.assertFalse(event.hasHandler(EVENT_HANDLER2), "Event contains consumeHandler");
+        Assert.assertFalse(event.hasHandler(EVENT_HANDLER2), "Event contains consumedHandler");
     }
 
     @Test

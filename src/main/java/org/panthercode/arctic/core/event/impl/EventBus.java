@@ -184,8 +184,8 @@ public class EventBus implements Service {
                 try {
                     actualMessage.consume();
                 } catch (Exception e) {
-                    if (actualMessage.getExceptionHandler() != null) {
-                        actualMessage.getExceptionHandler().handle(new MessageConsumeFailure(actualMessage, e));
+                    if (actualMessage.exceptionHandler() != null) {
+                        actualMessage.exceptionHandler().handle(new MessageConsumeFailure(actualMessage, e));
                     }
                 }
             }

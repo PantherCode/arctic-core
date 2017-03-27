@@ -46,7 +46,7 @@ public class EventBusTest {
         }
 
         @Override
-        public Handler<Message<String>> consumeHandler() {
+        public Handler<Message<String>> consumedHandler() {
             return null;
         }
 
@@ -56,7 +56,7 @@ public class EventBusTest {
         }
 
         @Override
-        public Handler<MessageConsumeFailure<String>> getExceptionHandler() {
+        public Handler<MessageConsumeFailure<String>> exceptionHandler() {
             return null;
         }
     }
@@ -100,7 +100,7 @@ public class EventBusTest {
         }
 
         @Override
-        public Handler<Message<String>> consumeHandler() {
+        public Handler<Message<String>> consumedHandler() {
             return null;
         }
 
@@ -110,7 +110,7 @@ public class EventBusTest {
         }
 
         @Override
-        public Handler<MessageConsumeFailure<String>> getExceptionHandler() {
+        public Handler<MessageConsumeFailure<String>> exceptionHandler() {
             return null;
         }
     }

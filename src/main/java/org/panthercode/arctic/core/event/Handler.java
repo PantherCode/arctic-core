@@ -27,7 +27,7 @@ package org.panthercode.arctic.core.event;
 public interface Handler<T> {
 
     /**
-     * This function is called to commit changes to consumeHandler class.
+     * This function is called to commit changes to consumedHandler class.
      *
      * @param e event content
      */

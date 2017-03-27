@@ -80,9 +80,9 @@ public class EventMessageTest {
 
         Assert.assertEquals(eventMessage.source(), SOURCE, "Actual value of source");
 
-        Assert.assertEquals(eventMessage.eventHandler(), EVENT_HANDLER, "Actual value of event consumeHandler");
+        Assert.assertEquals(eventMessage.eventHandler(), EVENT_HANDLER, "Actual value of event consumedHandler");
 
-        Assert.assertEquals(eventMessage.consumeHandler(), MESSAGE_HANDLER, "Actual value of message consumeHandler");
+        Assert.assertEquals(eventMessage.consumedHandler(), MESSAGE_HANDLER, "Actual value of message consumedHandler");
 
         Assert.assertFalse(eventMessage.isConsumed(), "Message is consumed");
 

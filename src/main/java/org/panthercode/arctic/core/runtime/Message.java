@@ -29,15 +29,10 @@ public interface Message<T> {
     /**
      * @return
      */
-    Handler<Message<T>> consumeHandler();
-
-    /**
-     * @param exceptionHandler
-     */
-    void setExceptionHandler(Handler<MessageConsumeFailure<T>> exceptionHandler);
+    Handler<Message<T>> consumedHandler();
 
     /**
      * @return
      */
-    Handler<MessageConsumeFailure<T>> getExceptionHandler();
+    Handler<MessageConsumeFailure<T>> exceptionHandler();
 }

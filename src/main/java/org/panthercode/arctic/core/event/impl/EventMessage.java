@@ -139,23 +139,15 @@ public class EventMessage<T extends EventArgs> implements Message<T> {
      * @return
      */
     @Override
-    public Handler<Message<T>> consumeHandler() {
+    public Handler<Message<T>> consumedHandler() {
         return this.messageHandler;
-    }
-
-    /**
-     * @param exceptionHandler
-     */
-    @Override
-    public void setExceptionHandler(Handler<MessageConsumeFailure<T>> exceptionHandler) {
-        this.exceptionHandler = exceptionHandler;
     }
 
     /**
      * @return
      */
     @Override
-    public Handler<MessageConsumeFailure<T>> getExceptionHandler() {
+    public Handler<MessageConsumeFailure<T>> exceptionHandler() {
         return this.exceptionHandler;
     }
 }
