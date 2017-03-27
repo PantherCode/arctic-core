@@ -5,6 +5,7 @@ import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.runtime.Message;
+import org.panthercode.arctic.core.runtime.MessageConsumeFailure;
 import org.panthercode.arctic.core.runtime.Service;
 import org.panthercode.arctic.core.settings.Context;
 
@@ -158,6 +159,7 @@ public class EventBus implements Service {
     /**
      *
      */
+    @SuppressWarnings("unchecked")
     private class EventBusRunnable implements Runnable {
         @Override
         public void run() {
@@ -179,8 +181,13 @@ public class EventBus implements Service {
 
                     actualMessage = EventBus.this.queue.remove();
                 }
-
-                actualMessage.consume();
+                try {
+                    actualMessage.consume();
+                } catch (Exception e) {
+                    if (actualMessage.getExceptionHandler() != null) {
+                        actualMessage.getExceptionHandler().handle(new MessageConsumeFailure(actualMessage, e));
+                    }
+                }
             }
         }
     }
