@@ -2,6 +2,7 @@ package org.panthercode.arctic.core.event;
 
 import org.panthercode.arctic.core.event.impl.EventBus;
 import org.panthercode.arctic.core.runtime.Message;
+import org.panthercode.arctic.core.runtime.MessageConsumeFailure;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -45,7 +46,17 @@ public class EventBusTest {
         }
 
         @Override
-        public Handler<Message<String>> handler() {
+        public Handler<Message<String>> consumeHandler() {
+            return null;
+        }
+
+        @Override
+        public void setExceptionHandler(Handler<MessageConsumeFailure<String>> exceptionHandler) {
+
+        }
+
+        @Override
+        public Handler<MessageConsumeFailure<String>> getExceptionHandler() {
             return null;
         }
     }
@@ -89,7 +100,17 @@ public class EventBusTest {
         }
 
         @Override
-        public Handler<Message<String>> handler() {
+        public Handler<Message<String>> consumeHandler() {
+            return null;
+        }
+
+        @Override
+        public void setExceptionHandler(Handler<MessageConsumeFailure<String>> exceptionHandler) {
+
+        }
+
+        @Override
+        public Handler<MessageConsumeFailure<String>> getExceptionHandler() {
             return null;
         }
     }
@@ -134,7 +155,18 @@ public class EventBusTest {
     }
 
     @Test
-    public void T04_EventBus_canDeactivateFail() throws Exception {
+    public void T04_EventBus_processFail(){
+        EventBus eventBus = new EventBus();
+
+        eventBus.activate();
+
+        eventBus.process(new TestMessage(CONTENT));
+
+
+    }
+
+    @Test
+    public void T05_EventBus_canDeactivateFail() throws Exception {
         EventBus eventBus = new EventBus();
 
         eventBus.activate();
@@ -147,6 +179,4 @@ public class EventBusTest {
 
         eventBus.deactivate();
     }
-
-    //TODO: implement exception handling
 }

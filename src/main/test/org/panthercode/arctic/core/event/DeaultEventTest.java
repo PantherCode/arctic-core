@@ -4,6 +4,7 @@ import org.panthercode.arctic.core.event.impl.DefaultEvent;
 import org.panthercode.arctic.core.event.impl.EventBus;
 import org.panthercode.arctic.core.event.impl.arguments.AbstractEventArgs;
 import org.panthercode.arctic.core.runtime.Message;
+import org.panthercode.arctic.core.runtime.MessageConsumeFailure;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -58,6 +59,15 @@ public class DeaultEventTest {
         }
     };
 
+    private static final Handler<MessageConsumeFailure<TestEventArgs>> EXCEPTION_HANDLER = new Handler<MessageConsumeFailure<TestEventArgs>>() {
+        @Override
+        public void handle(MessageConsumeFailure<TestEventArgs> e) {
+            Assert.assertEquals(e.getMessage().content().content(), CONTENT, "Actual content of event");
+
+            Assert.assertTrue(e.getMessage().isFailed(), "Message is failed");
+        }
+    };
+
     @BeforeClass
     public void before() {
         EVENT_BUS.activate();
@@ -74,15 +84,15 @@ public class DeaultEventTest {
 
         int expectedSize2 = 2;
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
 
-        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER2), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumeHandler");
     }
 
     @Test
@@ -91,17 +101,17 @@ public class DeaultEventTest {
 
         int expectedSize2 = 1;
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
 
         Assert.assertFalse(event.addHandler(INVALID_EVENT_HANDLER), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
         Assert.assertFalse(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumeHandler");
     }
 
     @Test
@@ -110,36 +120,36 @@ public class DeaultEventTest {
 
         int expectedSize2 = 1;
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
 
-        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize2, "Actual size of event consumeHandler");
 
         Assert.assertTrue(event.removeHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize1, "Actual size of event consumeHandler");
     }
 
     @Test
     public void T04_DefaultEvent_removeHandlerFail() {
         int expectedSize = 1;
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumeHandler");
 
         Assert.assertFalse(event.removeHandler(INVALID_EVENT_HANDLER), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumeHandler");
 
         Assert.assertFalse(event.removeHandler(EVENT_HANDLER2), "Actual result of method");
 
-        Assert.assertEquals(event.size(), expectedSize, "Actual size of event handler");
+        Assert.assertEquals(event.size(), expectedSize, "Actual size of event consumeHandler");
 
         Assert.assertTrue(event.removeHandler(EVENT_HANDLER1), "Actual result of method");
 
@@ -148,18 +158,18 @@ public class DeaultEventTest {
 
     @Test
     public void T05_DefaultEvent_hasHandler() {
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
-        Assert.assertTrue(event.hasHandler(EVENT_HANDLER1), "Event contains handler");
+        Assert.assertTrue(event.hasHandler(EVENT_HANDLER1), "Event contains consumeHandler");
 
-        Assert.assertFalse(event.hasHandler(EVENT_HANDLER2), "Event contains handler");
+        Assert.assertFalse(event.hasHandler(EVENT_HANDLER2), "Event contains consumeHandler");
     }
 
     @Test
     public void T06_DefaultEvent_isEmpty() {
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
 
         Assert.assertTrue(event.isEmpty(), "Event is empty");
 
@@ -176,7 +186,7 @@ public class DeaultEventTest {
     public void T07_DefaultEvent_send() {
         TestEventArgs eventArgs = new TestEventArgs(CONTENT);
 
-        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER);
+        Event<TestEventArgs> event = new DefaultEvent<>(EVENT_BUS, MESSAGE_HANDLER, EXCEPTION_HANDLER);
 
         Assert.assertTrue(event.addHandler(EVENT_HANDLER1), "Actual result of method");
 
