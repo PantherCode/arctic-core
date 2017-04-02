@@ -228,15 +228,13 @@ public class Worker implements Service<Job> {
 
     @Override
     public <T extends Job> void process(Message<T> message, Handler<MessageResponse<T>> messageResponseHandler) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public <T extends Job> void process(Message<T> message, Handler<MessageResponse<T>> messageResponseHandler, Handler<Exception> exceptionHandler) {
-
+        throw new NotImplementedException();
     }
-
-
 
     /*
      * helper classes
