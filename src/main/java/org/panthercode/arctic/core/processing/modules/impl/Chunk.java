@@ -113,7 +113,7 @@ public class Chunk extends Bundle {
     }
 
     /**
-     * Stops the actual process. It's not guaranteed that process stops immediately.
+     * Stops the actual processById. It's not guaranteed that processById stops immediately.
      * Calls the <tt>stop()</tt> method of each module.
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while stopping process.

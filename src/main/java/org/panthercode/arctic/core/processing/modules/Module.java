@@ -23,14 +23,14 @@ import org.panthercode.arctic.core.settings.Context;
 
 
 //TODO: udpate documentation
-//TODO: explain  difference betwesen return boolean and process state!
+//TODO: explain  difference betwesen return boolean and processById state!
 
 /**
  * A module is the basic unit for execution. It provides a little set of functionality for controlling and handling the
  * object at runtime. The concrete implementation should always containsHandler a coherent inner state model, that
  * change the state corresponding to the actual phase of the object.
  * <p>
- * For better safety there is no setter function to change the inner process state directly. Instead changes should
+ * For better safety there is no setter function to change the inner processById state directly. Instead changes should
  * be hidden and done by corresponded methods automatically. E.g. the <tt>start()</tt> method change the state to
  * <tt>Running</tt>.
  * <p>
@@ -81,7 +81,7 @@ import org.panthercode.arctic.core.settings.Context;
  * }
  * }
  * </pre>
- * By default a module is not thread safe programmed. If this requirement is necessary you should process <tt>synchronized
+ * By default a module is not thread safe programmed. If this requirement is necessary you should processById <tt>synchronized
  * </tt> to function signature of all inner field manipulating methods and <tt>copy()</tt>.
  * <p>
  * If you implement this interface or inherit from a module class, you should always override the following methods:
@@ -143,22 +143,22 @@ public interface Module extends Identifiable, Versionable {
     boolean isFailed();
 
     /**
-     * Return whether the process is aborted or not.
+     * Return whether the processById is aborted or not.
      *
-     * @return Returns <tt>true</tt> if object aborts the process; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if object aborts the processById; Otherwise <tt>false</tt>.
      */
     boolean isStopped();
 
     /**
-     * Returns the actual process state associated with the object.
+     * Returns the actual processById state associated with the object.
      *
-     * @return Returns the actual process state associated with the object.
+     * @return Returns the actual processById state associated with the object.
      */
     ProcessState state();
 
     /**
      * Executes the containing functionality of the object. This function should only entered in state "ready". If so the
-     * function should change the state to "running" after start the execution. After finishing execution set process state
+     * function should change the state to "running" after start the execution. After finishing execution set processById state
      * to "successful" if the run ends with the expected result; Otherwise set to "failed".
      *
      * @throws ProcessException Is eventually thrown by the concrete implementation of this interface.
@@ -166,14 +166,14 @@ public interface Module extends Identifiable, Versionable {
     boolean start(Object[] args) throws ProcessException;
 
     /**
-     * To abort the actual run call the stop() method. The process state is change to "stopped".
+     * To abort the actual run call the stop() method. The processById state is change to "stopped".
      *
      * @throws ProcessException Is eventually thrown by the concrete implementation of this interface.
      */
     boolean stop() throws ProcessException;
 
     /**
-     * This method set the process state to "ready". It's an good place to take trash out and prepare the next run.
+     * This method set the processById state to "ready". It's an good place to take trash out and prepare the next run.
      *
      * @throws ProcessException Is eventually thrown by the concrete implementation of this interface.
      */

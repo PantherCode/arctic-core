@@ -1,7 +1,5 @@
 package org.panthercode.arctic.core.event;
 
-import org.panthercode.arctic.core.runtime.Message;
-
 import java.util.Set;
 
 /**

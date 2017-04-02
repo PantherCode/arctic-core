@@ -63,11 +63,11 @@ import java.util.HashMap;
  * If you inherit directly or indirectly from this class, you always should call in constructor super(...) with correct
  * parametrization to initialize the inner state machine and other important fields. Don't ask, do it! If you are not
  * sure how to do it, look at other module classes. Attention: NEVER NEVER EVER use uninitialized modules for processing.
- * In complex situations maybe it's really hard to find faulty position in code and secondly the hole process can crash
+ * In complex situations maybe it's really hard to find faulty position in code and secondly the hole processById can crash
  * down.
  * <p>
  * Modules are designed for usage in multi-threaded environments. Therefore all setter or inner member manipulating
- * functions signatures use <tt>synchronized</tt> keyword. If you override an method or process your own code, you should
+ * functions signatures use <tt>synchronized</tt> keyword. If you override an method or processById your own code, you should
  * do same to avoid incorrect behavior of object at runtime.
  * <p>
  * Please read the documentation of child modules. If you inherit from any class, inherit always from the most
@@ -105,7 +105,7 @@ public abstract class ModuleImpl implements Module {
     //private List<Handler<EventOld<ProcessState>>> processStateHandlers = new ArrayList<>();
 
     /**
-     * Contains all allowed process state changes.
+     * Contains all allowed processById state changes.
      */
     private HashMap<ProcessState, EnumSet<ProcessState>> stateMap;
 
@@ -215,17 +215,17 @@ public abstract class ModuleImpl implements Module {
      *
      * @return Returns the actual <tt>ProcessStateHandler</tt> the object is associated with.
      */
-    //public synchronized boolean addProcessStateHandler(Handler<EventOld<ProcessState>> consumedHandler) {
-    //    return this.processStateHandlers.add(consumedHandler);
+    //public synchronized boolean addProcessStateHandler(Handler<EventOld<ProcessState>> responseHandler) {
+    //    return this.processStateHandlers.add(responseHandler);
     //}
 
     /**
      * Set a new <tt>ProcessStatusHandler</tt> the object is associated with.
      *
-     * @param consumedHandler new consumedHandler
+     * @param responseHandler new responseHandler
      */
-    //public synchronized boolean removeProcessStateHandler(Handler<EventOld<ProcessState>> consumedHandler) {
-    //    return this.processStateHandlers.removePath(consumedHandler);
+    //public synchronized boolean removeProcessStateHandler(Handler<EventOld<ProcessState>> responseHandler) {
+    //    return this.processStateHandlers.removePath(responseHandler);
     //}
 
     //public List<Handler<EventOld<ProcessState>>> processStateHandlers() {
@@ -270,9 +270,9 @@ public abstract class ModuleImpl implements Module {
     }
 
     /**
-     * Return whether the process is aborted or not.
+     * Return whether the processById is aborted or not.
      *
-     * @return Returns <tt>true</tt> if object aborts the process; Otherwise <tt>false</tt>.
+     * @return Returns <tt>true</tt> if object aborts the processById; Otherwise <tt>false</tt>.
      */
     public boolean isStopped() {
         return this.actualState == ProcessState.STOPPED;
@@ -297,23 +297,23 @@ public abstract class ModuleImpl implements Module {
     }
 
     /**
-     * Starts to run the object and set process state to 'Running'.
+     * Starts to run the object and set processById state to 'Running'.
      *
      * @return
-     * @throws ProcessException Is thrown if an error occurred while running the process.
+     * @throws ProcessException Is thrown if an error occurred while running the processById.
      */
     public abstract boolean start(Object[] args) throws ProcessException;
 
     /**
-     * Stops the actual run and set process state to 'Stopped'.
+     * Stops the actual run and set processById state to 'Stopped'.
      *
-     * @throws ProcessException Is thrown if an error occurred while stopping the process.
+     * @throws ProcessException Is thrown if an error occurred while stopping the processById.
      */
     public abstract boolean stop() throws ProcessException;
 
     /**
      * Set the inner state to 'Ready'. This method can only called if object has inner state 'Succeeded', 'Failed' or
-     * 'Stopped'. You can't reset a running process.
+     * 'Stopped'. You can't reset a running processById.
      *
      * @throws ProcessException Is thrown if an error occurred while resetting the object.
      */
@@ -409,7 +409,7 @@ public abstract class ModuleImpl implements Module {
 
     /**
      * Set the inner state of object to given value. If <tt>ProcessStateHandler</tt> is set, an event is raised.
-     * TODO: each consumedHandler gets a new instance, it's synchronized -> fast handling
+     * TODO: each responseHandler gets a new instance, it's synchronized -> fast handling
      *
      * @param newState new state of object
      */
@@ -419,10 +419,10 @@ public abstract class ModuleImpl implements Module {
 
             this.actualState = newState;
 
-            //for (Handler<EventOld<ProcessState>> consumedHandler : this.processStateHandlers) {
+            //for (Handler<EventOld<ProcessState>> responseHandler : this.processStateHandlers) {
             //    EventOld<ProcessState> event = new EventOld<>(this, oldState, this.actualState);
 
-            //    consumedHandler.handle(event);
+            //    responseHandler.handle(event);
             //          }
 
             return true;

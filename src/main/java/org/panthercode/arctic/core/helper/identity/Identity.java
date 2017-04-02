@@ -147,7 +147,7 @@ public final class Identity {
     /**
      * Creates and returns a copy of this object. The identifier of the copied object will be generated again.
      * If you try <tt>identity.equals(identity.copy())</tt> the result always is <tt>false</tt>. This is done
-     * to prevent objects with different content but same id.
+     * to prevent objects with different body but same id.
      *
      * @return Return a copy of this object.
      */

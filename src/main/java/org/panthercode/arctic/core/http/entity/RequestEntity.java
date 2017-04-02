@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * Created by architect on 26.03.17.
+ * JsonEntity
  */
 public class RequestEntity<T> extends AbstractEntity<T> {
     /**

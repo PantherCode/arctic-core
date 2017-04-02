@@ -1,12 +1,15 @@
 package org.panthercode.arctic.core.event.impl;
 
+import org.panthercode.arctic.core.event.EventArgs;
+import org.panthercode.arctic.core.event.Handler;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
-import org.panthercode.arctic.core.runtime.Message;
-import org.panthercode.arctic.core.runtime.MessageConsumeFailure;
-import org.panthercode.arctic.core.runtime.Service;
+import org.panthercode.arctic.core.runtime.message.Message;
+import org.panthercode.arctic.core.runtime.message.MessageHandler;
+import org.panthercode.arctic.core.runtime.message.MessageResponse;
+import org.panthercode.arctic.core.runtime.service.Service;
 import org.panthercode.arctic.core.settings.Context;
 
 import java.util.LinkedList;
@@ -17,7 +20,7 @@ import java.util.Queue;
  */
 @IdentityInfo(name = "EventBus")
 @VersionInfo(major = 1, minor = 0)
-public class EventBus implements Service {
+public class EventBus implements Service<EventArgs> {
     /**
      *
      */
@@ -41,7 +44,7 @@ public class EventBus implements Service {
     /**
      *
      */
-    private final Queue<Message> queue;
+    private final Queue<EventBusJob> queue;
 
     /**
      *
@@ -118,7 +121,7 @@ public class EventBus implements Service {
             if (!this.isActive) {
                 this.isActive = true;
 
-                this.thread = new Thread(new EventBusRunnable());
+                this.thread = new Thread(new EventBusScheduler());
 
                 thread.start();
             }
@@ -144,10 +147,20 @@ public class EventBus implements Service {
     }
 
     @Override
-    public <T> void process(Message<T> message) {
+    public <T extends EventArgs> void process(Message<T> message) {
+        this.process(message, null);
+    }
+
+    @Override
+    public <T extends EventArgs> void process(Message<T> message, Handler<MessageResponse<T>> messageResponseHandler) {
+        this.process(message, messageResponseHandler, null);
+    }
+
+    @Override
+    public <T extends EventArgs> void process(Message<T> message, Handler<MessageResponse<T>> messageResponseHandler, Handler<Exception> exceptionHandler) {
         if (message != null) {
             synchronized (LOCK) {
-                this.queue.add(message);
+                this.queue.add(new EventBusJob(message, messageResponseHandler, exceptionHandler));
 
                 if (this.queue.size() == 1) {
                     LOCK.notify();
@@ -156,15 +169,43 @@ public class EventBus implements Service {
         }
     }
 
+    private class EventBusJob<T> {
+        private Message<EventArgs> message;
+
+        private Handler<MessageResponse<EventArgs>> responseHandler;
+
+        private Handler<Exception> exceptionHandler;
+
+        @SuppressWarnings("unchecked")
+        EventBusJob(Message message, Handler<MessageResponse<EventArgs>> responseHandler, Handler<Exception> exceptionHandler) {
+            this.message = message;
+            this.responseHandler = responseHandler;
+            this.exceptionHandler = exceptionHandler;
+        }
+
+        Message message() {
+            return this.message;
+        }
+
+        Handler<MessageResponse<EventArgs>> responseHandler() {
+            return this.responseHandler;
+        }
+
+        Handler<Exception> exceptionHandler() {
+            return this.exceptionHandler;
+        }
+    }
+
     /**
      *
      */
-    @SuppressWarnings("unchecked")
-    private class EventBusRunnable implements Runnable {
-        @Override
-        public void run() {
-            Message actualMessage;
+    private class EventBusScheduler implements Runnable {
 
+        MessageHandler handler = new MessageHandler();
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void run() {
             while (EventBus.this.isActive) {
                 synchronized (LOCK) {
                     while (EventBus.this.queue.isEmpty()) {
@@ -179,13 +220,11 @@ public class EventBus implements Service {
                         return;
                     }
 
-                    actualMessage = EventBus.this.queue.remove();
-                }
-                try {
-                    actualMessage.consume();
-                } catch (Exception e) {
-                    if (actualMessage.exceptionHandler() != null) {
-                        actualMessage.exceptionHandler().handle(new MessageConsumeFailure(actualMessage, e));
+                    EventBusJob actualJob = EventBus.this.queue.remove();
+                    try {
+                        handler.handle(actualJob.message, actualJob.responseHandler, actualJob.exceptionHandler);
+                    } catch (Exception e) {
+                        //TODO: implement
                     }
                 }
             }

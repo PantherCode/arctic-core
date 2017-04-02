@@ -21,7 +21,7 @@ import org.panthercode.arctic.core.settings.Context;
 
 /**
  * Tasks are special runnable object with the possibility to run such objects in special context and handle results
- * asynchronously by initializing a consumedHandler. In combination with <tt>WorkerOld</tt> class you can create very simple and
+ * asynchronously by initializing a responseHandler. In combination with <tt>WorkerOld</tt> class you can create very simple and
  * fast a powerful processing unit.
  * <p>
  * To run the task in a new  thread, you can call <tt>start()</tt> method. If only the task should run synchronously in
@@ -67,11 +67,11 @@ public abstract class Task<T> implements Executable<T>, Runnable {
     public Task(Context context, Handler<T> handler) {
         this.context = ArgumentUtils.checkNotNull(context, "context");
 
-        this.handler = ArgumentUtils.checkNotNull(handler, "consumedHandler");
+        this.handler = ArgumentUtils.checkNotNull(handler, "responseHandler");
     }
 
     /**
-     * Execute the task and call consumedHandler if anyone exists.
+     * Execute the task and call responseHandler if anyone exists.
      */
     @Override
     public void run() {
@@ -103,9 +103,9 @@ public abstract class Task<T> implements Executable<T>, Runnable {
     }
 
     /**
-     * Returns the actual result consumedHandler.
+     * Returns the actual result responseHandler.
      *
-     * @return Returns the actual result consumedHandler.
+     * @return Returns the actual result responseHandler.
      */
     protected Handler<T> handler() {
         return this.handler;

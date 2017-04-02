@@ -58,7 +58,7 @@ public class Context extends Hashtable<Object, Object> {
     /**
      * Constructor
      *
-     * @param map other map whose content is mapped in this hashtable
+     * @param map other map whose body is mapped in this hashtable
      */
     public Context(Map<Object, Object> map) {
         super(map);

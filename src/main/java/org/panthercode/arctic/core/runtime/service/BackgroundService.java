@@ -1,13 +1,11 @@
-package org.panthercode.arctic.core.runtime;
+package org.panthercode.arctic.core.runtime.service;
 
-import org.panthercode.arctic.core.helper.identity.Identifiable;
-import org.panthercode.arctic.core.helper.version.Versionable;
 import org.panthercode.arctic.core.settings.Context;
 
 /**
- * Created by architect on 05.03.17.
+ * Created by architect on 02.04.17.
  */
-public interface Service extends Identifiable, Versionable {
+public interface BackgroundService {
     /**
      * @return
      */
@@ -37,9 +35,4 @@ public interface Service extends Identifiable, Versionable {
      *
      */
     void deactivate();
-
-    /**
-     * @param message
-     */
-    <T> void process(Message<T> message);
 }

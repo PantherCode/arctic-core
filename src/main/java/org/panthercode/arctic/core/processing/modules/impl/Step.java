@@ -26,9 +26,9 @@ import org.panthercode.arctic.core.settings.Context;
  * implementation.
  * <p>
  * If you inherit form this class, you should override stop() method, because the original
- * one only try to set process state to "Stopped". Therefore it will not challenge the process to stop.
+ * one only try to set processById state to "Stopped". Therefore it will not challenge the processById to stop.
  * <p>
- * It's on your own responsibility to change process state at runtime! E. g. if process waits, change process state to
+ * It's on your own responsibility to change processById state at runtime! E. g. if processById waits, change processById state to
  * "Waiting". When process goes on, change state to "Running". Otherwise maybe you will provoke bad behavior of the
  * system.
  *

@@ -68,17 +68,17 @@ public class Process extends Bundle {
     /**
      * Returns a actual running module.
      *
-     * @return Returns a actual running module or null if process doesn't run.
+     * @return Returns a actual running module or null if processById doesn't run.
      */
     public Module getCurrentModule() {
         return this.currentModule;
     }
 
     /**
-     * Starts the process.
+     * Starts the processById.
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while running
-     * process.
+     * processById.
      */
     @Override
     public boolean start(Object[] args)
@@ -111,7 +111,7 @@ public class Process extends Bundle {
             } catch (Exception e) {
                 this.changeState(ProcessState.FAILED);
                 this.after();
-                throw new ProcessException("While running the process module an error is occurred.",
+                throw new ProcessException("While running the processById module an error is occurred.",
                     e);
             }
         }
@@ -120,11 +120,11 @@ public class Process extends Bundle {
     }
 
     /**
-     * Stops the actual process. It's not guaranteed that process stops immediately, but afterRun
+     * Stops the actual processById. It's not guaranteed that processById stops immediately, but afterRun
      * finishing actual module. Calls actual module's <tt>stop()</tt> method.
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while
-     * stopping process.
+     * stopping processById.
      */
     public boolean stop()
         throws ProcessException {

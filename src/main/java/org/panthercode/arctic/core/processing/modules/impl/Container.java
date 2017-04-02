@@ -96,7 +96,7 @@ public class Container extends ModuleImpl {
     }
 
     /**
-     * Stops the process by calling the child modules <tt>stop()</tt> method. Try to set the container's process state
+     * Stops the processById by calling the child modules <tt>stop()</tt> method. Try to set the container's processById state
      * to <tt>Stopped</tt>.
      */
     @Override

@@ -7,7 +7,6 @@ import org.panthercode.arctic.core.helper.version.Versionable;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 /**
  * Created by architect on 06.03.17.
  */

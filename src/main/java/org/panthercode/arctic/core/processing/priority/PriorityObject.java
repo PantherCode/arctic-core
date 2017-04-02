@@ -31,7 +31,7 @@ public class PriorityObject<T> implements Comparable<PriorityObject<T>> {
     private Priority priority = Priority.NORMAL;
 
     /**
-     * actual content
+     * actual body
      */
     private T content;
 
@@ -44,7 +44,7 @@ public class PriorityObject<T> implements Comparable<PriorityObject<T>> {
     /**
      * Constructor
      *
-     * @param content actual prioritised content
+     * @param content actual prioritised body
      */
     public PriorityObject(T content) {
         this(content, Priority.NORMAL);
@@ -53,8 +53,8 @@ public class PriorityObject<T> implements Comparable<PriorityObject<T>> {
     /**
      * Constructor
      *
-     * @param content  prioritised content
-     * @param priority priority of the content
+     * @param content  prioritised body
+     * @param priority priority of the body
      */
     public PriorityObject(T content, Priority priority) {
         this.setPriority(priority);
@@ -62,36 +62,36 @@ public class PriorityObject<T> implements Comparable<PriorityObject<T>> {
     }
 
     /**
-     * Sets the priority of the content. This function is <tt>synchronized</tt>.
+     * Sets the priority of the body. This function is <tt>synchronized</tt>.
      *
-     * @param priority new priority of the content
+     * @param priority new priority of the body
      */
     public synchronized void setPriority(Priority priority) {
         this.priority = priority;
     }
 
     /**
-     * Returns the actual priority of the content.
+     * Returns the actual priority of the body.
      *
-     * @return Returns the actual priority of the content.
+     * @return Returns the actual priority of the body.
      */
     public Priority getPriority() {
         return this.priority;
     }
 
     /**
-     * Sets the content of prioritised object. This function is <tt>synchronized</tt>.
+     * Sets the body of prioritised object. This function is <tt>synchronized</tt>.
      *
-     * @param content new content of the object
+     * @param content new body of the object
      */
     public synchronized void setContent(T content) {
         this.content = content;
     }
 
     /**
-     * Returns the actual content of prioritised object.
+     * Returns the actual body of prioritised object.
      *
-     * @return Returns the actual content of prioritised object.
+     * @return Returns the actual body of prioritised object.
      */
     public T getContent() {
         return this.content;
