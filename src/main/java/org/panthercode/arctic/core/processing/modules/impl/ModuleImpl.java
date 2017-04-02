@@ -296,6 +296,11 @@ public abstract class ModuleImpl implements Module {
         return this.actualState == ProcessState.SUCCEEDED;
     }
 
+    @Override
+    public boolean start() throws ProcessException {
+        return this.start(new Object[0]);
+    }
+
     /**
      * Starts to run the object and set processById state to 'Running'.
      *

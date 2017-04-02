@@ -12,64 +12,59 @@ import java.io.IOException;
  * Created by architect on 26.03.17.
  * JsonEntity
  */
-public class RequestEntity<T> extends AbstractEntity<T> {
+public class JsonEntity<T> extends AbstractEntity<T> {
     /**
      *
      */
-    public RequestEntity() {
+    public JsonEntity() {
         super();
     }
 
     /**
-     *
      * @param data
      */
-    public RequestEntity(T data) {
+    public JsonEntity(T data) {
         super(data);
     }
 
     /**
-     *
      * @param json
      * @param clazz
      * @param <T>
      * @return
      */
-    public static <T> RequestEntity<T> fromJson(String json, Class<RequestEntity<T>> clazz) {
+    public static <T> JsonEntity<T> fromJson(String json, Class<JsonEntity<T>> clazz) {
         return JsonUtils.fromJson(json, clazz);
     }
 
     /**
-     *
      * @param json
      * @param clazz
      * @param gson
      * @param <T>
      * @return
      */
-    public static <T> RequestEntity<T> fromJson(String json, Class<RequestEntity<T>> clazz, Gson gson) {
+    public static <T> JsonEntity<T> fromJson(String json, Class<JsonEntity<T>> clazz, Gson gson) {
         return JsonUtils.fromJson(json, clazz);
     }
 
     /**
-     *
      * @param response
      * @param clazz
      * @param <T>
      * @return
      * @throws IOException
      */
-    public static <T> RequestEntity<T> fromResponse(HttpResponse response, Class<RequestEntity<T>> clazz)
+    public static <T> JsonEntity<T> fromResponse(HttpResponse response, Class<JsonEntity<T>> clazz)
             throws IOException {
         ArgumentUtils.checkNotNull(response, "response");
 
         String entity = EntityUtils.toString(response.getEntity());
 
-        return RequestEntity.fromJson(entity, clazz);
+        return JsonEntity.fromJson(entity, clazz);
     }
 
     /**
-     *
      * @param response
      * @param clazz
      * @param gson
@@ -77,17 +72,16 @@ public class RequestEntity<T> extends AbstractEntity<T> {
      * @return
      * @throws IOException
      */
-    public static <T> RequestEntity<T> fromResponse(HttpResponse response, Class<RequestEntity<T>> clazz, Gson gson)
+    public static <T> JsonEntity<T> fromResponse(HttpResponse response, Class<JsonEntity<T>> clazz, Gson gson)
             throws IOException {
         ArgumentUtils.checkNotNull(response, "response");
 
         String entity = EntityUtils.toString(response.getEntity());
 
-        return RequestEntity.fromJson(entity, clazz, gson);
+        return JsonEntity.fromJson(entity, clazz, gson);
     }
 
     /**
-     *
      * @return
      */
     public String toJson() {
@@ -95,7 +89,6 @@ public class RequestEntity<T> extends AbstractEntity<T> {
     }
 
     /**
-     *
      * @param gson
      * @return
      */

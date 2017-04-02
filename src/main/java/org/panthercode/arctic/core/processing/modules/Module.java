@@ -157,6 +157,12 @@ public interface Module extends Identifiable, Versionable {
     ProcessState state();
 
     /**
+     * @return
+     * @throws ProcessException
+     */
+    boolean start() throws ProcessException;
+
+    /**
      * Executes the containing functionality of the object. This function should only entered in state "ready". If so the
      * function should change the state to "running" after start the execution. After finishing execution set processById state
      * to "successful" if the run ends with the expected result; Otherwise set to "failed".
@@ -180,13 +186,11 @@ public interface Module extends Identifiable, Versionable {
     boolean reset() throws ProcessException;
 
     /**
-     *
      * @return
      */
     boolean hasResult();
 
     /**
-     *
      * @return
      */
     Object result();
