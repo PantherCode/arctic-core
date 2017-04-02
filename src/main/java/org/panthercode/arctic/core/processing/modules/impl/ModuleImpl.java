@@ -82,7 +82,7 @@ public abstract class ModuleImpl implements Module {
     /**
      * The local context the object is associated with.
      */
-    private Context context;
+    protected Context context;
 
     /**
      * The identity the object is associated with.
