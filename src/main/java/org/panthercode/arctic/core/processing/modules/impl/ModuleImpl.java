@@ -314,7 +314,9 @@ public abstract class ModuleImpl implements Module {
      *
      * @throws ProcessException Is thrown if an error occurred while stopping the processById.
      */
-    public abstract boolean stop() throws ProcessException;
+    public boolean stop() throws ProcessException {
+        return this.changeState(ProcessState.STOPPED);
+    }
 
     /**
      * Set the inner state to 'Ready'. This method can only called if object has inner state 'Succeeded', 'Failed' or
@@ -322,7 +324,9 @@ public abstract class ModuleImpl implements Module {
      *
      * @throws ProcessException Is thrown if an error occurred while resetting the object.
      */
-    public abstract boolean reset() throws ProcessException;
+    public boolean reset() throws ProcessException {
+        return this.changeState(ProcessState.READY);
+    }
 
     /**
      * Returns a toHash code value of this object.

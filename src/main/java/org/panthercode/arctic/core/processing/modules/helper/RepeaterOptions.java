@@ -35,7 +35,7 @@ public class RepeaterOptions {
     /**
      * flag whether occurred exceptions are ignored or not.
      */
-    private boolean ignoreExceptions = true;
+    private boolean ignoreExceptions = false;
 
     /**
      * flag whether the process can quit after first successful loop step or not

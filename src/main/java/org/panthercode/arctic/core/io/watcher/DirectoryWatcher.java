@@ -135,7 +135,7 @@ public class DirectoryWatcher implements Runnable {
      * @return
      * @throws IOException
      */
-    public synchronized boolean addRecursively(final Path path)
+    public synchronized boolean addAll(final Path path)
             throws IOException {
         if (path == null) {
             return false;
@@ -231,6 +231,7 @@ public class DirectoryWatcher implements Runnable {
         try {
             if (!newElements.isEmpty()) {
                 for (Path newPath : newElements) {
+                    //TODO: add directory recursive
                     createWatcherEntry(newPath, true);
                 }
 
