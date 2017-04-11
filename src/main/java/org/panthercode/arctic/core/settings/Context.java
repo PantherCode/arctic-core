@@ -16,10 +16,9 @@
 package org.panthercode.arctic.core.settings;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The context class is a Hashtable to store related items at runtime. The items are not stored persistently.
@@ -27,7 +26,7 @@ import java.util.Map;
  * @author PantherCode
  * @since 1.0
  */
-public class Context extends Hashtable<Object, Object> {
+public class Context extends ConcurrentHashMap<Object, Object> {
 
     /**
      * Constructor
@@ -65,7 +64,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param returnType
      * @param <T>
@@ -78,7 +76,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @param returnType
@@ -95,7 +92,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -104,7 +100,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -114,7 +109,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -123,7 +117,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -133,7 +126,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -142,7 +134,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -152,7 +143,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -161,7 +151,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -171,7 +160,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -180,7 +168,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -190,7 +177,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -199,7 +185,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -209,7 +194,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -218,7 +202,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -228,7 +211,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -237,7 +219,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -247,7 +228,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -256,7 +236,6 @@ public class Context extends Hashtable<Object, Object> {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -265,112 +244,169 @@ public class Context extends Hashtable<Object, Object> {
         return this.getOrDefault(key, defaultValue, Character.class);
     }
 
+    //TODO: check implementation and improve performance
+
     /**
-     *
      * @param key1
      * @param key2
      * @return
      */
     public Object[] getAll(Object key1, Object key2) {
-        throw new NotImplementedException();
+        return new Object[]{this.get(key1), this.get(key2)};
     }
 
     /**
-     *
      * @param key1
      * @param key2
      * @param key3
      * @return
      */
     public Object[] getAll(Object key1, Object key2, Object key3) {
-        throw new NotImplementedException();
+        return new Object[]{this.get(key1), this.get(key2), this.get(key3)};
     }
 
     /**
-     *
      * @param key1
      * @param key2
      * @param key3
      * @param rest
      * @return
      */
-    public Object[] getAll(Object key1, Object key2, Object key3, Object... rest) {
-        throw new NotImplementedException();
+    public Object[] getAll(Object key1, Object key2, Object key3, Object key4, Object... rest) {
+        Object[] array = new Object[4 + rest.length];
+
+        array[0] = this.get(key1);
+        array[1] = this.get(key1);
+        array[2] = this.get(key1);
+        array[3] = this.get(key1);
+
+        int i = 4;
+
+        for (Object key : rest) {
+            array[i++] = this.get(key);
+        }
+
+        return array;
     }
 
     /**
-     *
      * @param other
      */
-    public void merge(Context other) {
-        throw new NotImplementedException();
+    public void merge(Map<Object, Object> other) {
+        if (other != null) {
+            this.putAll(other);
+        }
     }
 
+    //TODO: check implementation and improve performance
+
     /**
-     *
      * @param other
      * @param key
      */
-    public void merge(Context other, Object key) {
-        throw new NotImplementedException();
+    public Object merge(Map<Object, Object> other, Object key) {
+        if (other != null && other.containsKey(key)) {
+            return this.put(key, other.get(key));
+        }
+
+        return null;
     }
 
     /**
-     *
      * @param other
      * @param key1
      * @param key2
      */
-    public void merge(Context other, Object key1, Object key2) {
-        throw new NotImplementedException();
+    public void merge(Map<Object, Object> other, Object key1, Object key2) {
+        if (other != null) {
+            if (other.containsKey(key1)) {
+                this.put(key1, other.get(key1));
+            }
+
+            if (other.containsKey(key2)) {
+                this.put(key2, other.get(key2));
+            }
+        }
     }
 
     /**
-     *
      * @param other
      * @param key1
      * @param key2
      * @param key3
      */
-    public void merge(Context other, Object key1, Object key2, Object key3) {
-        throw new NotImplementedException();
+    public void merge(Map<Object, Object> other, Object key1, Object key2, Object key3) {
+        if (other != null) {
+            if (other.containsKey(key1)) {
+                this.put(key1, other.get(key1));
+            }
+
+            if (other.containsKey(key2)) {
+                this.put(key2, other.get(key2));
+            }
+
+            if (other.containsKey(key3)) {
+                this.put(key3, other.get(key3));
+            }
+        }
     }
 
     /**
-     *
      * @param other
      * @param key1
      * @param key2
      * @param key3
      * @param rest
      */
-    public void merge(Context other, Object key1, Object key2, Object key3, Object... rest) {
-        throw new NotImplementedException();
+    public void merge(Map<Object, Object> other, Object key1, Object key2, Object key3, Object key4, Object... rest) {
+        if (other != null) {
+            if (other.containsKey(key1)) {
+                this.put(key1, other.get(key1));
+            }
+
+            if (other.containsKey(key2)) {
+                this.put(key2, other.get(key2));
+            }
+
+            if (other.containsKey(key3)) {
+                this.put(key3, other.get(key3));
+            }
+
+            if (other.containsKey(key4)) {
+                this.put(key4, other.get(key3));
+            }
+
+            for (Object o : rest) {
+                this.put(o, other.get(o));
+            }
+        }
     }
 
+    //TODO: check implementation and improve performance
+
     /**
-     *
      * @param key
      * @throws MissingKeyException
      */
     public void check(Object key)
             throws MissingKeyException {
-        throw new NotImplementedException();
+        if (!this.containsKey(key)) {
+            throw new MissingKeyException("The given key is not in the map.");
+        }
     }
 
     /**
-     *
      * @param key1
      * @param key2
      * @throws MissingKeyException
      */
     public void check(Object key1, Object key2)
             throws MissingKeyException {
-        throw new NotImplementedException();
+        this.check(key1);
+        this.check(key2);
     }
 
     /**
-     *
      * @param key1
      * @param key2
      * @param key3
@@ -378,20 +414,25 @@ public class Context extends Hashtable<Object, Object> {
      */
     public void check(Object key1, Object key2, Object key3)
             throws MissingKeyException {
-        throw new NotImplementedException();
+        this.check(key1, key2);
+        this.check(key3);
     }
 
     /**
-     *
      * @param key1
      * @param key2
      * @param key3
      * @param rest
      * @throws MissingKeyException
      */
-    public void check(Object key1, Object key2, Object key3, Object... rest)
+    public void check(Object key1, Object key2, Object key3, Object key4, Object... rest)
             throws MissingKeyException {
-        throw new NotImplementedException();
+        this.check(key1, key2, key3);
+        this.check(key4);
+
+        for (Object key : rest) {
+            this.check(key);
+        }
     }
 
     /**
@@ -408,10 +449,9 @@ public class Context extends Hashtable<Object, Object> {
         /**
          *
          */
-        private Hashtable<Object, Object> table = new Hashtable<>();
+        private Map<Object, Object> map = new ConcurrentHashMap<>();
 
         /**
-         *
          * @param key
          * @param value
          * @return
@@ -419,17 +459,16 @@ public class Context extends Hashtable<Object, Object> {
         public ContextBuilder append(Object key, Object value) {
             ArgumentUtils.checkNotNull(key, "key");
 
-            this.table.put(key, value);
+            this.map.put(key, value);
 
             return this;
         }
 
         /**
-         *
          * @return
          */
         public Context build() {
-            return new Context(this.table);
+            return new Context(this.map);
         }
     }
 }

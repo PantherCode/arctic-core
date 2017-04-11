@@ -20,6 +20,8 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
 
 /**
+ * TODO: anpassen!
+ *
  * This class is used to control and manage objects by version. The scheme follows the major.minor[.build[.revision]]
  * pattern.
  *

@@ -17,6 +17,10 @@ package org.panthercode.arctic.core.reflect;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.settings.OptionalField;
+import org.panthercode.arctic.core.settings.OptionalFields;
+import org.panthercode.arctic.core.settings.RequiredField;
+import org.panthercode.arctic.core.settings.RequiredFields;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -211,5 +215,29 @@ public class ReflectionUtils {
      */
     public static boolean isAnnotated(final Class<?> clazz, final Class<? extends Annotation> annotation) {
         return clazz != null && annotation != null && clazz.isAnnotationPresent(annotation);
+    }
+
+    public static RequiredField[] getRequiredFields(final Class<?> clazz) {
+        if (clazz == null) {
+            return null;
+        } else if (clazz.isAnnotationPresent(RequiredField.class)) {
+            return new RequiredField[]{clazz.getAnnotation(RequiredField.class)};
+        } else if (clazz.isAnnotationPresent(RequiredFields.class)) {
+            return clazz.getAnnotation(RequiredFields.class).value();
+        }
+
+        return new RequiredField[]{};
+    }
+
+    public static OptionalField[] getOptionalFields(final Class<?> clazz) {
+        if (clazz == null) {
+            return null;
+        } else if (clazz.isAnnotationPresent(OptionalField.class)) {
+            return new OptionalField[]{clazz.getAnnotation(OptionalField.class)};
+        } else if (clazz.isAnnotationPresent(OptionalFields.class)) {
+            return clazz.getAnnotation(OptionalFields.class).value();
+        }
+
+        return new OptionalField[]{};
     }
 }
