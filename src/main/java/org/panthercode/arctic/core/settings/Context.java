@@ -391,7 +391,7 @@ public class Context extends ConcurrentHashMap<Object, Object> {
     public void check(Object key)
             throws MissingKeyException {
         if (!this.containsKey(key)) {
-            throw new MissingKeyException("The given key is not in the map.");
+            throw new MissingKeyException("The key is not in the map.");
         }
     }
 

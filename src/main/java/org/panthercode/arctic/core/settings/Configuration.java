@@ -75,7 +75,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param returnType
      * @param <T>
@@ -90,7 +89,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @param returnType
@@ -107,7 +105,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -116,7 +113,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -126,7 +122,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -135,7 +130,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -145,7 +139,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -154,7 +147,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -164,7 +156,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -173,7 +164,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -183,7 +173,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -192,7 +181,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -202,7 +190,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -211,7 +198,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -221,7 +207,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -230,7 +215,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -240,7 +224,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -249,7 +232,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
@@ -259,7 +241,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @return
      */
@@ -268,13 +249,19 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @param key
      * @param defaultValue
      * @return
      */
     public Character getCharacterOrDefault(Object key, char defaultValue) {
         return this.getOrDefault(key, defaultValue, Character.class);
+    }
+
+    public void check(Object key)
+            throws MissingKeyException {
+        if (!this.containsKey(key)) {
+            throw new MissingKeyException("The key is not in the map.");
+        }
     }
 
     /**
@@ -320,7 +307,6 @@ public class Configuration extends Properties {
     }
 
     /**
-     *
      * @return
      */
     public static ConfigurationBuilder create() {
@@ -337,7 +323,6 @@ public class Configuration extends Properties {
         private Properties properties = new Properties();
 
         /**
-         *
          * @param key
          * @param value
          * @return
@@ -351,7 +336,6 @@ public class Configuration extends Properties {
         }
 
         /**
-         *
          * @return
          */
         public Configuration build() {
