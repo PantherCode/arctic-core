@@ -80,6 +80,8 @@ public abstract class Step extends ModuleImpl {
     @Override
     public synchronized boolean start(Object[] args)
             throws ProcessException {
+        this.reset();
+
         if (this.changeState(ProcessState.RUNNING)) {
 
             try {

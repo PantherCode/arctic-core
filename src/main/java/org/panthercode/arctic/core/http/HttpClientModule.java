@@ -2,7 +2,6 @@ package org.panthercode.arctic.core.http;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.util.EntityUtils;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
@@ -38,12 +37,12 @@ public class HttpClientModule extends ModuleImpl {
 
     @Override
     public boolean hasResult() {
-        return this.httpClientStep.hasResult();
+        return this.timer.hasResult();
     }
 
     @Override
     public Object result() {
-        return this.httpClientStep.result();
+        return this.timer.result();
     }
 
     @Override
@@ -62,18 +61,39 @@ public class HttpClientModule extends ModuleImpl {
     }
 
     @Override
-    public boolean start(Object[] args)
+    public synchronized boolean start(Object[] args)
             throws ProcessException {
         ArgumentUtils.checkNotNull(args, "args");
 
-        if ((args.length > 0) &&
-                (args[0] instanceof Request)) {
-            if (this.changeState(ProcessState.RUNNING)) {
-                return this.timer.start(args);
+        if (args.length == 0) {
+            this.changeState(ProcessState.FAILED);
+
+            throw new ProcessException("Empty arguments array");
+        }
+
+        if (!(args[0] instanceof Request)) {
+            this.changeState(ProcessState.FAILED);
+
+            throw new ProcessException("Can't find request object in arguments");
+        }
+
+        this.reset();
+
+        if (this.changeState(ProcessState.RUNNING)) {
+            try {
+                this.timer.start(args);
+
+                this.changeState(this.timer.state());
+
+                return this.timer.isSucceeded();
+            } catch (Exception e) {
+                this.changeState(ProcessState.FAILED);
+
+                throw new ProcessException(e);
             }
         }
 
-        throw new ProcessException("Can't find \'Request\' object in args.");
+        return false;
     }
 
     @Override

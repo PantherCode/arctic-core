@@ -15,13 +15,14 @@
  */
 package org.panthercode.arctic.core.processing.modules.impl;
 
-import java.util.Iterator;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.modules.Module;
 import org.panthercode.arctic.core.settings.Context;
+
+import java.util.Iterator;
 
 /**
  * The Process class runs one element afterRun another.
@@ -61,7 +62,7 @@ public class Process extends Bundle {
      * @param process object to copy
      */
     public Process(Process process)
-        throws NullPointerException {
+            throws NullPointerException {
         super(process);
     }
 
@@ -78,11 +79,13 @@ public class Process extends Bundle {
      * Starts the processById.
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while running
-     * processById.
+     *                   processById.
      */
     @Override
     public boolean start(Object[] args)
-        throws ProcessException {
+            throws ProcessException {
+        this.reset();
+
         if (this.changeState(ProcessState.RUNNING)) {
 
             this.before();
@@ -112,7 +115,7 @@ public class Process extends Bundle {
                 this.changeState(ProcessState.FAILED);
                 this.after();
                 throw new ProcessException("While running the processById module an error is occurred.",
-                    e);
+                        e);
             }
         }
 
@@ -124,10 +127,10 @@ public class Process extends Bundle {
      * finishing actual module. Calls actual module's <tt>stop()</tt> method.
      *
      * @throws Exception Is eventually thrown by actual module or if an error occurred while
-     * stopping processById.
+     *                   stopping processById.
      */
     public boolean stop()
-        throws ProcessException {
+            throws ProcessException {
         if (this.currentModule != null) {
             this.currentModule.stop();
         }
@@ -184,7 +187,7 @@ public class Process extends Bundle {
 
     @Override
     public Process copy()
-        throws UnsupportedOperationException {
+            throws UnsupportedOperationException {
         return new Process(this);
     }
 }

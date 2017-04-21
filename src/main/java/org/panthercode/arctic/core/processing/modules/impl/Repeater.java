@@ -20,7 +20,7 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.processing.ProcessException;
 import org.panthercode.arctic.core.processing.ProcessState;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.processing.modules.helper.Controller;
+import org.panthercode.arctic.core.processing.modules.helper.RepeaterCondition;
 import org.panthercode.arctic.core.processing.modules.helper.RepeaterOptions;
 import org.panthercode.arctic.core.settings.Context;
 
@@ -50,7 +50,7 @@ public abstract class Repeater extends ModuleImpl {
     /**
      *
      */
-    private Controller<? extends Object> controller;
+    private RepeaterCondition<? extends Object> repeaterCondition;
 
     /**
      * Loop class use milliseconds for measurements
@@ -98,7 +98,7 @@ public abstract class Repeater extends ModuleImpl {
 
         this.setModule(module);
 
-        this.setController(this.createController());
+        this.setRepeaterCondition(this.createController());
 
         this.options = options;
     }
@@ -116,15 +116,15 @@ public abstract class Repeater extends ModuleImpl {
 
         this.setModule(repeater.getModule().copy());
 
-        this.setController(this.createController());
+        this.setRepeaterCondition(this.createController());
 
         this.options = new RepeaterOptions(repeater.getDelayTime(), repeater.isIgnoreExceptions(), repeater.canQuit());
     }
 
-    private void setController(Controller<? extends Object> controller) {
-        ArgumentUtils.checkNotNull(controller, "controller");
+    private void setRepeaterCondition(RepeaterCondition<? extends Object> repeaterCondition) {
+        ArgumentUtils.checkNotNull(repeaterCondition, "repeaterCondition");
 
-        this.controller = controller;
+        this.repeaterCondition = repeaterCondition;
     }
 
     /**
@@ -168,6 +168,16 @@ public abstract class Repeater extends ModuleImpl {
      */
     public Module getModule() {
         return this.module;
+    }
+
+    @Override
+    public boolean hasResult() {
+        return this.module != null && this.module.hasResult();
+    }
+
+    @Override
+    public Object result() {
+        return this.module == null ? null : this.module.result();
     }
 
     /**
@@ -266,12 +276,12 @@ public abstract class Repeater extends ModuleImpl {
 
     @Override
     public synchronized boolean start(Object[] args) throws ProcessException {
+        this.reset();
+
         if (this.changeState(ProcessState.RUNNING)) {
-            before();
+            this.before();
 
-            for (controller.reset(); controller.accept(); controller.update()) {
-                this.module.reset();
-
+            for (repeaterCondition.reset(); repeaterCondition.accept(); repeaterCondition.update()) {
                 try {
                     this.module.start(args);
 
@@ -279,10 +289,13 @@ public abstract class Repeater extends ModuleImpl {
                         break;
                     }
 
+                    this.module.reset();
+
                     Thread.sleep(this.getDelayTime());
                 } catch (ProcessException e) {
                     if (!this.isIgnoreExceptions()) {
                         this.changeState(ProcessState.FAILED);
+
                         throw new ProcessException("While running the module an error occurred.", e);
                     }
                 } catch (InterruptedException e) {
@@ -291,11 +304,11 @@ public abstract class Repeater extends ModuleImpl {
             }
 
             if (!this.isStopped()) {
-                ProcessState result = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
+                ProcessState resultState = (!this.canQuit() || this.module.isSucceeded()) ? ProcessState.SUCCEEDED
                         : ProcessState.FAILED;
 
-                if (!this.changeState(result)) {
-                    throw new ProcessException("Failed to set status to " + result + ".");
+                if (!this.changeState(resultState)) {
+                    throw new ProcessException("Failed to set status to " + resultState + ".");
                 }
             }
 
@@ -314,7 +327,7 @@ public abstract class Repeater extends ModuleImpl {
     @Override
     public synchronized boolean stop()
             throws ProcessException {
-        return this.changeState(ProcessState.STOPPED) && this.module.stop();
+        return super.stop() && this.module.stop();
     }
 
     /**
@@ -324,7 +337,7 @@ public abstract class Repeater extends ModuleImpl {
     @Override
     public synchronized boolean reset()
             throws ProcessException {
-        return this.changeState(ProcessState.READY) && this.module.reset();
+        return super.reset() && this.module.reset();
     }
 
     /**
@@ -368,9 +381,9 @@ public abstract class Repeater extends ModuleImpl {
     }
 
     /**
-     * Creates a new controller instance to control the repeating process.
+     * Creates a new repeaterCondition instance to control the repeating process.
      *
-     * @return Returns a new instance of a controller.
+     * @return Returns a new instance of a repeaterCondition.
      */
-    protected abstract Controller<? extends Object> createController();
+    protected abstract RepeaterCondition<? extends Object> createController();
 }

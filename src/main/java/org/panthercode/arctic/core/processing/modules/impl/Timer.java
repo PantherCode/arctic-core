@@ -20,7 +20,7 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.processing.modules.helper.Controller;
+import org.panthercode.arctic.core.processing.modules.helper.RepeaterCondition;
 import org.panthercode.arctic.core.processing.modules.helper.TimerOptions;
 import org.panthercode.arctic.core.settings.Context;
 
@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 @VersionInfo(major = 1)
 public class Timer extends Repeater {
 
-    private TimerController controller = null;
+    private TimerRepeaterCondition controller = null;
 
     /**
      * Constructor
@@ -150,16 +150,6 @@ public class Timer extends Repeater {
         return this.isRunning() ? this.controller.value() : 0L;
     }
 
-    @Override
-    public boolean hasResult() {
-        return false;
-    }
-
-    @Override
-    public Object result() {
-        return null;
-    }
-
     /**
      * Creates a copy of this object.
      *
@@ -210,13 +200,13 @@ public class Timer extends Repeater {
     }
 
     @Override
-    protected Controller<? extends Object> createController() {
-        this.controller = new TimerController();
+    protected RepeaterCondition<? extends Object> createController() {
+        this.controller = new TimerRepeaterCondition();
 
         return this.controller;
     }
 
-    private class TimerController extends Controller<Long> {
+    private class TimerRepeaterCondition extends RepeaterCondition<Long> {
         private long actualDurationInMillis = 0;
 
         private long startTimeInMillis = 0;
@@ -224,6 +214,8 @@ public class Timer extends Repeater {
         @Override
         public void reset() {
             this.actualDurationInMillis = 0;
+
+            this.startTimeInMillis = System.currentTimeMillis();
         }
 
         @Override
@@ -233,7 +225,7 @@ public class Timer extends Repeater {
 
         @Override
         public void update() {
-            this.actualDurationInMillis = this.startTimeInMillis - System.currentTimeMillis();
+            this.actualDurationInMillis = System.currentTimeMillis() - startTimeInMillis;
         }
 
         @Override

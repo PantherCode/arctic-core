@@ -19,8 +19,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.processing.modules.Module;
-import org.panthercode.arctic.core.processing.modules.helper.Controller;
 import org.panthercode.arctic.core.processing.modules.helper.CounterOptions;
+import org.panthercode.arctic.core.processing.modules.helper.RepeaterCondition;
 import org.panthercode.arctic.core.settings.Context;
 
 //TODO: update documentation
@@ -37,7 +37,7 @@ import org.panthercode.arctic.core.settings.Context;
 @VersionInfo(major = 1)
 public class Counter extends Repeater {
 
-    private CounterController controller = null;
+    private CounterRepeaterCondition controller = null;
 
     /**
      * Constructor
@@ -119,17 +119,6 @@ public class Counter extends Repeater {
         return (this.isRunning()) ? this.controller.actualCount : 0;
     }
 
-
-    @Override
-    public boolean hasResult() {
-        return false;
-    }
-
-    @Override
-    public Object result() {
-        return null;
-    }
-
     @Override
     public Counter copy()
             throws UnsupportedOperationException {
@@ -172,13 +161,13 @@ public class Counter extends Repeater {
     }
 
     @Override
-    protected Controller<? extends Object> createController() {
-        this.controller = new CounterController();
+    protected RepeaterCondition<? extends Object> createController() {
+        this.controller = new CounterRepeaterCondition();
 
         return this.controller;
     }
 
-    private class CounterController extends Controller<Integer> {
+    private class CounterRepeaterCondition extends RepeaterCondition<Integer> {
 
         private int actualCount = 0;
 

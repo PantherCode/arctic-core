@@ -22,7 +22,7 @@ package org.panthercode.arctic.core.processing.modules.helper;
  * @see org.panthercode.arctic.core.processing.modules.impl.Repeater
  * @since 1.0
  */
-public abstract class Controller<T> {
+public abstract class RepeaterCondition<T> {
 
     /**
      * Set the actual inner state to an initial value.
