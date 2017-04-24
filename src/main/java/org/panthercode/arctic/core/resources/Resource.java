@@ -16,8 +16,8 @@
 package org.panthercode.arctic.core.resources;
 
 import org.panthercode.arctic.core.helper.identity.Identifiable;
-import org.panthercode.arctic.core.processing.priority.Priority;
 import org.panthercode.arctic.core.helper.version.Versionable;
+import org.panthercode.arctic.core.processing.priority.Priority;
 import org.panthercode.arctic.core.settings.Configurable;
 
 /**
@@ -28,37 +28,31 @@ import org.panthercode.arctic.core.settings.Configurable;
  */
 public interface Resource extends Identifiable, Versionable, Configurable {
     /**
-     *
      * @return
      */
     boolean isOpen();
 
     /**
-     *
      * @return
      */
     boolean isBusy();
 
     /**
-     *
      * @return
      */
     int actualThreadCount();
 
     /**
-     *
      * @return
      */
     int allowedParalleledThreads();
 
     /**
-     *
      * @throws Exception
      */
     void acquire() throws Exception;
 
     /**
-     *
      * @param priority
      * @throws Exception
      */
@@ -70,13 +64,11 @@ public interface Resource extends Identifiable, Versionable, Configurable {
     void release();
 
     /**
-     *
      * @return
      */
     Resource copy();
 
     /**
-     *
      * @param functionName
      * @param returnType
      * @param arguments

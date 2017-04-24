@@ -11,17 +11,12 @@ public interface Validator<T> {
      */
     boolean accept(T value);
 
-    /**
-     * @param value
-     * @return
-     * @throws IllegalArgumentException
-     */
-    default T validate(T value)
+    default T validate(T value, String message)
             throws IllegalArgumentException {
         if (this.accept(value)) {
             return value;
         }
 
-        throw new IllegalArgumentException("The value is not correct.");
+        throw new IllegalArgumentException(message);
     }
 }

@@ -1,6 +1,7 @@
 package org.panthercode.arctic.core.http;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
@@ -21,8 +22,6 @@ import java.io.IOException;
 @VersionInfo(major = 1, minor = 0)
 public class HttpClientModule extends ModuleImpl {
 
-    private final HttpClientStep httpClientStep = new HttpClientStep();
-
     private Timer timer;
 
     public HttpClientModule() {
@@ -30,9 +29,17 @@ public class HttpClientModule extends ModuleImpl {
     }
 
     public HttpClientModule(TimerOptions options) {
+        this(options, Executor.newInstance());
+    }
+
+    public HttpClientModule(TimerOptions options, Executor executor) {
         super();
 
-        this.timer = new Timer(this.httpClientStep, options);
+        ArgumentUtils.checkNotNull(executor, "executor");
+
+        HttpClientStep step = new HttpClientStep(executor);
+
+        this.timer = new Timer(step, options);
     }
 
     @Override
@@ -123,19 +130,23 @@ public class HttpClientModule extends ModuleImpl {
     @VersionInfo(major = 1, minor = 0)
     private class HttpClientStep extends Step {
 
+        private Executor executor;
+
         private HttpResponse response;
 
         private HttpResponse result;
 
-        public HttpClientStep() {
+        HttpClientStep(Executor executor) {
             super();
+
+            this.executor = executor;
         }
 
         @Override
         public boolean step(Object[] args)
                 throws ProcessException {
             try {
-                this.response = ((Request) args[0]).execute().returnResponse();
+                this.response = this.executor.execute((Request) args[0]).returnResponse();
 
                 if (response.getStatusLine().getStatusCode() < 300) {
                     this.result = this.response;
@@ -169,7 +180,7 @@ public class HttpClientModule extends ModuleImpl {
 
         @Override
         public Step copy() {
-            return new HttpClientStep();
+            return new HttpClientStep(this.executor);
         }
     }
 }

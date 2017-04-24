@@ -19,10 +19,10 @@ import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.helper.identity.Identifiable;
 import org.panthercode.arctic.core.helper.identity.Identity;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
-import org.panthercode.arctic.core.processing.priority.Priority;
 import org.panthercode.arctic.core.helper.version.Version;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
 import org.panthercode.arctic.core.helper.version.Versionable;
+import org.panthercode.arctic.core.processing.priority.Priority;
 import org.panthercode.arctic.core.reflect.ReflectionUtils;
 import org.panthercode.arctic.core.settings.Configurable;
 import org.panthercode.arctic.core.settings.Configuration;
@@ -65,7 +65,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @param configuration
      */
     public AbstractResource(Configuration configuration) {
@@ -77,7 +76,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -86,7 +84,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -95,7 +92,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @param configuration new configuration associated with the object
      */
     @Override
@@ -104,7 +100,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -113,7 +108,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -122,7 +116,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -131,7 +124,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -140,7 +132,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -149,7 +140,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @throws Exception
      */
     @Override
@@ -158,7 +148,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @param priority
      * @throws Exception
      */
@@ -176,7 +165,6 @@ public abstract class AbstractResource implements Resource, Identifiable, Versio
     }
 
     /**
-     *
      * @param functionName
      * @param returnType
      * @param arguments
