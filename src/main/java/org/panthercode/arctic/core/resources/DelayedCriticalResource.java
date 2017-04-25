@@ -2,7 +2,6 @@ package org.panthercode.arctic.core.resources;
 
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
 import org.panthercode.arctic.core.concurrent.semaphore.Semaphore;
-import org.panthercode.arctic.core.concurrent.semaphore.Semaphores;
 import org.panthercode.arctic.core.concurrent.semaphore.impl.DelaySemaphore;
 import org.panthercode.arctic.core.helper.identity.IdentityInfo;
 import org.panthercode.arctic.core.helper.version.VersionInfo;
@@ -52,30 +51,5 @@ public class DelayedCriticalResource extends AbstractCriticalResource {
     @Override
     public Resource copy() {
         return new DelayedCriticalResource(this.semaphore, this.delaySemaphore, this.configuration);
-    }
-
-    public static void main(String[] args) {
-        final Semaphore<Priority> semaphore = Semaphores.createPriorityQueuedSemaphore(2);
-        final DelaySemaphore delaySemaphore = new DelaySemaphore(1000, 2);
-
-        for (int i = 0; i < 10; i++) {
-            final int index = i;
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        semaphore.acquire();
-                        delaySemaphore.acquire();
-
-                        System.out.println(index);
-
-                        delaySemaphore.release();
-                        semaphore.release();
-                    } catch (Exception ignored) {
-                    }
-                }
-            }).start();
-        }
     }
 }
