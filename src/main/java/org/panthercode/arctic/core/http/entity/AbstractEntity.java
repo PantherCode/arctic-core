@@ -20,7 +20,6 @@ public abstract class AbstractEntity<T> {
     }
 
     /**
-     *
      * @param data
      */
     public AbstractEntity(T data) {
@@ -28,7 +27,6 @@ public abstract class AbstractEntity<T> {
     }
 
     /**
-     *
      * @return
      */
     public T getData() {
@@ -36,7 +34,6 @@ public abstract class AbstractEntity<T> {
     }
 
     /**
-     *
      * @param data
      */
     public void setData(T data) {
@@ -44,7 +41,6 @@ public abstract class AbstractEntity<T> {
     }
 
     /**
-     *
      * @param validator
      * @return
      */
@@ -53,11 +49,11 @@ public abstract class AbstractEntity<T> {
     }
 
     /**
-     *
      * @param validator
      * @return
      */
     public T validate(Validator<T> validator) {
-        return ArgumentUtils.checkNotNull(validator, "validator").validate(this.data);
+        //TODO: set message
+        return ArgumentUtils.checkNotNull(validator, "validator").validate(this.data, "message");
     }
 }

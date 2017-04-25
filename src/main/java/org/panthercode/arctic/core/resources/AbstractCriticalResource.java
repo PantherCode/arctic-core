@@ -34,7 +34,7 @@ public abstract class AbstractCriticalResource extends AbstractResource {
     /**
      *
      */
-    private Semaphore<Priority> semaphore = null;
+    protected Semaphore<Priority> semaphore = null;
 
     /**
      *
