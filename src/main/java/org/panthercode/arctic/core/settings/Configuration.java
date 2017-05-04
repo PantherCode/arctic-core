@@ -260,7 +260,7 @@ public class Configuration extends Properties {
     public void check(Object key)
             throws MissingKeyException {
         if (!this.containsKey(key)) {
-            throw new MissingKeyException("The key is not in the map.");
+            throw new MissingKeyException("The key is not in the map. [key=" + key.toString() + "]");
         }
     }
 
