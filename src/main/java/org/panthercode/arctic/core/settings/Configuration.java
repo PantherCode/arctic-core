@@ -290,7 +290,7 @@ public class Configuration extends Properties {
      */
     public void load(final String path) throws IOException {
         try (FileInputStream stream = FileUtils.openInputStream(new File(path))) {
-            load(stream);
+            this.load(stream);
         }
     }
 
@@ -302,7 +302,7 @@ public class Configuration extends Properties {
      */
     public void store(final String path) throws IOException {
         try (FileOutputStream stream = FileUtils.openOutputStream(new File(path))) {
-            store(stream, this.comment);
+            this.store(stream, this.comment);
         }
     }
 

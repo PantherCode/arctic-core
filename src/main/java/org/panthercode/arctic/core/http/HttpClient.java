@@ -17,6 +17,7 @@ package org.panthercode.arctic.core.http;
 
 import org.apache.http.client.fluent.Request;
 import org.panthercode.arctic.core.arguments.ArgumentUtils;
+import org.panthercode.arctic.core.web.Destination;
 
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
@@ -552,6 +553,18 @@ public class HttpClient {
          * Standard Constructor
          */
         public HttpClientBuilder() {
+        }
+
+        public HttpClientBuilder setDestination(Destination destination) {
+            if (destination != null) {
+                this.host = destination.toURI();
+
+                if (destination.hasProxy()) {
+                    this.proxy = destination.getProxy().toURI();
+                }
+            }
+
+            return this;
         }
 
         /**
